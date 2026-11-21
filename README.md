@@ -166,6 +166,7 @@ and translating the values. The details are in
 
 ## Documentation
 
+- [`AGENTS.md`](AGENTS.md) - conventions for anyone who modifies the code.
 - [`docs/architecture/overview.md`](docs/architecture/overview.md) - map of the layers and the flow of a command.
 - [`docs/architecture/adr/`](docs/architecture/adr/) - decision records with the *why* behind each technical choice.
 - [`docs/development/git-workflow.md`](docs/development/git-workflow.md) - branching, commit format, tags and releases.
