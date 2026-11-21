@@ -1,5 +1,7 @@
+using System.Globalization;
 using MediaPilot.Core;
 using MediaPilot.Core.Contracts;
+using MediaPilot.Localization;
 using MediaPilot.Localization.Resources;
 
 namespace MediaPilot.Core.Services;
@@ -142,11 +144,13 @@ public sealed class MediaCommandExecutor : IDisposable
 
     private void ShowInformation()
     {
-        var track = _mediaController.GetCurrentTrackTitle();
+        var track = _mediaController.GetCurrentTrack();
 
         _notifications.ShowMessage(
             Strings.App_Name,
-            string.IsNullOrWhiteSpace(track) ? Strings.Executor_NoTrackPlaying : track);
+            track is null || track.IsEmpty
+                ? Strings.Executor_NoTrackPlaying
+                : DescribeTrack(track));
     }
 
     private void FlushVolumeNotification()
@@ -166,7 +170,36 @@ public sealed class MediaCommandExecutor : IDisposable
 
         _pendingVolume = volume;
 
-        var track = _mediaController.GetCurrentTrackTitle();
-        _notifications.ShowVolume(volume, _pendingMuted, _pendingIncreased, track);
+        var track = _mediaController.GetCurrentTrack();
+        _notifications.ShowVolume(
+            volume,
+            _pendingMuted,
+            _pendingIncreased,
+            track is null || track.IsEmpty ? null : DescribeTrack(track));
+    }
+
+    /// <summary>
+    /// Builds the text that identifies a track: the title and, when the media
+    /// session publishes it, the artist.
+    /// </summary>
+    /// <param name="track">The track to describe.</param>
+    /// <returns>The text of the track.</returns>
+    private static string DescribeTrack(MediaTrack track)
+    {
+        if (string.IsNullOrWhiteSpace(track.Artist))
+        {
+            return track.Title;
+        }
+
+        if (string.IsNullOrWhiteSpace(track.Title))
+        {
+            return track.Artist;
+        }
+
+        return LocalizedFormat.Format(
+            CultureInfo.CurrentUICulture,
+            Strings.Track_TitleArtistFormat,
+            track.Title,
+            track.Artist);
     }
 }

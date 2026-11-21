@@ -1,6 +1,7 @@
 using MediaPilot.Core;
 using MediaPilot.Core.Contracts;
 using MediaPilot.Core.Services;
+using MediaPilot.Localization.Resources;
 
 namespace MediaPilot.Core.Tests;
 
@@ -77,7 +78,7 @@ public sealed class MediaCommandExecutorTests
     [Fact]
     public void Execute_InformationShowsTheTrackTitle()
     {
-        var media = new FakeMediaController { TrackTitle = "Test track" };
+        var media = new FakeMediaController { Track = new MediaTrack("Test track", string.Empty) };
         var notifications = new FakeNotificationPresenter();
         var executor = new MediaCommandExecutor(media, new FakeVolumeController(), notifications, TestDebounceMs);
 
@@ -85,6 +86,32 @@ public sealed class MediaCommandExecutorTests
 
         Assert.True(notifications.MessageShown);
         Assert.Equal("Test track", notifications.LastMessage);
+    }
+
+    [Fact]
+    public void Execute_InformationShowsTheTitleAndTheArtist()
+    {
+        var media = new FakeMediaController { Track = new MediaTrack("Test track", "Test artist") };
+        var notifications = new FakeNotificationPresenter();
+        var executor = new MediaCommandExecutor(media, new FakeVolumeController(), notifications, TestDebounceMs);
+
+        executor.Execute(MediaCommand.ShowInformation);
+
+        Assert.True(notifications.MessageShown);
+        Assert.Equal("Test track - Test artist", notifications.LastMessage);
+    }
+
+    [Fact]
+    public void Execute_InformationWithoutTrackReportsThatNothingIsPlaying()
+    {
+        var media = new FakeMediaController();
+        var notifications = new FakeNotificationPresenter();
+        var executor = new MediaCommandExecutor(media, new FakeVolumeController(), notifications, TestDebounceMs);
+
+        executor.Execute(MediaCommand.ShowInformation);
+
+        Assert.True(notifications.MessageShown);
+        Assert.Equal(Strings.Executor_NoTrackPlaying, notifications.LastMessage);
     }
 
     private static void WaitForNotification()
@@ -96,7 +123,7 @@ public sealed class MediaCommandExecutorTests
     {
         public MediaCommand? LastCommand { get; private set; }
 
-        public string? TrackTitle { get; set; }
+        public MediaTrack? Track { get; set; }
 
         public bool TryExecute(MediaCommand command)
         {
@@ -104,7 +131,7 @@ public sealed class MediaCommandExecutorTests
             return true;
         }
 
-        public string? GetCurrentTrackTitle() => TrackTitle;
+        public MediaTrack? GetCurrentTrack() => Track;
     }
 
     private sealed class FakeVolumeController : IVolumeController

@@ -1,3 +1,5 @@
+using MediaPilot.Core;
+
 namespace MediaPilot.Core.Contracts;
 
 /// <summary>
@@ -13,8 +15,8 @@ public interface IMediaController
     bool TryExecute(MediaCommand command);
 
     /// <summary>
-    /// Gets the title of the track being played, if any.
+    /// Gets the track that is being played, if any.
     /// </summary>
-    /// <returns>The track title, or <see langword="null"/> if there is no information.</returns>
-    string? GetCurrentTrackTitle();
+    /// <returns>The track, or <see langword="null"/> when there is no information.</returns>
+    MediaTrack? GetCurrentTrack();
 }

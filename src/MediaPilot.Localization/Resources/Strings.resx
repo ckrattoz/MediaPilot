@@ -241,6 +241,9 @@
   <data name="Executor_NoTrackPlaying" xml:space="preserve">
     <value>No hay ninguna pista en reproducción.</value>
   </data>
+  <data name="Track_TitleArtistFormat" xml:space="preserve">
+    <value>{0} - {1}</value>
+  </data>
   <data name="HotkeyConflict_Title" xml:space="preserve">
     <value>Atajo en uso</value>
   </data>

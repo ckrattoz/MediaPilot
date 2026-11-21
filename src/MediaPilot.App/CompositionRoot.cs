@@ -45,6 +45,7 @@ public sealed class CompositionRoot : IDisposable
     private WindowsHotkeyService? _hotkeys;
     private TrayIconService? _tray;
     private WindowsVolumeController? _volume;
+    private MediaSessionMonitor? _mediaSessions;
     private MediaCommandExecutor? _executor;
     private WindowsThemeService? _systemTheme;
     private NotificationPresenter? _notifications;
@@ -92,7 +93,9 @@ public sealed class CompositionRoot : IDisposable
             Path.Combine(AppContext.BaseDirectory, IconFolder, "inactive.ico"));
 
         _volume = new WindowsVolumeController();
-        var media = new WindowsMediaController();
+
+        _mediaSessions = new MediaSessionMonitor(_loggerFactory.CreateLogger<MediaSessionMonitor>());
+        var media = new WindowsMediaController(_mediaSessions);
         _notifications = new NotificationPresenter();
 
         _executor = new MediaCommandExecutor(media, _volume, _notifications, _settings.NotificationDebounceMs);
@@ -110,6 +113,12 @@ public sealed class CompositionRoot : IDisposable
 
         ApplyHotkeys();
 
+        // The media session monitor connects asynchronously: the media session
+        // API is a WinRT API and its request cannot block the user interface
+        // thread. Until it answers, the application works without track
+        // information.
+        _ = _mediaSessions.StartAsync();
+
         if (Log.IsEnabled(LogLevel.Information))
         {
             Log.LogInformation("MediaPilot started. Hotkeys enabled: {Enabled}.", _settings.HotkeysEnabled);
@@ -123,6 +132,7 @@ public sealed class CompositionRoot : IDisposable
         _hotkeys?.Dispose();
         _tray?.Dispose();
         _volume?.Dispose();
+        _mediaSessions?.Dispose();
         _messageWindow?.Dispose();
         _loggerFactory?.Dispose();
 

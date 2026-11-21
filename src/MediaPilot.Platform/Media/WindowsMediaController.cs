@@ -5,15 +5,27 @@ using MediaPilot.Platform.Input;
 namespace MediaPilot.Platform.Media;
 
 /// <summary>
-/// Control over media playback through the system keys.
+/// Control over media playback.
 /// </summary>
 /// <remarks>
-/// It sends the VK_MEDIA_* keys to the system, which is exactly the mechanism
-/// of the original project. Reading the track being played requires the media
-/// sessions API (SMTC) and is added in a later stage.
+/// The playback commands are sent through the system keys, which is exactly
+/// the mechanism of the original project: the system routes them to the
+/// application that owns the media session.
 /// </remarks>
 public sealed class WindowsMediaController : IMediaController
 {
+    private readonly MediaSessionMonitor _sessionMonitor;
+
+    /// <summary>
+    /// Initializes the controller.
+    /// </summary>
+    /// <param name="sessionMonitor">Monitor of the media sessions of the system.</param>
+    public WindowsMediaController(MediaSessionMonitor sessionMonitor)
+    {
+        ArgumentNullException.ThrowIfNull(sessionMonitor);
+        _sessionMonitor = sessionMonitor;
+    }
+
     /// <inheritdoc />
     public bool TryExecute(MediaCommand command)
     {
@@ -29,10 +41,5 @@ public sealed class WindowsMediaController : IMediaController
     }
 
     /// <inheritdoc />
-    /// <remarks>
-    /// Always returns <see langword="null"/>: getting the real track title
-    /// requires <c>Windows.Media.Control</c>, which is enabled in the media
-    /// sessions integration stage.
-    /// </remarks>
-    public string? GetCurrentTrackTitle() => null;
+    public MediaTrack? GetCurrentTrack() => _sessionMonitor.CurrentTrack;
 }
