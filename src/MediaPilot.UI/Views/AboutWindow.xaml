@@ -1,0 +1,56 @@
+<Window x:Class="MediaPilot.UI.Views.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:MediaPilot.UI.Resources"
+        Title="{loc:Localize About_WindowTitle}"
+        Width="460"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Background="{DynamicResource MediaPilot.Brush.Surface}">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{loc:Localize App_Name}"
+                       FontSize="28" FontWeight="SemiBold"
+                       Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
+            <TextBlock Text="{loc:Localize App_Tagline}"
+                       Margin="0,4,0,0"
+                       Style="{StaticResource MediaPilot.Caption}" />
+        </StackPanel>
+
+        <Border Grid.Row="1" Margin="0,18,0,0"
+                Style="{StaticResource MediaPilot.Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource MediaPilot.SectionTitle}"
+                           Text="{loc:Localize About_Section_Info}" />
+                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                           Text="{loc:Localize About_Info_Body}" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Margin="0,16,0,0"
+                Style="{StaticResource MediaPilot.Card}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource MediaPilot.SectionTitle}"
+                           Text="{loc:Localize About_Section_Shortcuts}" />
+                <StackPanel x:Name="ShortcutsHost" Margin="0,4,0,0" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="4" Margin="0,18,0,0" HorizontalAlignment="Right">
+            <Button Content="{loc:Localize About_Button_Close}"
+                    Style="{StaticResource MediaPilot.AccentButton}"
+                    Click="OnCloseClick" />
+        </StackPanel>
+    </Grid>
+</Window>

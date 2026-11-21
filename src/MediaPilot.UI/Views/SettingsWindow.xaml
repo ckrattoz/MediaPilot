@@ -1,0 +1,144 @@
+<Window x:Class="MediaPilot.UI.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:MediaPilot.UI.Controls"
+        xmlns:loc="clr-namespace:MediaPilot.UI.Resources"
+        Title="{loc:Localize Settings_WindowTitle}"
+        Width="560" Height="640"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MediaPilot.Brush.Surface}">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,18">
+            <TextBlock Text="{loc:Localize Settings_Heading}"
+                       FontSize="24" FontWeight="SemiBold"
+                       Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
+            <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                       Text="{loc:Localize Settings_Subheading}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <!-- ── General ── -->
+                <Border Style="{StaticResource MediaPilot.Card}">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource MediaPilot.SectionTitle}"
+                                   Text="{loc:Localize Settings_Section_General}" />
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localize Settings_HotkeysEnabled_Label}"
+                                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
+                                           FontSize="13" />
+                                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                                           Text="{loc:Localize Settings_HotkeysEnabled_Hint}" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource MediaPilot.ToggleSwitch}"
+                                      IsChecked="{Binding HotkeysEnabled, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localize Settings_Notifications_Label}"
+                                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
+                                           FontSize="13" />
+                                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                                           Text="{loc:Localize Settings_Notifications_Hint}" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource MediaPilot.ToggleSwitch}"
+                                      IsChecked="{Binding ShowNotifications, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localize Settings_StartWithWindows_Label}"
+                                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
+                                           FontSize="13" />
+                                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                                           Text="{loc:Localize Settings_StartWithWindows_Hint}" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" Style="{StaticResource MediaPilot.ToggleSwitch}"
+                                      IsChecked="{Binding StartWithWindows, Mode=TwoWay}" />
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{loc:Localize Settings_Theme_Label}"
+                                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
+                                           FontSize="13" />
+                                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                                           Text="{loc:Localize Settings_Theme_Hint}" />
+                            </StackPanel>
+                            <ComboBox x:Name="ThemeSelector" Grid.Column="1" Width="180"
+                                      SelectionChanged="OnThemeSelectionChanged">
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Auto}" Tag="Auto" />
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Light}" Tag="Light" />
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Dark}" Tag="Dark" />
+                            </ComboBox>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Shortcuts ── -->
+                <Border Style="{StaticResource MediaPilot.Card}" Margin="0,16,0,0">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource MediaPilot.SectionTitle}"
+                                   Text="{loc:Localize Settings_Section_Hotkeys}" />
+                        <TextBlock Style="{StaticResource MediaPilot.Caption}" Margin="0,0,0,12"
+                                   Text="{loc:Localize Settings_Hotkeys_Hint}" />
+
+                        <ItemsControl ItemsSource="{Binding Hotkeys}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" VerticalAlignment="Center"
+                                                   Text="{Binding Description}"
+                                                   Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
+                                                   FontSize="13" />
+                                        <controls:HotkeyCaptureBox Grid.Column="1"
+                                                                   Gesture="{Binding Gesture, Mode=TwoWay}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Margin="0,18,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{loc:Localize Settings_Button_Cancel}" Margin="0,0,10,0" Padding="18,7" MinWidth="110"
+                    Click="OnCancelClick" />
+            <Button Content="{loc:Localize Settings_Button_Save}" Style="{StaticResource MediaPilot.AccentButton}"
+                    Click="OnSaveClick" />
+        </StackPanel>
+    </Grid>
+</Window>

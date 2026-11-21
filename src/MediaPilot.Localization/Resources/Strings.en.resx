@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema, Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    ... resheader ...
+    ... data ...
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+    <data name="App_Name" xml:space="preserve">
+    <value>MediaPilot</value>
+  </data>
+  <data name="App_Tagline" xml:space="preserve">
+    <value>Global multimedia hotkeys for Windows 11</value>
+  </data>
+  <data name="Tray_Menu_OpenSettings" xml:space="preserve">
+    <value>Open settings</value>
+  </data>
+  <data name="Tray_Menu_About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Tray_Menu_ToggleHotkeys" xml:space="preserve">
+    <value>Hotkeys enabled</value>
+  </data>
+  <data name="Tray_Menu_ToggleStartup" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="Tray_Menu_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Settings_WindowTitle" xml:space="preserve">
+    <value>MediaPilot - Settings</value>
+  </data>
+  <data name="Settings_Heading" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_Subheading" xml:space="preserve">
+    <value>Customize the hotkeys and the behavior of MediaPilot.</value>
+  </data>
+  <data name="Settings_Section_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_HotkeysEnabled_Label" xml:space="preserve">
+    <value>Hotkeys enabled</value>
+  </data>
+  <data name="Settings_HotkeysEnabled_Hint" xml:space="preserve">
+    <value>Suspends or resumes the global hotkeys.</value>
+  </data>
+  <data name="Settings_Notifications_Label" xml:space="preserve">
+    <value>Show notifications</value>
+  </data>
+  <data name="Settings_Notifications_Hint" xml:space="preserve">
+    <value>Shows the volume overlay whenever it changes.</value>
+  </data>
+  <data name="Settings_StartWithWindows_Label" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
+  <data name="Settings_StartWithWindows_Hint" xml:space="preserve">
+    <value>Runs MediaPilot when you sign in.</value>
+  </data>
+  <data name="Settings_Theme_Label" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Theme_Hint" xml:space="preserve">
+    <value>&quot;Automatic&quot; follows the Windows preference.</value>
+  </data>
+  <data name="Settings_Theme_Auto" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="Settings_Theme_Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Settings_Theme_Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Settings_Section_Hotkeys" xml:space="preserve">
+    <value>Keyboard shortcuts</value>
+  </data>
+  <data name="Settings_Hotkeys_Hint" xml:space="preserve">
+    <value>Click a shortcut and press the new combination.</value>
+  </data>
+  <data name="Settings_Button_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Settings_Button_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="About_WindowTitle" xml:space="preserve">
+    <value>About MediaPilot</value>
+  </data>
+  <data name="About_Section_Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="About_Info_Body" xml:space="preserve">
+    <value>Control multimedia playback and the system volume from any application, without leaving it.</value>
+  </data>
+  <data name="About_Section_Shortcuts" xml:space="preserve">
+    <value>Default shortcuts</value>
+  </data>
+  <data name="About_Button_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Command_Previous" xml:space="preserve">
+    <value>Previous track</value>
+  </data>
+  <data name="Command_PlayPause" xml:space="preserve">
+    <value>Play / Pause</value>
+  </data>
+  <data name="Command_Next" xml:space="preserve">
+    <value>Next track</value>
+  </data>
+  <data name="Command_VolumeDown" xml:space="preserve">
+    <value>Volume -</value>
+  </data>
+  <data name="Command_VolumeMute" xml:space="preserve">
+    <value>Mute</value>
+  </data>
+  <data name="Command_VolumeUp" xml:space="preserve">
+    <value>Volume +</value>
+  </data>
+  <data name="Command_ShowInformation" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Key_Space" xml:space="preserve">
+    <value>Space</value>
+  </data>
+  <data name="Key_Left" xml:space="preserve">
+    <value>←</value>
+  </data>
+  <data name="Key_Up" xml:space="preserve">
+    <value>↑</value>
+  </data>
+  <data name="Key_Right" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="Key_Down" xml:space="preserve">
+    <value>↓</value>
+  </data>
+  <data name="Key_OemPeriod" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="Key_MediaPreviousTrack" xml:space="preserve">
+    <value>Previous track</value>
+  </data>
+  <data name="Key_MediaPlayPause" xml:space="preserve">
+    <value>Play/Pause</value>
+  </data>
+  <data name="Key_MediaNextTrack" xml:space="preserve">
+    <value>Next track</value>
+  </data>
+  <data name="Key_VolumeMute" xml:space="preserve">
+    <value>Mute</value>
+  </data>
+  <data name="Key_VolumeDown" xml:space="preserve">
+    <value>Volume -</value>
+  </data>
+  <data name="Key_VolumeUp" xml:space="preserve">
+    <value>Volume +</value>
+  </data>
+  <data name="Hotkey_PressCombination" xml:space="preserve">
+    <value>Press a combination...</value>
+  </data>
+  <data name="Hotkey_Unassigned" xml:space="preserve">
+    <value>Not assigned</value>
+  </data>
+  <data name="Notification_Muted" xml:space="preserve">
+    <value>Muted</value>
+  </data>
+  <data name="Notification_VolumeFormat" xml:space="preserve">
+    <value>{0} Volume: {1}%</value>
+  </data>
+  <data name="Notification_TrackVolumeFormat" xml:space="preserve">
+    <value>{0} {1} - {2}%</value>
+  </data>
+  <data name="Notification_TrackFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Executor_NoTrackPlaying" xml:space="preserve">
+    <value>Nothing is playing right now.</value>
+  </data>
+  <data name="HotkeyConflict_Title" xml:space="preserve">
+    <value>Shortcut already in use</value>
+  </data>
+  <data name="HotkeyConflict_Message" xml:space="preserve">
+    <value>Windows has already assigned the combination {0}. Close the other application or reassign the shortcut in Settings.</value>
+  </data>
+  <data name="Startup_FailedMessage" xml:space="preserve">
+    <value>Could not configure automatic startup.</value>
+  </data>
+</root>

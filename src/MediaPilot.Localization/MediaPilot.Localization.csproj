@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>MediaPilot.Localization</RootNamespace>
+    <Description>User-facing strings for MediaPilot, with one satellite resource file per language.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      The neutral resource file holds the primary language (Spanish) and is
+      embedded in the main assembly. Every other language is a satellite
+      assembly named Strings.<culture>.resx.
+    -->
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>MSBuild:Compile</Generator>
+      <StronglyTypedFileName>$(IntermediateOutputPath)Strings.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+      <StronglyTypedNamespace>MediaPilot.Localization.Resources</StronglyTypedNamespace>
+      <StronglyTypedClassName>Strings</StronglyTypedClassName>
+      <PublicClass>true</PublicClass>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Resources\Strings.en.resx">
+      <DependentUpon>Strings.resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

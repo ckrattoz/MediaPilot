@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>MediaPilot.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MediaPilot.Core\MediaPilot.Core.csproj" />
+    <ProjectReference Include="..\MediaPilot.Platform\MediaPilot.Platform.csproj" />
+    <ProjectReference Include="..\MediaPilot.Configuration\MediaPilot.Configuration.csproj" />
+    <ProjectReference Include="..\MediaPilot.UI\MediaPilot.UI.csproj" />
+    <ProjectReference Include="..\MediaPilot.Localization\MediaPilot.Localization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\Icons\*.ico" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
