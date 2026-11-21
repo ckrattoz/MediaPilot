@@ -1,0 +1,35 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <!--
+      The installer is not part of the solution: it is a WiX project, built
+      by build/package.ps1, and it needs the published output of the
+      application to exist before it can be compiled.
+    -->
+    <OutputName>MediaPilot-$(ProductVersion)-x64</OutputName>
+    <OutputType>Package</OutputType>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <!--
+      ICE61 complains that the product removes a version equal to itself.
+      That is exactly what AllowSameVersionUpgrades asks for: reinstalling the
+      same version has to replace the previous installation.
+    -->
+    <SuppressIces>ICE61</SuppressIces>
+  </PropertyGroup>
+
+  <!--
+    The version comes from Directory.Build.props, the same place the
+    assembly reads it from, so the installer and the application never
+    disagree.
+  -->
+  <PropertyGroup>
+    <ProductVersion Condition="'$(ProductVersion)' == ''">$(VersionPrefix)</ProductVersion>
+    <PublishDirectory Condition="'$(PublishDirectory)' == ''">$(MSBuildThisFileDirectory)..\artifacts\publish\</PublishDirectory>
+    <DefineConstants>ProductVersion=$(ProductVersion);PublishDirectory=$(PublishDirectory)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" />
+  </ItemGroup>
+
+</Project>

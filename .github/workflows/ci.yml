@@ -91,9 +91,20 @@ jobs:
         shell: pwsh
         run: ./build/publish.ps1 -SingleFile -Runtime win-x64
 
+      - name: Build the installer
+        shell: pwsh
+        run: ./build/package.ps1
+
       - name: Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mediapilot-win-x64
           path: artifacts/publish/**
+          if-no-files-found: error
+
+      - name: Upload the installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: mediapilot-installer
+          path: artifacts/packages/**
           if-no-files-found: error

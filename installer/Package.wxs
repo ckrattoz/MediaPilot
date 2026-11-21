@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="MediaPilot"
+           Manufacturer="ckrattoz"
+           Version="$(ProductVersion)"
+           UpgradeCode="A9874E81-9A46-4CC2-A509-42D811E30025"
+           Scope="perMachine"
+           Compressed="yes"
+           InstallerVersion="500">
+
+    <MajorUpgrade AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of MediaPilot is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <Icon Id="ApplicationIcon" SourceFile="$(PublishDirectory)Resources\Icons\active.ico" />
+
+    <Feature Id="MainProgram" Title="MediaPilot" Level="1" AllowAbsent="no">
+      <!--
+        The published output is harvested as it is: every file becomes its own
+        component, so the installer can repair or replace them one by one.
+      -->
+      <Files Include="$(PublishDirectory)**\*.*" Directory="INSTALLFOLDER" />
+
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <ComponentGroup Id="StartMenuComponents" Directory="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut" Guid="6F0C2E14-3B95-4F0E-9C2A-6D7A1E4B8C33">
+        <Shortcut Id="MediaPilotShortcut"
+                  Name="MediaPilot"
+                  Description="Global multimedia control for Windows 11"
+                  Target="[INSTALLFOLDER]MediaPilot.App.exe"
+                  WorkingDirectory="INSTALLFOLDER" />
+        <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\ckrattoz\MediaPilot"
+                       Name="InstallFolder"
+                       Type="string"
+                       Value="[INSTALLFOLDER]"
+                       KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Property Id="ARPPRODUCTICON" Value="ApplicationIcon" />
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+  </Package>
+
+  <Fragment>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="MediaPilot" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="MediaPilot" />
+    </StandardDirectory>
+  </Fragment>
+
+</Wix>
