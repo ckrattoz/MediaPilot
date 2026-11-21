@@ -92,12 +92,44 @@ MediaCommandExecutor.Execute(MediaCommand)
      │             └──► 350 ms timer ──► INotificationPresenter.ShowVolume
      │
      └── ShowInformation
-              └──► INotificationPresenter.ShowMessage
+              └──► IMediaController.GetCurrentTrack ──► INotificationPresenter.ShowMessage
 ```
 
 The 350 ms delay before the volume notification is the behavior inherited from
 the original project: while the key is held down, no notification is emitted
 for each repetition.
+
+## Media sessions
+
+The track that is being played comes from the media session API of the system
+(`Windows.Media.Control`), not from the title of the foreground window.
+
+`MediaSessionMonitor` owns the session manager and follows its events:
+
+```
+Application that plays audio
+     │
+     ▼
+publishes a media session (title, artist, album, playback state)
+     │
+     ▼
+GlobalSystemMediaTransportControlsSessionManager
+     │
+     ├── CurrentSessionChanged ──► MediaSessionMonitor.RefreshAsync
+     └── MediaPropertiesChanged ─► MediaSessionMonitor.RefreshAsync
+     │
+     ▼
+MediaSessionMonitor.CurrentTrack  (MediaTrack: title and artist)
+     │
+     ▼
+IMediaController.GetCurrentTrack  ──►  MediaCommandExecutor
+```
+
+The API is asynchronous and the domain is not, so the monitor keeps the last
+known track in a field and the rest of the application reads that snapshot.
+The connection is started without blocking the user interface thread: until it
+answers, the application works without track information. The full reasoning is
+in [ADR 0008](adr/0008-media-session-smtc.md).
 
 ## Threading model
 
@@ -144,6 +176,28 @@ notification (`WM_SETTINGCHANGE`).
 `ShutdownMode` is `OnExplicitShutdown`: the application only ends when the
 user chooses *Exit* in the tray menu.
 
+## Packaging
+
+The application is published as a self-contained x64 executable and packaged
+in an MSI installer built with the WiX Toolset:
+
+```
+dotnet publish src/MediaPilot.App
+        │
+        ▼
+artifacts/publish/            (self-contained, includes the .NET runtime)
+        │
+        ▼
+installer/Package.wxs         (harvests the published output)
+        │
+        ▼
+artifacts/packages/MediaPilot-<version>-x64.msi
+```
+
+The installer is a WiX project outside the solution, because it needs the
+published output to exist before it can be compiled. The reasoning is in
+[ADR 0009](adr/0009-msi-installer-wix.md).
+
 ## Decision records
 
 Every choice with discarded alternatives has its ADR:
@@ -157,3 +211,5 @@ Every choice with discarded alternatives has its ADR:
 | [0005](adr/0005-registerhotkey-global-hotkeys.md) | `RegisterHotKey` instead of a global hook |
 | [0006](adr/0006-json-settings-store.md) | JSON configuration instead of the registry |
 | [0007](adr/0007-manual-composition-root.md) | Manual composition instead of a dependency injection container |
+| [0008](adr/0008-media-session-smtc.md) | Media session API for the track information |
+| [0009](adr/0009-msi-installer-wix.md) | MSI installer built with the WiX Toolset |

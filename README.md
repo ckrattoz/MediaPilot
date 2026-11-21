@@ -11,9 +11,10 @@ forced white background that is incompatible with dark mode, hotkeys that
 cannot be reconfigured) and replaces AutoHotkey's global hook with the system
 hotkey registration.
 
-> **Project status:** under active development. The core functionality and the
-> settings window are implemented; reading the actual track title (SMTC) and
-> packaging for distribution come in later phases.
+> **Project status:** under active development. The hotkeys, the volume
+> control, the notifications, the track information and the installer are
+> implemented. The next milestone is the distribution outside the development
+> environment.
 
 ---
 
@@ -62,6 +63,16 @@ All seven hotkeys are reconfigurable from **Settings → Global hotkeys**
 
 A gesture needs at least one modifier: a hotkey without modifiers would
 hijack that key system-wide, which is why validation rejects it.
+
+## Track information
+
+The *Track information* command reads the media session of the system
+(`Windows.Media.Control`, the API that every player publishes) and shows the
+title and the artist of what is playing.
+
+The original script read the title of the foreground window, which showed the
+title of any window of the system. The media session is the supported way and
+works with the browser, with Spotify and with the movies and TV application.
 
 ## Tray menu
 
@@ -126,13 +137,14 @@ MediaPilot.slnx
 │   ├── MediaPilot.Core/           Pure domain and contracts (net10.0)
 │   ├── MediaPilot.Configuration/  JSON store and paths (net10.0)
 │   ├── MediaPilot.Localization/   UI strings and culture resolution (net10.0)
-│   ├── MediaPilot.Platform/       Win32 interop: tray, hotkeys, volume, theme
+│   ├── MediaPilot.Platform/       Win32 and WinRT interop: tray, hotkeys, volume, theme, media sessions
 │   ├── MediaPilot.UI/             Windows, style resources and view models
 │   └── MediaPilot.App/            Composition root and entry point
 ├── tests/
 │   ├── MediaPilot.Core.Tests/     Domain and persistence
 │   └── MediaPilot.Platform.Tests/ Platform services
-├── build/                         Build and publish scripts
+├── installer/                     WiX project that builds the MSI
+├── build/                         Build, publish and packaging scripts
 └── docs/architecture/             Architecture and decision records
 ```
 
@@ -184,7 +196,7 @@ continuous integration:
 dotnet test MediaPilot.slnx -c Release
 ```
 
-## Publishing
+## Publishing and installation
 
 `build/publish.ps1` produces a self-contained executable (it does not require
 installing .NET on the target machine) or a runtime-dependent one, depending on
@@ -194,8 +206,22 @@ the `-SelfContained` parameter:
 ./build/publish.ps1 -SelfContained -Runtime win-x64
 ```
 
-The result ends up in `artifacts/publish/`. Distribution outside the development
-environment (installer, Store package) is planned for a later phase.
+The result ends up in `artifacts/publish/`.
+
+`build/package.ps1` goes one step further: it publishes the application and
+builds the MSI installer over that output, with the WiX Toolset (which comes
+from NuGet, there is nothing to install on the build machine):
+
+```powershell
+./build/package.ps1
+```
+
+The installer ends up in `artifacts/packages/`. It installs MediaPilot in
+`Program Files`, creates a shortcut in the Start menu and registers itself so
+that Windows can repair or uninstall it.
+
+The installer is a separate project and is not part of the solution: it needs
+the published output to exist before it can be compiled.
 
 ## License
 

@@ -7,6 +7,31 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-21
+
+Second milestone: the real track information and the installer.
+
+### Added
+
+- **Track information through the media session API.** The information command
+  shows the title and the artist of the track that is being played, read from
+  the media session of the system (`Windows.Media.Control`). The original
+  AutoHotkey script read the title of the foreground window, which showed the
+  title of any window of the system, not the title of the track.
+- **MSI installer built with the WiX Toolset.** The package installs the
+  application in `Program Files`, creates a shortcut in the Start menu and
+  registers itself so that Windows can repair or uninstall it. The toolset
+  comes from NuGet: there is no software to install on the build machine.
+- `build/package.ps1` publishes the application and builds the installer in
+  one step.
+
+### Changed
+
+- The projects that target Windows now use `net10.0-windows10.0.19041.0`,
+  which brings the Windows SDK projections needed by the media session API.
+  The minimum supported system does not change: the application already
+  required Windows 11 22H2.
+
 ## [0.1.0] - 2026-11-21
 
 First functional milestone of MediaPilot: the native Windows 11 application

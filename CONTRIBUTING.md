@@ -40,6 +40,13 @@ dotnet test MediaPilot.slnx -c Release         # tests only
 dotnet run --project src/MediaPilot.App/MediaPilot.App.csproj
 ```
 
+The installer is built separately, because it needs the published output of
+the application:
+
+```powershell
+./build/package.ps1                            # publish + MSI installer
+```
+
 Before opening a proposal:
 
 ```powershell
@@ -66,9 +73,11 @@ behind are not pushed.
   - `Core` knows neither Windows nor WPF.
   - `Configuration` does not know WPF.
   - `Localization` knows neither Windows nor WPF.
-  - `Platform` speaks Win32, not WPF.
+  - `Platform` speaks Win32 and WinRT, not WPF.
   - `UI` does not call Win32 directly.
   - Only `App` (and `CompositionRoot`) knows the concrete implementations.
+- The WinRT types never leave `MediaPilot.Platform`: the domain only sees
+  `MediaTrack`, a record with the title and the artist of the track.
 
 ## User interface text
 

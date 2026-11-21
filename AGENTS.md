@@ -18,9 +18,14 @@ modified, and it is not a submodule of this one.
 dotnet build MediaPilot.slnx -c Release        # build only
 dotnet test  MediaPilot.slnx -c Release        # tests only
 ./build/i18n.ps1 -Check                        # validate the resource files
-./build/publish.ps1 -SingleFile -Runtime win-x64
+./build/publish.ps1 -SelfContained -Runtime win-x64
+./build/package.ps1                            # publish + build the MSI installer
 dotnet run --project src/MediaPilot.App/MediaPilot.App.csproj
 ```
+
+The installer is a WiX project under `installer/`. It is **not** part of the
+solution: it needs the published output to exist before it can be compiled, so
+`build/package.ps1` publishes the application first and then builds it.
 
 The repository builds with `TreatWarningsAsErrors` and the .NET analyzers in
 `Recommended` mode. **A warning is an error.** Never silence a warning to make
@@ -91,12 +96,17 @@ platform type:
 | `MediaPilot.Core` | `net10.0` | Nothing platform specific |
 | `MediaPilot.Configuration` | `net10.0` | The file system |
 | `MediaPilot.Localization` | `net10.0` | The resource manager |
-| `MediaPilot.Platform` | `net10.0-windows` | Win32, not WPF |
-| `MediaPilot.UI` | `net10.0-windows` | WPF, not Win32 |
-| `MediaPilot.App` | `net10.0-windows` | Everything, in `CompositionRoot` |
+| `MediaPilot.Platform` | `net10.0-windows10.0.19041.0` | Win32 and WinRT, not WPF |
+| `MediaPilot.UI` | `net10.0-windows10.0.19041.0` | WPF, not Win32 |
+| `MediaPilot.App` | `net10.0-windows10.0.19041.0` | Everything, in `CompositionRoot` |
 
 `Core` must never reference Windows. If the domain needs to know about the
 operating system, the design is wrong.
+
+The Windows specific target framework is required by the media session API:
+the WinRT projections only exist there. `Platform`, `UI`, `App` and
+`Platform.Tests` all use it, and a project that references `Platform` has to
+use it too, otherwise the restore fails with NU1201.
 
 ## Things that are easy to break
 
@@ -108,6 +118,10 @@ operating system, the design is wrong.
   not make it fail silently.
 - **`waveOutGetVolume` does not work on Windows 11.** It returns
   `0xFFFFFFFF`. The volume goes through MMDevice.
+- **The track information comes from the media session API**, not from the
+  title of the foreground window. `MediaSessionMonitor` keeps the snapshot and
+  the domain only sees `MediaTrack`. The WinRT types stay in the platform
+  layer.
 - **The theme is resolved in code, never with `ThemeMode="System"`.** On a
   machine in a mixed configuration it produces an illegible UI. See
   [ADR 0002](docs/architecture/adr/0002-explicit-theme-resolution.md).
@@ -116,6 +130,9 @@ operating system, the design is wrong.
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
   satisfies CA1863.
+- **The installer does not declare a `<Compile>` item.** The WiX SDK already
+  includes the `.wxs` files of the folder: declaring them again compiles the
+  package twice and the files are harvested twice.
 
 ## Decision records
 
