@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MediaPilot.App/MediaPilot.App.csproj" />
+    <Project Path="src/MediaPilot.Configuration/MediaPilot.Configuration.csproj" />
+    <Project Path="src/MediaPilot.Core/MediaPilot.Core.csproj" />
+    <Project Path="src/MediaPilot.Localization/MediaPilot.Localization.csproj" />
+    <Project Path="src/MediaPilot.Platform/MediaPilot.Platform.csproj" />
+    <Project Path="src/MediaPilot.UI/MediaPilot.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MediaPilot.Core.Tests/MediaPilot.Core.Tests.csproj" />
+    <Project Path="tests/MediaPilot.Platform.Tests/MediaPilot.Platform.Tests.csproj" />
+  </Folder>
+</Solution>

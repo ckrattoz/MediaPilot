@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Install the .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          # global.json is honored so that the continuous integration uses
+          # exactly the SDK the project was developed against.
+          global-json-file: global.json
+
+      - name: Show the SDK version
+        run: dotnet --info
+
+      - name: Restore dependencies
+        run: dotnet restore MediaPilot.slnx
+
+      - name: Validate the localization resources
+        shell: pwsh
+        run: ./build/i18n.ps1 -Check
+
+      - name: Build
+        run: dotnet build MediaPilot.slnx --configuration Release --no-restore --nologo
+
+      - name: Run the tests
+        run: >
+          dotnet test MediaPilot.slnx
+          --configuration Release
+          --no-build
+          --nologo
+          --logger "trx;LogFileName=results.trx"
+          --collect:"XPlat Code Coverage"
+
+      - name: Upload the test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ${{ env.RUNNER_TEMP }}\*\TestResults\**
+          if-no-files-found: ignore
+
+      - name: Upload the coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage
+          path: ${{ env.RUNNER_TEMP }}\*\coverage*.json
+          if-no-files-found: ignore
+
+  publish:
+    name: Publish
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Install the .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Publish (self-contained)
+        shell: pwsh
+        run: ./build/publish.ps1 -SelfContained -Runtime win-x64
+
+      - name: Publish (single file)
+        shell: pwsh
+        run: ./build/publish.ps1 -SingleFile -Runtime win-x64
+
+      - name: Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mediapilot-win-x64
+          path: artifacts/publish/**
+          if-no-files-found: error
