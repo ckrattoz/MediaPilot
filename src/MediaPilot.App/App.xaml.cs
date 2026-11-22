@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Threading;
 using MediaPilot.Localization;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +32,7 @@ public partial class App : Application, IDisposable
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
 
         _composition = new CompositionRoot(this);
         _composition.Start();
@@ -83,5 +85,20 @@ public partial class App : Application, IDisposable
         {
             _logger?.LogCritical(exception, "Unhandled error.");
         }
+    }
+
+    /// <summary>
+    /// Handles the errors raised by the user interface.
+    /// </summary>
+    /// <remarks>
+    /// A failure in a window must not terminate the application: the icon
+    /// would disappear from the notification area and the shortcuts would stop
+    /// working. The error is written to the log and the application keeps
+    /// running.
+    /// </remarks>
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        _logger?.LogCritical(e.Exception, "Unhandled error in the user interface.");
+        e.Handled = true;
     }
 }

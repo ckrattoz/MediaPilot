@@ -197,7 +197,7 @@ public sealed class MediaCommandExecutor : IDisposable
         }
 
         return LocalizedFormat.Format(
-            CultureInfo.CurrentUICulture,
+            CultureInfo.CurrentCulture,
             Strings.Track_TitleArtistFormat,
             track.Title,
             track.Artist);

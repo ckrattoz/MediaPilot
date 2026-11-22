@@ -29,7 +29,7 @@ public sealed class NotificationPresenter : INotificationPresenter
         else
         {
             body = LocalizedFormat.Format(
-                CultureInfo.CurrentUICulture,
+                CultureInfo.CurrentCulture,
                 Strings.Notification_VolumeFormat,
                 direction,
                 volume);
@@ -38,8 +38,8 @@ public sealed class NotificationPresenter : INotificationPresenter
         if (!string.IsNullOrWhiteSpace(trackTitle))
         {
             body = muted
-                ? LocalizedFormat.Format(CultureInfo.CurrentUICulture, Strings.Notification_TrackFormat, direction, trackTitle)
-                : LocalizedFormat.Format(CultureInfo.CurrentUICulture, Strings.Notification_TrackVolumeFormat, direction, trackTitle, volume);
+                ? LocalizedFormat.Format(CultureInfo.CurrentCulture, Strings.Notification_TrackFormat, direction, trackTitle)
+                : LocalizedFormat.Format(CultureInfo.CurrentCulture, Strings.Notification_TrackVolumeFormat, direction, trackTitle, volume);
         }
 
         Show(title, body, VolumeDisplayDuration);

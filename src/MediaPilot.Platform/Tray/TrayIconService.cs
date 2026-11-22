@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using MediaPilot.Core.Contracts;
 using MediaPilot.Localization.Resources;
 using MediaPilot.Platform.Interop;
+using Microsoft.Extensions.Logging;
 
 namespace MediaPilot.Platform.Tray;
 
@@ -26,6 +27,7 @@ public sealed class TrayIconService : ITrayIcon, IDisposable
     private readonly string _activeIconPath;
     private readonly string _inactiveIconPath;
     private readonly HashSet<nint> _loadedIcons = [];
+    private readonly ILogger? _logger;
 
     private TrayIconState _state = TrayIconState.Active;
     private nint _currentIcon;
@@ -40,17 +42,20 @@ public sealed class TrayIconService : ITrayIcon, IDisposable
     /// <param name="router">Native message router.</param>
     /// <param name="activeIconPath">Path of the icon for the active state.</param>
     /// <param name="inactiveIconPath">Path of the icon for the inactive state.</param>
+    /// <param name="logger">Logger for the errors raised inside the window procedure.</param>
     public TrayIconService(
         nint windowHandle,
         NativeMessageRouter router,
         string activeIconPath,
-        string inactiveIconPath)
+        string inactiveIconPath,
+        ILogger? logger = null)
     {
         ArgumentNullException.ThrowIfNull(router);
 
         _windowHandle = windowHandle;
         _activeIconPath = activeIconPath;
         _inactiveIconPath = inactiveIconPath;
+        _logger = logger;
 
         router.Register(HandleMessage);
 
@@ -237,20 +242,33 @@ public sealed class TrayIconService : ITrayIcon, IDisposable
         // With NOTIFYICON_VERSION_4 the event travels in the low 16 bits of lParam.
         var evt = (int)((long)message.LParam & 0xFFFF);
 
-        switch (evt)
+        try
         {
-            case WmLButtonDblClk:
-                OpenRequested?.Invoke(this, EventArgs.Empty);
-                return true;
+            switch (evt)
+            {
+                case WmLButtonDblClk:
+                    OpenRequested?.Invoke(this, EventArgs.Empty);
+                    break;
 
-            case WmRButtonUp:
-            case WmContextMenu:
-                ShowContextMenu();
-                return true;
+                case WmRButtonUp:
+                case WmContextMenu:
+                    ShowContextMenu();
+                    break;
 
-            default:
-                return false;
+                default:
+                    break;
+            }
         }
+        catch (Exception exception)
+        {
+            // The handler runs inside a window procedure: an exception that
+            // escapes it terminates the process with a fatal error.
+            _logger?.LogError(exception, "The tray icon could not process the event {Event}.", evt);
+        }
+
+        // The message belongs to the icon: it is always consumed so that the
+        // default window procedure does not process it.
+        return true;
     }
 
     private void ShowContextMenu()
@@ -283,13 +301,41 @@ public sealed class TrayIconService : ITrayIcon, IDisposable
                 _windowHandle,
                 0);
 
-            MenuNativeMethods.SetForegroundWindow(_windowHandle);
+            PostDismissMessage();
 
             RaiseCommand(command);
+        }
+        catch (Exception exception)
+        {
+            // The menu is shown from a window procedure: an exception that
+            // escapes it terminates the process with a fatal error.
+            _logger?.LogError(exception, "The tray menu could not be displayed.");
         }
         finally
         {
             MenuNativeMethods.DeleteMenu(menu);
+        }
+    }
+
+    /// <summary>
+    /// Tells the owner window that the popup menu is over.
+    /// </summary>
+    /// <remarks>
+    /// A popup menu is dismissed by a null message posted to its owner window
+    /// right after it closes. Without it the menu stays on screen when the
+    /// user clicks outside of it and the application looks frozen.
+    /// </remarks>
+    private void PostDismissMessage()
+    {
+        try
+        {
+            NativeMethods.PostMessage(_windowHandle, User32.WmNull, 0, 0);
+        }
+        catch (Exception exception)
+        {
+            // The message is a courtesy for the window manager: a failure must
+            // not prevent the command of the user from being executed.
+            _logger?.LogError(exception, "The tray menu could not be dismissed.");
         }
     }
 

@@ -5,7 +5,15 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <!--
+      The runtime must not run in globalization-invariant mode. WPF resolves
+      its default language as "en-US" and the font cache builds real cultures,
+      so in invariant mode every window that shows text dies with a
+      CultureNotFoundException. The application needs the real cultures to
+      resolve the strings of the interface as well. See
+      docs/architecture/adr/0010-wpf-and-globalization-invariant-mode.md.
+    -->
+    <InvariantGlobalization>false</InvariantGlobalization>
     <NeutralLanguage>es</NeutralLanguage>
   </PropertyGroup>
 

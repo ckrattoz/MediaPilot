@@ -40,6 +40,10 @@ internal static partial class NativeMethods
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool ShowWindow(nint hWnd, int nCmdShow);
 
+    [LibraryImport("user32.dll", EntryPoint = "PostMessageW", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool PostMessage(nint hWnd, int msg, nint wParam, nint lParam);
+
     // ─────────────────────────── shell32 ───────────────────────────
 
     // Shell_NotifyIconW receives a structure with fixed-size string fields,
@@ -88,6 +92,15 @@ internal static class User32
 
     /// <summary>Hides the window without minimizing it.</summary>
     internal const int SwHide = 0;
+
+    /// <summary>
+    /// <c>WM_NULL</c> message.
+    /// </summary>
+    /// <remarks>
+    /// Posted to the owner window right after a popup menu closes so that the
+    /// menu is dismissed properly when the user clicks outside of it.
+    /// </remarks>
+    internal const int WmNull = 0x0000;
 }
 
 /// <summary>Types and constants for <c>shell32</c> interop.</summary>
