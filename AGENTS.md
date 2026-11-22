@@ -127,9 +127,24 @@ use it too, otherwise the restore fails with NU1201.
   [ADR 0002](docs/architecture/adr/0002-explicit-theme-resolution.md).
 - **The culture is applied before the first window is created.** XAML resolves
   the strings while the visual tree is built.
+- **Never enable the invariant globalization mode.** WPF uses `en-us` as the
+  default language of every element and builds real cultures in the font cache:
+  in invariant mode every window that shows text dies with a
+  `CultureNotFoundException` and the process ends with
+  `STATUS_FATAL_USER_CALLBACK_EXCEPTION`. `GlobalizationTests` guards it. See
+  [ADR 0010](docs/architecture/adr/0010-wpf-and-globalization-invariant-mode.md).
+- **Nothing that can fail runs inside the window procedure.** The tray menu is
+  shown from the host window procedure, that is, from inside a native callback:
+  an exception that escapes it terminates the process. The commands are
+  scheduled on the dispatcher and every call of the tray service is guarded.
+- **The popup menu is dismissed with `PostMessage(WM_NULL)`.** It is the
+  documented way to tell the owner window that the menu is over. Without it the
+  menu stays on screen when the user clicks outside of it.
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
-  satisfies CA1863.
+  satisfies CA1863. The format provider is `CultureInfo.CurrentCulture`: the
+  text of the message is already chosen by the resource manager with the
+  interface culture.
 - **The installer does not declare a `<Compile>` item.** The WiX SDK already
   includes the `.wxs` files of the folder: declaring them again compiles the
   package twice and the files are harvested twice.

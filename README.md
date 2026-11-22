@@ -29,6 +29,13 @@ hotkey registration.
 The repository pins the SDK version in [`global.json`](global.json). To build
 on another machine without the exact SDK, adjust the version number there.
 
+The runtime uses the globalization data of Windows, so the application needs a
+Windows installation with the standard locales. The invariant globalization
+mode is not an option: WPF resolves the default language of every element as
+`en-us` and builds real cultures in the font cache, and it dies as soon as a
+window shows text. See
+[ADR 0010](docs/architecture/adr/0010-wpf-and-globalization-invariant-mode.md).
+
 ## Build and run
 
 ```powershell
@@ -83,6 +90,10 @@ Right-click on the icon opens the native menu:
 - **Start with Windows** - toggles the `Run` key in the user registry.
 - **About** - version, copyright and link to the documentation.
 - **Exit** - terminates the application.
+
+The menu is the native one of Windows: it closes when the user clicks outside
+of it or presses Escape. The settings window and the about window are reused,
+so asking for them twice leaves a single window on screen.
 
 The icon changes appearance according to the state: with the hotkeys active it
 uses `active.ico`, and with the hotkeys disabled `inactive.ico`. The original

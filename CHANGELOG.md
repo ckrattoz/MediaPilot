@@ -7,6 +7,36 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-21
+
+Correction of the defect that closed the application when a window was opened
+from the tray menu.
+
+### Fixed
+
+- **The windows of the application no longer close the process.** The runtime
+  was configured in globalization-invariant mode, which leaves it without
+  cultures. WPF needs them: it uses `en-us` as the default language of every
+  element and builds real cultures in the font cache, so opening the settings
+  window or the about window died with a `CultureNotFoundException` and the
+  process was terminated with `STATUS_FATAL_USER_CALLBACK_EXCEPTION`. The
+  runtime now uses the cultures of the system. See
+  [ADR 0010](docs/architecture/adr/0010-wpf-and-globalization-invariant-mode.md).
+- **The context menu of the tray icon closes when the user clicks outside of
+  it.** The owner window is notified with `PostMessage(WM_NULL)` right after
+  the menu closes, which is the documented way to dismiss a popup menu.
+- **An error in the user interface does not terminate the application.** The
+  commands of the tray menu are scheduled on the dispatcher instead of running
+  inside the window procedure, and every error is written to the log.
+
+### Changed
+
+- The format provider of the localized messages is now the regional culture
+  instead of the interface culture. The text of the message is still chosen by
+  the resource manager with the interface culture.
+- The settings window and the about window are reused instead of opening a new
+  copy every time they are requested from the tray menu.
+
 ## [0.2.0] - 2026-11-21
 
 Second milestone: the real track information and the installer.

@@ -213,3 +213,4 @@ Every choice with discarded alternatives has its ADR:
 | [0007](adr/0007-manual-composition-root.md) | Manual composition instead of a dependency injection container |
 | [0008](adr/0008-media-session-smtc.md) | Media session API for the track information |
 | [0009](adr/0009-msi-installer-wix.md) | MSI installer built with the WiX Toolset |
+| [0010](adr/0010-wpf-and-globalization-invariant-mode.md) | Real cultures for WPF and a tray menu that cannot take the application down |
