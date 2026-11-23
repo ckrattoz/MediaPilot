@@ -7,6 +7,27 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-23
+
+Correction of the reliability of the playback commands.
+
+### Fixed
+
+- **The pause and play command is reliable.** The media keys were injected
+  with their virtual key, so the event arrived as an ordinary key to the
+  focused window and never went through the media key router of Windows: the
+  change between playing and paused happened only sometimes, and it depended
+  on the window that had the focus. The keys are now injected with their scan
+  code, the same way a physical media key reaches the system. See
+  [ADR 0012](docs/architecture/adr/0012-media-keys-with-their-scan-code.md).
+- **The next track and previous track commands use the same mechanism**, with
+  the same route through the system.
+
+### Added
+
+- Tests that assert that the media keys are injected with their scan code and
+  not with their virtual key.
+
 ## [0.2.2] - 2026-11-21
 
 Correction of the defect that left the playback commands without effect.

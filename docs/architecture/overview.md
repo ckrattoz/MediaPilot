@@ -215,3 +215,4 @@ Every choice with discarded alternatives has its ADR:
 | [0009](adr/0009-msi-installer-wix.md) | MSI installer built with the WiX Toolset |
 | [0010](adr/0010-wpf-and-globalization-invariant-mode.md) | Real cultures for WPF and a tray menu that cannot take the application down |
 | [0011](adr/0011-native-size-of-the-injected-structures.md) | Native size for the structures that inject the media keys |
+| [0012](adr/0012-media-keys-with-their-scan-code.md) | Media keys injected with their scan code |

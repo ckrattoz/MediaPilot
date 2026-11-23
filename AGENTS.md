@@ -146,6 +146,12 @@ use it too, otherwise the restore fails with NU1201.
   the whole call with `ERROR_INVALID_PARAMETER` when the structure does not
   match. `KeyInputTests` guards it. See
   [ADR 0011](docs/architecture/adr/0011-native-size-of-the-injected-structures.md).
+- **The media keys are injected with their scan code.** An event injected as a
+  virtual key arrives as an ordinary key to the focused window and never
+  reaches the media key router of Windows, so the playback commands behave in
+  a random way. `KeyInputService` asks `MapVirtualKey` for the scan code and
+  builds the events with `wVk = 0`. See
+  [ADR 0012](docs/architecture/adr/0012-media-keys-with-their-scan-code.md).
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
   satisfies CA1863. The format provider is `CultureInfo.CurrentCulture`: the
