@@ -101,7 +101,7 @@ public sealed class CompositionRoot : IDisposable
         _volume = new WindowsVolumeController();
 
         _mediaSessions = new MediaSessionMonitor(_loggerFactory.CreateLogger<MediaSessionMonitor>());
-        var media = new WindowsMediaController(_mediaSessions);
+        var media = new WindowsMediaController(_mediaSessions, _loggerFactory.CreateLogger<WindowsMediaController>());
         _notifications = new NotificationPresenter();
 
         _executor = new MediaCommandExecutor(media, _volume, _notifications, _settings.NotificationDebounceMs);
