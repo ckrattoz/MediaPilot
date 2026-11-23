@@ -140,6 +140,12 @@ use it too, otherwise the restore fails with NU1201.
 - **The popup menu is dismissed with `PostMessage(WM_NULL)`.** It is the
   documented way to tell the owner window that the menu is over. Without it the
   menu stays on screen when the user clicks outside of it.
+- **The injected structures must have the size of the native ones.** The union
+  of `INPUT` declares every member of the native union, not only the one that
+  is used: its size is the size of the largest member, and `SendInput` rejects
+  the whole call with `ERROR_INVALID_PARAMETER` when the structure does not
+  match. `KeyInputTests` guards it. See
+  [ADR 0011](docs/architecture/adr/0011-native-size-of-the-injected-structures.md).
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
   satisfies CA1863. The format provider is `CultureInfo.CurrentCulture`: the

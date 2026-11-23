@@ -7,6 +7,28 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-21
+
+Correction of the defect that left the playback commands without effect.
+
+### Fixed
+
+- **The pause, next track and previous track commands work again.** The
+  playback commands are sent to the system as the media keys of the keyboard,
+  the same way the original script did. The structure that describes the
+  injected events was declared with a single member in its union, so it was 32
+  bytes instead of the 40 bytes that the native structure has on x64, and the
+  system rejected the whole call with `ERROR_INVALID_PARAMETER` before
+  injecting anything. The union now declares every member of the native one.
+  See [ADR 0011](docs/architecture/adr/0011-native-size-of-the-injected-structures.md).
+- **A rejected key is written to the log.** The result of the injection was
+  discarded, so the failure of a playback command was invisible.
+
+### Added
+
+- Tests that assert the size of the injected structure and that the system
+  accepts it.
+
 ## [0.2.1] - 2026-11-21
 
 Correction of the defect that closed the application when a window was opened
