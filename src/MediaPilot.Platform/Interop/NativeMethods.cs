@@ -44,6 +44,9 @@ internal static partial class NativeMethods
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool PostMessage(nint hWnd, int msg, nint wParam, nint lParam);
 
+    [LibraryImport("user32.dll", EntryPoint = "MapVirtualKeyW")]
+    internal static partial uint MapVirtualKey(uint uCode, uint uMapType);
+
     // ─────────────────────────── shell32 ───────────────────────────
 
     // Shell_NotifyIconW receives a structure with fixed-size string fields,
@@ -89,6 +92,12 @@ internal static class User32
 
     /// <summary>Extended key flag (arrows, media keys).</summary>
     internal const uint KeyEventExtended = 0x0001;
+
+    /// <summary>The event carries a scan code instead of a virtual key.</summary>
+    internal const uint KeyEventScancode = 0x0008;
+
+    /// <summary>Translation of a virtual key into a scan code.</summary>
+    internal const uint MapVkToVsc = 0x0000;
 
     /// <summary>Hides the window without minimizing it.</summary>
     internal const int SwHide = 0;

@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
+using MediaPilot.Core;
 using MediaPilot.Platform.Interop;
+using MediaPilot.Platform.Input;
 
 namespace MediaPilot.Platform.Tests;
 
@@ -59,5 +61,31 @@ public sealed class KeyInputTests
             // ERROR_INVALID_PARAMETER (87).
             Assert.NotEqual(87, Marshal.GetLastWin32Error());
         }
+    }
+
+    [Theory]
+    [InlineData(VirtualKey.MediaPlayPause)]
+    [InlineData(VirtualKey.MediaNextTrack)]
+    [InlineData(VirtualKey.MediaPreviousTrack)]
+    public void TheMediaKeysAreInjectedWithTheirScanCode(VirtualKey key)
+    {
+        var inputs = KeyInputService.BuildInputs(key);
+
+        Assert.Equal(2, inputs.Length);
+
+        foreach (var input in inputs)
+        {
+            // The scan code is what the media key router of Windows watches:
+            // an event injected as a virtual key never reaches it.
+            Assert.Equal(0, input.U.ki.wVk);
+            Assert.NotEqual(0, input.U.ki.wScan);
+            Assert.NotEqual(0u, input.U.ki.dwFlags & User32.KeyEventScancode);
+            Assert.NotEqual(0u, input.U.ki.dwFlags & User32.KeyEventExtended);
+        }
+
+        // The press and the release carry the same scan code.
+        Assert.Equal(inputs[0].U.ki.wScan, inputs[1].U.ki.wScan);
+        Assert.NotEqual(0u, inputs[1].U.ki.dwFlags & User32.KeyEventKeyUp);
+        Assert.Equal(0u, inputs[0].U.ki.dwFlags & User32.KeyEventKeyUp);
     }
 }
