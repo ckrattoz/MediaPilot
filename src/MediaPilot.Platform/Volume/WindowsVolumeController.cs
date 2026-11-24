@@ -1,6 +1,4 @@
-using System.Runtime.InteropServices;
 using MediaPilot.Core.Contracts;
-using MediaPilot.Platform.Interop;
 
 namespace MediaPilot.Platform.Volume;
 
@@ -16,31 +14,60 @@ namespace MediaPilot.Platform.Volume;
 /// returns <c>0xFFFFFFFF</c> because the legacy mixer no longer exposes the
 /// master volume.
 /// </para>
+/// <para>
+/// The device is resolved on every operation and it is never kept: the user
+/// can change the default output device at any moment, and the volume
+/// commands have to follow the device that is the default now.
+/// </para>
 /// </remarks>
 public sealed class WindowsVolumeController : IVolumeController, IDisposable
 {
     /// <summary>Percentage points that a volume command changes.</summary>
     private const int VolumeStepPercent = 1;
 
-    private IAudioEndpointVolume? _endpointVolume;
+    private readonly IAudioEndpointResolver _resolver;
+
+    /// <summary>
+    /// Initializes the controller with the resolver of the system.
+    /// </summary>
+    public WindowsVolumeController()
+        : this(new MMDeviceAudioEndpointResolver())
+    {
+    }
+
+    /// <summary>
+    /// Initializes the controller with a resolver.
+    /// </summary>
+    /// <remarks>
+    /// The resolver is asked for the device on every operation, so a test can
+    /// return a different device each time and assert that the controller
+    /// follows the default one.
+    /// </remarks>
+    /// <param name="resolver">Resolver of the default output device.</param>
+    internal WindowsVolumeController(IAudioEndpointResolver resolver)
+    {
+        ArgumentNullException.ThrowIfNull(resolver);
+
+        _resolver = resolver;
+    }
 
     /// <inheritdoc />
     public bool TryGetVolume(out int volume)
     {
         volume = 0;
 
-        var endpoint = GetEndpointVolume();
-        if (endpoint is null)
+        var control = _resolver.Resolve();
+        if (control is null)
         {
             return false;
         }
 
-        if (endpoint.GetMasterVolumeLevelScalar(out var scalar) != AudioConstants.SOk)
+        if (!control.TryGetLevel(out var level))
         {
             return false;
         }
 
-        volume = (int)Math.Round(Math.Clamp(scalar, 0f, 1f) * 100f, MidpointRounding.AwayFromZero);
+        volume = (int)Math.Round(Math.Clamp(level, 0f, 1f) * 100f, MidpointRounding.AwayFromZero);
         return true;
     }
 
@@ -49,32 +76,25 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
     {
         muted = false;
 
-        var endpoint = GetEndpointVolume();
-        if (endpoint is null)
+        var control = _resolver.Resolve();
+        if (control is null)
         {
             return false;
         }
 
-        if (endpoint.GetMute(out var state) != AudioConstants.SOk)
-        {
-            return false;
-        }
-
-        muted = state;
-        return true;
+        return control.TryGetMuted(out muted);
     }
 
     /// <inheritdoc />
     public bool TrySetMuted(bool muted)
     {
-        var endpoint = GetEndpointVolume();
-        if (endpoint is null)
+        var control = _resolver.Resolve();
+        if (control is null)
         {
             return false;
         }
 
-        var context = Guid.Empty;
-        return endpoint.SetMute(muted, ref context) == AudioConstants.SOk;
+        return control.SetMuted(muted);
     }
 
     /// <inheritdoc />
@@ -84,7 +104,8 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
     public bool TryDecreaseVolume() => TryChangeVolume(-VolumeStepPercent, liftMute: false);
 
     /// <summary>
-    /// Changes the volume by a fixed number of percentage points.
+    /// Changes the volume of the default output device by a fixed number of
+    /// percentage points.
     /// </summary>
     /// <remarks>
     /// <para>
@@ -104,25 +125,23 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
     /// <returns><see langword="true"/> if the volume could be read.</returns>
     private bool TryChangeVolume(int delta, bool liftMute)
     {
-        var endpoint = GetEndpointVolume();
-        if (endpoint is null)
+        var control = _resolver.Resolve();
+        if (control is null)
         {
             return false;
         }
 
-        if (endpoint.GetMasterVolumeLevelScalar(out var scalar) != AudioConstants.SOk)
+        if (!control.TryGetLevel(out var level))
         {
             return false;
         }
 
-        var current = (int)Math.Round(Math.Clamp(scalar, 0f, 1f) * 100f, MidpointRounding.AwayFromZero);
+        var current = (int)Math.Round(Math.Clamp(level, 0f, 1f) * 100f, MidpointRounding.AwayFromZero);
         var target = Math.Clamp(current + delta, 0, 100);
 
-        var context = Guid.Empty;
-
-        if (liftMute && endpoint.GetMute(out var muted) == AudioConstants.SOk && muted)
+        if (liftMute && control.TryGetMuted(out var muted) && muted)
         {
-            endpoint.SetMute(false, ref context);
+            control.SetMuted(false);
         }
 
         if (target == current)
@@ -132,57 +151,12 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
             return true;
         }
 
-        return endpoint.SetMasterVolumeLevelScalar(target / 100f, ref context) == AudioConstants.SOk;
-    }
-
-    private IAudioEndpointVolume? GetEndpointVolume()
-    {
-        if (_endpointVolume is not null)
-        {
-            return _endpointVolume;
-        }
-
-        try
-        {
-            var enumerator = (IMMDeviceEnumerator)new MMDeviceEnumeratorClass();
-
-            if (enumerator.GetDefaultAudioEndpoint(
-                    AudioConstants.EDataFlowRender,
-                    AudioConstants.ERoleMultimedia,
-                    out var device) != AudioConstants.SOk)
-            {
-                return null;
-            }
-
-            if (device.Activate(
-                    typeof(IAudioEndpointVolume).GUID,
-                    AudioConstants.ClsctxAll,
-                    IntPtr.Zero,
-                    out var instance) != AudioConstants.SOk)
-            {
-                return null;
-            }
-
-            _endpointVolume = (IAudioEndpointVolume)Marshal.GetObjectForIUnknown(instance);
-            return _endpointVolume;
-        }
-        catch (Exception)
-        {
-            // No output device or no permissions: the notification simply
-            // will not show the volume level.
-            return null;
-        }
+        return control.SetLevel(target / 100f);
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        if (_endpointVolume is not null)
-        {
-            Marshal.ReleaseComObject(_endpointVolume);
-            _endpointVolume = null;
-        }
-
         GC.SuppressFinalize(this);
     }
 }

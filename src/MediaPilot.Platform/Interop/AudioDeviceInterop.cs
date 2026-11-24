@@ -8,6 +8,9 @@ internal static class AudioConstants
     /// <summary>Playback data flow.</summary>
     internal const int EDataFlowRender = 0;
 
+    /// <summary>Console role: the device that the sound panel shows as the default output.</summary>
+    internal const int ERoleConsole = 0;
+
     /// <summary>Multimedia role: the device where audio applications play.</summary>
     internal const int ERoleMultimedia = 1;
 
