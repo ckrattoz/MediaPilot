@@ -20,15 +20,6 @@ public sealed class AppSettings
     /// <summary>Indicates whether volume notifications are displayed.</summary>
     public bool ShowNotifications { get; init; } = true;
 
-    /// <summary>
-    /// Delay, in milliseconds, before showing the volume notification.
-    /// </summary>
-    /// <remarks>
-    /// 350 ms is the value inherited from the original project and it prevents
-    /// repeated notifications from being sent while a key is held down.
-    /// </remarks>
-    public int NotificationDebounceMs { get; init; } = 350;
-
     /// <summary>User interface theme preference.</summary>
     public ThemePreference Theme { get; init; } = ThemePreference.Auto;
 

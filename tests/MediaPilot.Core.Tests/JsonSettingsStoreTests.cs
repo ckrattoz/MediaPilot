@@ -25,7 +25,6 @@ public sealed class JsonSettingsStoreTests : IDisposable
         Assert.True(settings.HotkeysEnabled);
         Assert.True(settings.ShowNotifications);
         Assert.False(settings.StartWithWindows);
-        Assert.Equal(350, settings.NotificationDebounceMs);
         Assert.Equal(ThemePreference.Auto, settings.Theme);
         Assert.Equal(AppSettings.CurrentSchemaVersion, settings.SchemaVersion);
     }
@@ -40,7 +39,6 @@ public sealed class JsonSettingsStoreTests : IDisposable
             ShowNotifications = false,
             StartWithWindows = true,
             Theme = ThemePreference.Dark,
-            NotificationDebounceMs = 500,
             Hotkeys = [new HotkeyBinding(new HotkeyGesture(ModifierKeys.Control | ModifierKeys.Win, VirtualKey.F5), MediaCommand.Next)],
         };
 
@@ -51,7 +49,6 @@ public sealed class JsonSettingsStoreTests : IDisposable
         Assert.False(actual.ShowNotifications);
         Assert.True(actual.StartWithWindows);
         Assert.Equal(ThemePreference.Dark, actual.Theme);
-        Assert.Equal(500, actual.NotificationDebounceMs);
         Assert.Single(actual.Hotkeys);
         Assert.Equal(MediaCommand.Next, actual.Hotkeys[0].Command);
         Assert.Equal(VirtualKey.F5, actual.Hotkeys[0].Gesture.Key);

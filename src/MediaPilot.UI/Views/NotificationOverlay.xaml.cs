@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 using MediaPilot.Platform.Interop;
 
 namespace MediaPilot.UI.Views;
@@ -18,6 +19,8 @@ public partial class NotificationOverlay : Window
 {
     private const double OverlayMargin = 12;
 
+    private readonly DispatcherTimer _dismissTimer;
+
     /// <summary>
     /// Initializes the notification window.
     /// </summary>
@@ -31,6 +34,13 @@ public partial class NotificationOverlay : Window
         Topmost = true;
         SizeToContent = SizeToContent.Height;
         Width = 320;
+
+        _dismissTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+        _dismissTimer.Tick += OnDismissTimerTick;
+
+        // The notification stays anchored to the corner of the screen while
+        // its content changes.
+        SizeChanged += (_, _) => PositionAtBottomRight();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -49,8 +59,7 @@ public partial class NotificationOverlay : Window
     /// <param name="duration">Time visible before closing.</param>
     public void Show(string title, string message, TimeSpan duration)
     {
-        TitleText.Text = title;
-        MessageText.Text = message;
+        Update(title, message, duration);
 
         // The position is computed on Loaded, not before: until the first
         // layout the real size of the window is unknown and the notification
@@ -59,19 +68,32 @@ public partial class NotificationOverlay : Window
 
         Show();
         Activate();
+    }
 
-        var timer = new System.Windows.Threading.DispatcherTimer
-        {
-            Interval = duration,
-        };
+    /// <summary>
+    /// Updates the content of a notification that is already on screen.
+    /// </summary>
+    /// <remarks>
+    /// The time on screen starts again, so the notification stays visible
+    /// while the value it shows keeps changing.
+    /// </remarks>
+    /// <param name="title">Notification title.</param>
+    /// <param name="message">Notification body.</param>
+    /// <param name="duration">Time visible before closing.</param>
+    public void Update(string title, string message, TimeSpan duration)
+    {
+        TitleText.Text = title;
+        MessageText.Text = message;
 
-        timer.Tick += (_, _) =>
-        {
-            timer.Stop();
-            Close();
-        };
+        _dismissTimer.Stop();
+        _dismissTimer.Interval = duration;
+        _dismissTimer.Start();
+    }
 
-        timer.Start();
+    private void OnDismissTimerTick(object? sender, EventArgs e)
+    {
+        _dismissTimer.Stop();
+        Close();
     }
 
     private void PositionAtBottomRight()

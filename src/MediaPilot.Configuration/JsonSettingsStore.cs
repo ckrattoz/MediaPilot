@@ -91,7 +91,6 @@ public sealed class JsonSettingsStore : ISettingsStore
             HotkeysEnabled = settings.HotkeysEnabled,
             StartWithWindows = settings.StartWithWindows,
             ShowNotifications = settings.ShowNotifications,
-            NotificationDebounceMs = settings.NotificationDebounceMs,
             Theme = settings.Theme,
             Hotkeys = settings.Hotkeys,
         };

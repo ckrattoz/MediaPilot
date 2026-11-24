@@ -19,13 +19,6 @@ public sealed class MediaCommandExecutor : IDisposable
     private readonly IMediaController _mediaController;
     private readonly IVolumeController _volumeController;
     private readonly INotificationPresenter _notifications;
-    private readonly Timer _debounceTimer;
-
-    private int _pendingVolume;
-    private bool _pendingMuted;
-    private bool _pendingIncreased;
-    private bool _hasPendingVolume;
-    private int _debounceTimerDelay = 350;
 
     /// <summary>
     /// Initializes the executor.
@@ -33,12 +26,10 @@ public sealed class MediaCommandExecutor : IDisposable
     /// <param name="mediaController">Media playback control.</param>
     /// <param name="volumeController">Volume control.</param>
     /// <param name="notifications">Notification presenter.</param>
-    /// <param name="notificationDebounceMs">Delay before showing the volume notification.</param>
     public MediaCommandExecutor(
         IMediaController mediaController,
         IVolumeController volumeController,
-        INotificationPresenter notifications,
-        int notificationDebounceMs = 350)
+        INotificationPresenter notifications)
     {
         ArgumentNullException.ThrowIfNull(mediaController);
         ArgumentNullException.ThrowIfNull(volumeController);
@@ -47,14 +38,16 @@ public sealed class MediaCommandExecutor : IDisposable
         _mediaController = mediaController;
         _volumeController = volumeController;
         _notifications = notifications;
-        _debounceTimerDelay = notificationDebounceMs;
-
-        _debounceTimer = new Timer(
-            _ => FlushVolumeNotification(),
-            null,
-            Timeout.Infinite,
-            Timeout.Infinite);
     }
+
+    /// <summary>
+    /// Indicates whether the volume notifications are displayed.
+    /// </summary>
+    /// <remarks>
+    /// It follows the setting of the same name, which the user can change
+    /// from the settings window while the application is running.
+    /// </remarks>
+    public bool ShowNotifications { get; set; } = true;
 
     /// <summary>
     /// Executes a command.
@@ -91,16 +84,9 @@ public sealed class MediaCommandExecutor : IDisposable
         }
     }
 
-    /// <summary>
-    /// Defines the delay before showing the volume notification.
-    /// </summary>
-    /// <param name="milliseconds">Delay in milliseconds.</param>
-    public void SetDebounceDelay(int milliseconds) => _debounceTimerDelay = milliseconds;
-
     /// <inheritdoc />
     public void Dispose()
     {
-        _debounceTimer.Dispose();
         GC.SuppressFinalize(this);
     }
 
@@ -115,12 +101,7 @@ public sealed class MediaCommandExecutor : IDisposable
             return;
         }
 
-        _pendingIncreased = increased;
-        _hasPendingVolume = true;
-
-        // The notification is delayed so that holding the key down does not
-        // produce one notification per repetition.
-        _debounceTimer.Change(_debounceTimerDelay, Timeout.Infinite);
+        ShowVolumeNotification(increased: increased, muted: false);
     }
 
     private void ToggleMute()
@@ -135,11 +116,41 @@ public sealed class MediaCommandExecutor : IDisposable
             return;
         }
 
-        _pendingMuted = !muted;
-        _hasPendingVolume = true;
-        _pendingIncreased = false;
+        ShowVolumeNotification(increased: false, muted: !muted);
+    }
 
-        _debounceTimer.Change(_debounceTimerDelay, Timeout.Infinite);
+    /// <summary>
+    /// Shows the volume that the system has right now.
+    /// </summary>
+    /// <remarks>
+    /// The notification is shown right away and the presenter updates the one
+    /// that is already on screen, so the user sees the volume going up while
+    /// the key is held down. The delay of the original project was needed
+    /// because every notification was a new balloon and they piled up.
+    /// </remarks>
+    /// <param name="increased">Whether the volume was raised.</param>
+    /// <param name="muted">Whether the device is silent now.</param>
+    private void ShowVolumeNotification(bool increased, bool muted)
+    {
+        if (!ShowNotifications)
+        {
+            return;
+        }
+
+        var volume = 0;
+
+        if (!muted && _volumeController.TryGetVolume(out var current))
+        {
+            volume = current;
+        }
+
+        var track = _mediaController.GetCurrentTrack();
+
+        _notifications.ShowVolume(
+            volume,
+            muted,
+            increased,
+            track is null || track.IsEmpty ? null : DescribeTrack(track));
     }
 
     private void ShowInformation()
@@ -151,31 +162,6 @@ public sealed class MediaCommandExecutor : IDisposable
             track is null || track.IsEmpty
                 ? Strings.Executor_NoTrackPlaying
                 : DescribeTrack(track));
-    }
-
-    private void FlushVolumeNotification()
-    {
-        if (!_hasPendingVolume)
-        {
-            return;
-        }
-
-        _hasPendingVolume = false;
-
-        var volume = _pendingMuted ? 0 : _pendingVolume;
-        if (!_pendingMuted && _volumeController.TryGetVolume(out var current))
-        {
-            volume = current;
-        }
-
-        _pendingVolume = volume;
-
-        var track = _mediaController.GetCurrentTrack();
-        _notifications.ShowVolume(
-            volume,
-            _pendingMuted,
-            _pendingIncreased,
-            track is null || track.IsEmpty ? null : DescribeTrack(track));
     }
 
     /// <summary>

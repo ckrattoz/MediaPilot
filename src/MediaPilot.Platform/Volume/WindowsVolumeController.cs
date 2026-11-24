@@ -19,6 +19,9 @@ namespace MediaPilot.Platform.Volume;
 /// </remarks>
 public sealed class WindowsVolumeController : IVolumeController, IDisposable
 {
+    /// <summary>Percentage points that a volume command changes.</summary>
+    private const int VolumeStepPercent = 1;
+
     private IAudioEndpointVolume? _endpointVolume;
 
     /// <inheritdoc />
@@ -75,20 +78,31 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
     }
 
     /// <inheritdoc />
-    public bool TryIncreaseVolume()
-    {
-        var endpoint = GetEndpointVolume();
-        if (endpoint is null)
-        {
-            return false;
-        }
-
-        var context = Guid.Empty;
-        return endpoint.VolumeStepUp(ref context) == AudioConstants.SOk;
-    }
+    public bool TryIncreaseVolume() => TryChangeVolume(VolumeStepPercent, liftMute: true);
 
     /// <inheritdoc />
-    public bool TryDecreaseVolume()
+    public bool TryDecreaseVolume() => TryChangeVolume(-VolumeStepPercent, liftMute: false);
+
+    /// <summary>
+    /// Changes the volume by a fixed number of percentage points.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The step of the system is not used: it is two points, and the user
+    /// asked for the volume to move one point at a time. The level is set
+    /// with <c>SetMasterVolumeLevelScalar</c> instead of stepping, and it is
+    /// worked in whole points so that the steps land exactly on the numbers
+    /// that the interface shows.
+    /// </para>
+    /// <para>
+    /// Raising the volume lifts the silence, which is what the volume key of
+    /// the keyboard does, and what the original project did.
+    /// </para>
+    /// </remarks>
+    /// <param name="delta">Points to add, positive or negative.</param>
+    /// <param name="liftMute">Whether the silence is lifted.</param>
+    /// <returns><see langword="true"/> if the volume could be read.</returns>
+    private bool TryChangeVolume(int delta, bool liftMute)
     {
         var endpoint = GetEndpointVolume();
         if (endpoint is null)
@@ -96,8 +110,29 @@ public sealed class WindowsVolumeController : IVolumeController, IDisposable
             return false;
         }
 
+        if (endpoint.GetMasterVolumeLevelScalar(out var scalar) != AudioConstants.SOk)
+        {
+            return false;
+        }
+
+        var current = (int)Math.Round(Math.Clamp(scalar, 0f, 1f) * 100f, MidpointRounding.AwayFromZero);
+        var target = Math.Clamp(current + delta, 0, 100);
+
         var context = Guid.Empty;
-        return endpoint.VolumeStepDown(ref context) == AudioConstants.SOk;
+
+        if (liftMute && endpoint.GetMute(out var muted) == AudioConstants.SOk && muted)
+        {
+            endpoint.SetMute(false, ref context);
+        }
+
+        if (target == current)
+        {
+            // The volume is already at the limit: there is nothing to change,
+            // but the caller still shows the level that the system has.
+            return true;
+        }
+
+        return endpoint.SetMasterVolumeLevelScalar(target / 100f, ref context) == AudioConstants.SOk;
     }
 
     private IAudioEndpointVolume? GetEndpointVolume()

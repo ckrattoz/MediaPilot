@@ -104,7 +104,11 @@ public sealed class CompositionRoot : IDisposable
         var media = new WindowsMediaController(_mediaSessions, _loggerFactory.CreateLogger<WindowsMediaController>());
         _notifications = new NotificationPresenter();
 
-        _executor = new MediaCommandExecutor(media, _volume, _notifications, _settings.NotificationDebounceMs);
+        _executor = new MediaCommandExecutor(media, _volume, _notifications)
+        {
+            ShowNotifications = _settings.ShowNotifications,
+        };
+
         _hotkeys.CommandTriggered += (_, command) => _executor.Execute(command);
 
         _tray.OpenRequested += (_, _) => RunOnDispatcher(() => ShowSettings(settingsStore));
@@ -241,7 +245,6 @@ public sealed class CompositionRoot : IDisposable
             ShowNotifications = _settings.ShowNotifications,
             StartWithWindows = _settings.StartWithWindows,
             Theme = _settings.Theme,
-            NotificationDebounceMs = _settings.NotificationDebounceMs,
             Hotkeys = _settings.Hotkeys,
         };
 
@@ -281,7 +284,6 @@ public sealed class CompositionRoot : IDisposable
             ShowNotifications = _settings.ShowNotifications,
             StartWithWindows = desired,
             Theme = _settings.Theme,
-            NotificationDebounceMs = _settings.NotificationDebounceMs,
             Hotkeys = _settings.Hotkeys,
         };
 
@@ -310,6 +312,17 @@ public sealed class CompositionRoot : IDisposable
         }
 
         var viewModel = new SettingsViewModel(settingsStore, _hotkeys, new WindowsStartupService(Environment.ProcessPath ?? string.Empty));
+
+        // The settings that the application uses while it is running are
+        // updated as soon as the user saves them.
+        viewModel.Saved += (_, _) =>
+        {
+            if (_executor is not null)
+            {
+                _executor.ShowNotifications = viewModel.ShowNotifications;
+            }
+        };
+
         var window = new SettingsWindow(viewModel);
         window.Closed += (_, _) => _settingsWindow = null;
         _settingsWindow = window;

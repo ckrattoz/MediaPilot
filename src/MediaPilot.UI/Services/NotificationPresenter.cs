@@ -4,6 +4,7 @@ using MediaPilot.Core;
 using MediaPilot.Core.Contracts;
 using MediaPilot.Localization;
 using MediaPilot.Localization.Resources;
+using MediaPilot.UI.Views;
 
 namespace MediaPilot.UI.Services;
 
@@ -14,6 +15,8 @@ public sealed class NotificationPresenter : INotificationPresenter
 {
     private static readonly TimeSpan VolumeDisplayDuration = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan MessageDisplayDuration = TimeSpan.FromSeconds(3);
+
+    private NotificationOverlay? _overlay;
 
     /// <inheritdoc />
     public void ShowVolume(int volume, bool muted, bool increased, string? trackTitle)
@@ -48,11 +51,16 @@ public sealed class NotificationPresenter : INotificationPresenter
     /// <inheritdoc />
     public void ShowMessage(string title, string message) => Show(title, message, MessageDisplayDuration);
 
-    private static void Show(string title, string message, TimeSpan duration)
+    private void Show(string title, string message, TimeSpan duration)
     {
         var dispatcher = Application.Current?.Dispatcher;
 
-        if (dispatcher is null || dispatcher.CheckAccess())
+        if (dispatcher is null)
+        {
+            return;
+        }
+
+        if (dispatcher.CheckAccess())
         {
             Present(title, message, duration);
             return;
@@ -61,9 +69,36 @@ public sealed class NotificationPresenter : INotificationPresenter
         dispatcher.BeginInvoke(() => Present(title, message, duration));
     }
 
-    private static void Present(string title, string message, TimeSpan duration)
+    /// <summary>
+    /// Shows the notification, or updates the one that is already on screen.
+    /// </summary>
+    /// <remarks>
+    /// There is only one notification at a time: the one that is visible is
+    /// updated in place, so the volume is seen going up while the key is
+    /// held down and the notifications never pile up.
+    /// </remarks>
+    /// <param name="title">Notification title.</param>
+    /// <param name="message">Notification body.</param>
+    /// <param name="duration">Time visible before closing.</param>
+    private void Present(string title, string message, TimeSpan duration)
     {
-        var overlay = new Views.NotificationOverlay();
+        if (_overlay is not null && _overlay.IsVisible)
+        {
+            _overlay.Update(title, message, duration);
+            return;
+        }
+
+        var overlay = new NotificationOverlay();
+        overlay.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(_overlay, overlay))
+            {
+                _overlay = null;
+            }
+        };
+
+        _overlay = overlay;
+
         overlay.Show(title, message, duration);
     }
 }

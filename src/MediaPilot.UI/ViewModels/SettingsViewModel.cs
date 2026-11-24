@@ -56,10 +56,6 @@ public sealed partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     private ThemePreference _theme = ThemePreference.Auto;
 
-    /// <summary>Delay before showing the volume notification, in milliseconds.</summary>
-    [ObservableProperty]
-    private int _notificationDebounceMs = 350;
-
     /// <summary>
     /// Raised when the view model has applied and saved the changes.
     /// </summary>
@@ -77,7 +73,6 @@ public sealed partial class SettingsViewModel : ObservableObject
         ShowNotifications = settings.ShowNotifications;
         StartWithWindows = settings.StartWithWindows;
         Theme = settings.Theme;
-        NotificationDebounceMs = settings.NotificationDebounceMs;
 
         Hotkeys.Clear();
         foreach (var binding in settings.Hotkeys)
@@ -99,7 +94,6 @@ public sealed partial class SettingsViewModel : ObservableObject
             ShowNotifications = ShowNotifications,
             StartWithWindows = StartWithWindows,
             Theme = Theme,
-            NotificationDebounceMs = NotificationDebounceMs,
             Hotkeys = [.. Hotkeys
                 .Where(h => h.Gesture is not null)
                 .Select(h => new HotkeyBinding(h.Gesture!.Value, h.Command))],
