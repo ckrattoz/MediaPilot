@@ -31,8 +31,8 @@ The repository builds with `TreatWarningsAsErrors` and the .NET analyzers in
 `Recommended` mode. **A warning is an error.** Never silence a warning to make
 the build pass without understanding it.
 
-The tests are 39 in total: 23 in `MediaPilot.Core.Tests` (no Windows needed)
-and 16 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
+The tests are 50 in total: 29 in `MediaPilot.Core.Tests` (no Windows needed)
+and 21 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
 
 ## Language rules
 
@@ -152,6 +152,14 @@ use it too, otherwise the restore fails with NU1201.
   a random way. `KeyInputService` asks `MapVirtualKey` for the scan code and
   builds the events with `wVk = 0`. See
   [ADR 0012](docs/architecture/adr/0012-media-keys-with-their-scan-code.md).
+- **The volume moves one point at a time and the notification is live.** The
+  level is read with `GetMasterVolumeLevelScalar`, increased by one point and
+  written back with `SetMasterVolumeLevelScalar`: the step of the system is two
+  points and it does not lift the silence. Raising the volume has to lift it.
+  The notification is shown on every change, without any debounce, and the
+  overlay that is on screen is updated in place instead of opening another one.
+  See
+  [ADR 0013](docs/architecture/adr/0013-volume-step-and-live-notification.md).
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
   satisfies CA1863. The format provider is `CultureInfo.CurrentCulture`: the

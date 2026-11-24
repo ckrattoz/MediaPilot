@@ -85,19 +85,24 @@ MediaCommandExecutor.Execute(MediaCommand)
      │
      ├── VolumeUp / VolumeDown
      │        └──► IVolumeController.TryIncreaseVolume / TryDecreaseVolume
-     │             └──► 350 ms timer ──► INotificationPresenter.ShowVolume
+     │             └──► INotificationPresenter.ShowVolume (immediately)
      │
      ├── VolumeMute
      │        └──► IVolumeController.TrySetMuted(!current)
-     │             └──► 350 ms timer ──► INotificationPresenter.ShowVolume
+     │             └──► INotificationPresenter.ShowVolume (immediately)
      │
      └── ShowInformation
               └──► IMediaController.GetCurrentTrack ──► INotificationPresenter.ShowMessage
 ```
 
-The 350 ms delay before the volume notification is the behavior inherited from
-the original project: while the key is held down, no notification is emitted
-for each repetition.
+The volume notification is shown on every change and without any delay. The
+overlay that is on screen is updated in place, so the volume is seen going up
+while the key is held down and the notifications never pile up. The delay of
+the original project was needed because every notification was a new balloon.
+
+The volume moves one point at a time, and raising it lifts the silence, the
+same way the volume key of the keyboard does. See
+[ADR 0013](adr/0013-volume-step-and-live-notification.md).
 
 ## Media sessions
 

@@ -125,7 +125,6 @@ hotkey from *Settings → Keyboard shortcuts*.
   "HotkeysEnabled": true,
   "StartWithWindows": false,
   "ShowNotifications": true,
-  "NotificationDebounceMs": 350,
   "Theme": "Auto",
   "Hotkeys": [
     {

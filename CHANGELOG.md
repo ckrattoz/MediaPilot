@@ -7,6 +7,39 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-11-23
+
+Change in the way the volume is moved and in the way its notification is shown.
+
+### Changed
+
+- **The volume moves one point at a time.** It used the step of the system,
+  which is two percentage points. The level is now read, increased by one point
+  and written back, so the notification shows exactly the level that the system
+  has.
+- **The notification of the volume is live.** The 350 ms delay inherited from
+  the original script is removed: the notification is shown on every change and
+  the one that is on screen is updated in place, so the volume is seen going up
+  while the key is held down and the notifications never pile up. The setting
+  `NotificationDebounceMs` is removed with it.
+- **Raising the volume lifts the silence**, the same way the volume key of the
+  keyboard does and the same way the original script did.
+
+### Fixed
+
+- **The setting "Show notifications" works.** It was exposed in the settings
+  window but the executor never read it, so the notification appeared even with
+  it turned off. It is also applied as soon as the settings are saved.
+
+### Added
+
+- Tests that assert that the notification is shown immediately, that every
+  change of the volume notifies again and that nothing is notified when the
+  notifications are turned off.
+
+See
+[ADR 0013](docs/architecture/adr/0013-volume-step-and-live-notification.md).
+
 ## [0.2.3] - 2026-11-23
 
 Correction of the reliability of the playback commands.
