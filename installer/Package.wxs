@@ -68,21 +68,25 @@
                        Value="[INSTALLFOLDER]"
                        KeyPath="yes" />
         <!--
-          The entry that starts MediaPilot with Windows is written by the
-          application itself, in the Run key of the current user, and only
-          when the user asks for it. The row below removes it when the
-          program is installed, which is what the table of Windows Installer
-          does with these values: it cleans up what a previous installation
-          left behind.
+          The entry that starts MediaPilot with Windows belongs to the
+          <c>Run</c> key of the current user, and it is written by the
+          application itself when the user asks for it.
 
-          It does not remove it when the program is uninstalled, because
-          Windows Installer only removes the values that the package itself
-          wrote. The ownership of that entry is still to be decided: see
-          ADR 0016.
+          The installer writes it as well, with the argument that identifies it
+          as the entry of the installer, because Windows Installer only
+          removes the registry values that the package itself wrote: with this
+          row the uninstaller takes the entry away with the program. The
+          application reconciles it with the setting of the user when it
+          starts, and it ends without running when the installer started it
+          and the user has not enabled the automatic start.
+
+          See ADR 0017.
         -->
-        <RemoveRegistryValue Root="HKCU"
-                             Key="Software\Microsoft\Windows\CurrentVersion\Run"
-                             Name="MediaPilot" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="MediaPilot"
+                       Type="string"
+                       Value="&quot;[INSTALLFOLDER]MediaPilot.App.exe&quot; --installer-startup" />
         <!--
           The program lives in the profile of the user, so the folders that
           the installation creates have to go away with it. The action of the

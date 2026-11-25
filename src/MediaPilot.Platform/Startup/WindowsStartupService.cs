@@ -16,6 +16,18 @@ public sealed class WindowsStartupService : IStartupService
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private const string ValueName = "MediaPilot";
 
+    /// <summary>
+    /// Argument that the installer adds to the entry of the automatic start.
+    /// </summary>
+    /// <remarks>
+    /// The installer registers the program in the <c>Run</c> key, because
+    /// Windows Installer only removes the registry values that the package
+    /// itself wrote. The argument tells the program that the entry that
+    /// started it was written by the installer and not by the user, so it can
+    /// check the setting of the user before it stays in the notification area.
+    /// </remarks>
+    public const string InstallerStartupArgument = "--installer-startup";
+
     private readonly string _executablePath;
 
     /// <summary>
@@ -26,6 +38,30 @@ public sealed class WindowsStartupService : IStartupService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(executablePath);
         _executablePath = executablePath;
+    }
+
+    /// <summary>
+    /// Indicates whether the program was started by the entry that the
+    /// installer registered.
+    /// </summary>
+    /// <param name="arguments">Arguments of the process.</param>
+    /// <returns>
+    /// <see langword="true"/> when the arguments contain the argument of the
+    /// installer.
+    /// </returns>
+    public static bool IsInstallerStartup(IReadOnlyList<string> arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+
+        for (var index = 0; index < arguments.Count; index++)
+        {
+            if (string.Equals(arguments[index], InstallerStartupArgument, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <inheritdoc />

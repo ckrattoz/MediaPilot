@@ -40,6 +40,7 @@ public sealed class CompositionRoot : IDisposable
     private const string IconFolder = "Resources/Icons";
 
     private readonly App _application;
+    private readonly IReadOnlyList<string> _startupArguments;
     private readonly NativeMessageRouter _router = new();
     private readonly ThemeManager _themeManager = new();
     private readonly Dispatcher _dispatcher;
@@ -61,10 +62,13 @@ public sealed class CompositionRoot : IDisposable
     /// Initializes the composition root.
     /// </summary>
     /// <param name="application">Host application.</param>
-    public CompositionRoot(App application)
+    /// <param name="startupArguments">Arguments of the process.</param>
+    public CompositionRoot(App application, IReadOnlyList<string> startupArguments)
     {
         ArgumentNullException.ThrowIfNull(application);
+        ArgumentNullException.ThrowIfNull(startupArguments);
         _application = application;
+        _startupArguments = startupArguments;
         _dispatcher = Dispatcher.CurrentDispatcher;
     }
 
@@ -85,6 +89,14 @@ public sealed class CompositionRoot : IDisposable
 
         var settingsStore = new JsonSettingsStore(AppPaths.SettingsFile, _loggerFactory.CreateLogger<JsonSettingsStore>());
         _settings = settingsStore.Load();
+
+        // The entry of the automatic start is registered by the installer, so
+        // that the uninstaller can take it away with the program. The program
+        // decides what to do with it when it starts.
+        if (!ApplyStartupRegistration())
+        {
+            return;
+        }
 
         _systemTheme = new WindowsThemeService();
         _themeManager.Apply(_settings.Theme, _systemTheme.IsDark);
@@ -305,6 +317,40 @@ public sealed class CompositionRoot : IDisposable
 
         settingsStore.Save(_settings);
         _tray?.SetStartupEnabled(desired);
+    }
+
+    /// <summary>
+    /// Applies the setting of the automatic start to the entry of the
+    /// registration.
+    /// </summary>
+    /// <remarks>
+    /// The installer registers the program in the <c>Run</c> key of the user,
+    /// because Windows Installer only removes the registry values that the
+    /// package itself wrote, and the entry has to disappear with the program.
+    /// The entry always mirrors the setting of the user.
+    ///
+    /// When the program is started by the entry that the installer wrote and
+    /// the user has not enabled the automatic start, the entry is removed and
+    /// the program ends: it does not stay in the notification area on its
+    /// own.
+    /// </remarks>
+    /// <returns>
+    /// <see langword="false"/> when the program has to end without running.
+    /// </returns>
+    private bool ApplyStartupRegistration()
+    {
+        var startup = new WindowsStartupService(Environment.ProcessPath ?? string.Empty);
+        var startedByInstaller = WindowsStartupService.IsInstallerStartup(_startupArguments);
+
+        if (StartupPolicy.ShouldDisableAndExit(startedByInstaller, _settings.StartWithWindows))
+        {
+            startup.TrySetEnabled(false);
+            _application.Shutdown();
+            return false;
+        }
+
+        startup.TrySetEnabled(_settings.StartWithWindows);
+        return true;
     }
 
     private void ShowSettings(ISettingsStore settingsStore)

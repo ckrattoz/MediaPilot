@@ -34,7 +34,7 @@ public partial class App : Application, IDisposable
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         DispatcherUnhandledException += OnDispatcherUnhandledException;
 
-        _composition = new CompositionRoot(this);
+        _composition = new CompositionRoot(this, e.Args);
         _composition.Start();
 
         // A dedicated reference to the logger is kept: after shutdown the
