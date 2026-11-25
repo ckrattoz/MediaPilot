@@ -154,6 +154,7 @@ MediaPilot.slnx
 │   ├── MediaPilot.Core.Tests/     Domain and persistence
 │   └── MediaPilot.Platform.Tests/ Platform services
 ├── installer/                     WiX project that builds the MSI
+│   ├── Localization/              Texts of the installer, in Spanish
 ├── build/                         Build, publish and packaging scripts
 └── docs/architecture/             Architecture and decision records
 ```
@@ -229,6 +230,13 @@ from NuGet, there is nothing to install on the build machine):
 The installer ends up in `artifacts/packages/`. It installs MediaPilot in
 `Program Files`, creates a shortcut in the Start menu and registers itself so
 that Windows can repair or uninstall it.
+
+The installer is in **Spanish**, the neutral language of the product, and its
+texts live in `installer/Localization/MediaPilot.es-ES.wxl`. The license it
+shows is the MIT license of the project, in `installer/License.rtf`. The
+uninstaller closes MediaPilot, removes the files and the shortcut, and removes
+the entry that starts it with Windows; the settings and the log of the
+application are kept, because they belong to the user.
 
 The installer is a separate project and is not part of the solution: it needs
 the published output to exist before it can be compiled.

@@ -175,6 +175,21 @@ use it too, otherwise the restore fails with NU1201.
 - **The installer does not declare a `<Compile>` item.** The WiX SDK already
   includes the `.wxs` files of the folder: declaring them again compiles the
   package twice and the files are harvested twice.
+- **The installer does not declare an `<EmbeddedResource>` item either.** The
+  SDK includes the `.wxl` files of the folder on its own, and declaring them
+  again makes the build fail with a duplicated localization identifier.
+- **The texts of the installer live in
+  `installer/Localization/MediaPilot.es-ES.wxl`.** The installer is built for
+  one culture, the one declared in the `Cultures` property of the WiX project.
+  A string that does not exist in the extension is a build error: check the
+  identifiers of the extension before adding one.
+- **The license of the installer is `installer/License.rtf`**, bound to the
+  variable `WixUILicenseRtf`. The extension carries a placeholder license with
+  a Latin filler text, and it is what the user sees if the binding is missing.
+- **The uninstaller has to close the application.** MediaPilot lives in the
+  notification area: `util:CloseApplication` asks it to close, and the
+  application answers `WM_CLOSE` and exits. See
+  [ADR 0015](docs/architecture/adr/0015-installer-texts-and-uninstaller.md).
 
 ## Decision records
 

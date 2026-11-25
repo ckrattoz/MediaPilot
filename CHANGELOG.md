@@ -7,6 +7,42 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-24
+
+The installer speaks the language of the product and leaves nothing behind.
+
+### Fixed
+
+- **The license of the installer is the real one.** The dialog showed the
+  literal Lorem ipsum that the WixUI extension carries for the projects that
+  do not bring a license. It now shows the MIT license of MediaPilot.
+- **The uninstaller removes the entry that starts MediaPilot with Windows.**
+  It was left behind, so Windows tried to run an executable that no longer
+  existed at every logon.
+- **The uninstaller closes the application.** MediaPilot lives in the
+  notification area and it was still running, with its files deleted, until
+  the user found the icon. The installer asks it to close and the application
+  answers.
+
+### Changed
+
+- **The installer is in Spanish**, the neutral language of the product, and
+  its texts are the ones of MediaPilot instead of the generic ones of WiX. The
+  tone is the same as the one of the application.
+- The entry of the installed programs has the icon, a description and the link
+  to the repository.
+
+### Added
+
+- The file `installer/Localization/MediaPilot.es-ES.wxl`, which holds the texts
+  of the installer, and the file `installer/License.rtf`, which holds the
+  license.
+- The application answers `WM_CLOSE` and `WM_QUERYENDSESSION`, so it closes
+  when the installer asks it to and when the session of Windows ends.
+
+See
+[ADR 0015](docs/architecture/adr/0015-installer-texts-and-uninstaller.md).
+
 ## [0.2.5] - 2026-11-24
 
 Correction of the defect that left the volume commands without effect when the

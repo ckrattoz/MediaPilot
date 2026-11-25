@@ -3,6 +3,8 @@
 - **Status:** Accepted
 - **Date:** 2026-11-21
 - **Decides:** How MediaPilot is packaged and installed on the user machine.
+- **Extended by:** [ADR 0015](0015-installer-texts-and-uninstaller.md), which
+  decides the texts of the installer and what the uninstaller leaves behind.
 
 ## Context
 
@@ -73,4 +75,7 @@ publishes the application first and then builds the installer.
 - **Accepted:** the application does not register itself to start with Windows.
   The setting belongs to the application, which writes the `Run` key of the
   current user. Having the installer and the application write the same key
-  would mean two sources of truth for the same setting.
+  would mean two sources of truth for the same setting. The installer does
+  remove that entry when the program is uninstalled, so that it does not try
+  to start an executable that is gone. See
+  [ADR 0015](0015-installer-texts-and-uninstaller.md).
