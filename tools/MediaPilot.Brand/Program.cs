@@ -77,13 +77,14 @@ internal static class Program
     {
         var shapes = new List<(string, BrandShape, bool)>
         {
-            ("Base · con tile, punta viva", BrandShape.Bold, true),
+            ("Elegida · barra 26, hueco 30, punta 18", BrandShape.Bold, true),
+            ("Punta viva, sin truncar", BrandShape.Bold with { TipTruncation = 0 }, true),
             ("Punta truncada 10", BrandShape.Bold with { TipTruncation = 10 }, true),
-            ("Punta truncada 18", BrandShape.Bold with { TipTruncation = 18 }, true),
-            ("Punta truncada 18 · sin tile", BrandShape.Bold with { TipTruncation = 18 }, false),
-            ("Punta truncada 18 · barras altas", BrandShape.Bold with { TipTruncation = 18, SideBarHeight = 68, SideBarOffset = 16 }, true),
-            ("Punta truncada 18 · triangulo ancho", BrandShape.Bold with { TipTruncation = 18, TriangleWidth = 88, TriangleHeight = 104 }, true),
-            ("Punta truncada 18 · barras iguales", BrandShape.Bold with { TipTruncation = 18, SideBarHeight = 62, SideBarOffset = 16 }, true),
+            ("Sin tile · solo la onda", BrandShape.Bold, false),
+            ("Barras altas 68", BrandShape.Bold with { SideBarHeight = 68 }, true),
+            ("Barras cortas 52", BrandShape.Bold with { SideBarHeight = 52 }, true),
+            ("Sin desplazamiento", BrandShape.Bold with { SideBarOffset = 0 }, true),
+            ("Hueco amplio 38", BrandShape.Bold with { BarGap = 38 }, true),
         };
 
         var sheet = ShapeSheet.Build(shapes);
