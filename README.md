@@ -227,16 +227,19 @@ from NuGet, there is nothing to install on the build machine):
 ./build/package.ps1
 ```
 
-The installer ends up in `artifacts/packages/`. It installs MediaPilot in
-`Program Files`, creates a shortcut in the Start menu and registers itself so
-that Windows can repair or uninstall it.
+The installer ends up in `artifacts/packages/`. It installs MediaPilot for the
+current user, in `%LOCALAPPDATA%\Programs\MediaPilot`, **without asking for the
+privileges of an administrator**: the program belongs to the user in every
+point, so there is nothing to install for the whole computer. It creates a
+shortcut in the Start menu and registers itself so that Windows can repair or
+uninstall it.
 
 The installer is in **Spanish**, the neutral language of the product, and its
 texts live in `installer/Localization/MediaPilot.es-ES.wxl`. The license it
 shows is the MIT license of the project, in `installer/License.rtf`. The
-uninstaller closes MediaPilot, removes the files and the shortcut, and removes
-the entry that starts it with Windows; the settings and the log of the
-application are kept, because they belong to the user.
+uninstaller closes MediaPilot, removes the files, the folders and the
+shortcut, and removes the entry that starts it with Windows; the settings and
+the log of the application are kept, because they belong to the user.
 
 The installer is a separate project and is not part of the solution: it needs
 the published output to exist before it can be compiled.

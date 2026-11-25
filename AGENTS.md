@@ -190,6 +190,20 @@ use it too, otherwise the restore fails with NU1201.
   notification area: `util:CloseApplication` asks it to close, and the
   application answers `WM_CLOSE` and exits. See
   [ADR 0015](docs/architecture/adr/0015-installer-texts-and-uninstaller.md).
+- **The package is installed for the current user.** It is declared with
+  `Scope="perUser"` and it installs into `%LOCALAPPDATA%\Programs\MediaPilot`,
+  so it never asks for the elevation of an administrator. The key path of the
+  component that registers the program is a value of `HKCU`, so the state of
+  the installation belongs to the user. See
+  [ADR 0016](docs/architecture/adr/0016-per-user-installation.md).
+- **The uninstaller removes the tree of folders of the installation.** The
+  files live in the profile of the user and the folders of the languages of the
+  runtime change with the version of .NET, so the rows of the `RemoveFile`
+  table cannot be written when the package is built:
+  `util:RemoveFolderEx` writes them when the program is uninstalled, with the
+  folders that exist at that moment. The folder is read back from the registry
+  (`HKCU\Software\ckrattoz\MediaPilot\InstallFolder`), because the property of
+  the installation directory is not resolved anymore at that point.
 
 ## Decision records
 

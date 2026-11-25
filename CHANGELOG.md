@@ -7,6 +7,32 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-25
+
+The installer installs the program for the user who runs it, without asking
+for the privileges of an administrator.
+
+### Changed
+
+- **The installation is per user and it does not ask for the elevation.** The
+  program belongs to the user in every point: its settings, its shortcut, its
+  entry of start-up, its hotkeys and its icon in the notification area. The
+  installer asked for the privileges of an administrator only to write in a
+  folder that nothing else uses, and it registered the installation for the
+  whole computer, so two users of the same machine fought over the same
+  hotkeys.
+- The program is installed in `%LOCALAPPDATA%\Programs\MediaPilot`, the place
+  that Windows reserves for the programs of the user, and the state of the
+  installation is registered in the registry of that user.
+- **The uninstaller removes the tree of folders.** A per-user installation
+  lives in the profile, so the uninstaller has to take the folders with the
+  files, including the folders of the languages of the runtime, whose number
+  changes with the version of .NET. The action of the Util extension walks the
+  installation folder and removes every file and every folder that it finds.
+
+See
+[ADR 0016](docs/architecture/adr/0016-per-user-installation.md).
+
 ## [0.3.0] - 2026-11-24
 
 The installer speaks the language of the product and leaves nothing behind.

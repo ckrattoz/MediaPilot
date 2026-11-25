@@ -227,3 +227,7 @@ Every choice with discarded alternatives has its ADR:
 | [0010](adr/0010-wpf-and-globalization-invariant-mode.md) | Real cultures for WPF and a tray menu that cannot take the application down |
 | [0011](adr/0011-native-size-of-the-injected-structures.md) | Native size for the structures that inject the media keys |
 | [0012](adr/0012-media-keys-with-their-scan-code.md) | Media keys injected with their scan code |
+| [0013](adr/0013-volume-step-and-live-notification.md) | Volume step of one point and live notification |
+| [0014](adr/0014-default-output-device-is-resolved-every-time.md) | The default output device is resolved on every operation |
+| [0015](adr/0015-installer-texts-and-uninstaller.md) | Texts of the installer in Spanish and a complete uninstaller |
+| [0016](adr/0016-per-user-installation.md) | Installation for the current user, without elevation |

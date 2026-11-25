@@ -5,6 +5,9 @@
 - **Decides:** How MediaPilot is packaged and installed on the user machine.
 - **Extended by:** [ADR 0015](0015-installer-texts-and-uninstaller.md), which
   decides the texts of the installer and what the uninstaller leaves behind.
+- **Extended by:** [ADR 0016](0016-per-user-installation.md), which decides who
+  installs MediaPilot and where it is installed. The package is no longer
+  installed for the whole computer.
 
 ## Context
 
@@ -40,7 +43,9 @@ the one every version of Windows understands.
 - The package installs into `Program Files\MediaPilot`, creates a Start menu
   shortcut and registers itself so that Windows Installer can repair or
   uninstall it. `MajorUpgrade` with a fixed `UpgradeCode` allows upgrading
-  from one version to the next.
+  from one version to the next. (The folder and the scope of the
+  installation were changed later: see
+  [ADR 0016](0016-per-user-installation.md).)
 - The version is read from `Directory.Build.props`, the same place the
   assembly reads it from, so the installer and the application never disagree.
 
