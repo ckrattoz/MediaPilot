@@ -34,6 +34,8 @@ namespace MediaPilot.App;
 /// </remarks>
 public sealed class CompositionRoot : IDisposable
 {
+    private const int WmClose = 0x0010;
+    private const int WmQueryEndSession = 0x0011;
     private const int WmSettingChange = 0x001A;
     private const string IconFolder = "Resources/Icons";
 
@@ -171,6 +173,20 @@ public sealed class CompositionRoot : IDisposable
 
     private IntPtr OnWindowMessage(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
+        if (msg == WmClose || msg == WmQueryEndSession)
+        {
+            // The installer asks the application to close before it replaces
+            // or removes its files, and Windows asks it to close when the
+            // session ends. The application has no state to save, so it just
+            // leaves.
+            RunOnDispatcher(() => _application.Shutdown());
+
+            // The answer to WM_QUERYENDSESSION is left to the default window
+            // procedure, which allows the session to end.
+            handled = msg == WmClose;
+            return IntPtr.Zero;
+        }
+
         if (msg == WmSettingChange)
         {
             _systemTheme?.NotifyThemeChanged();

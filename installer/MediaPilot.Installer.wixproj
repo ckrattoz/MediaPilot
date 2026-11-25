@@ -10,6 +10,13 @@
     <OutputType>Package</OutputType>
     <InstallerPlatform>x64</InstallerPlatform>
     <!--
+      The installer is built in Spanish, the neutral language of the product.
+      The WixUI extension brings its own translation for that culture and the
+      file Localization\MediaPilot.es-ES.wxl overrides the texts that are
+      generic.
+    -->
+    <Cultures>es-ES</Cultures>
+    <!--
       ICE61 complains that the product removes a version equal to itself.
       That is exactly what AllowSameVersionUpgrades asks for: reinstalling the
       same version has to replace the previous installation.
@@ -30,6 +37,22 @@
 
   <ItemGroup>
     <PackageReference Include="WixToolset.UI.wixext" />
+    <PackageReference Include="WixToolset.Util.wixext" />
   </ItemGroup>
+
+  <!--
+    The texts of the installer are in Spanish: it is the neutral language of
+    the product. The file Localization\MediaPilot.es-ES.wxl overrides the
+    generic texts of the WixUI extension, and its culture is the one that is
+    built. The SDK includes the .wxl files of the project on its own.
+  -->
+
+  <!--
+    The license that the installer shows is the real MIT license of the
+    project, instead of the placeholder text that the extension brings.
+  -->
+  <PropertyGroup>
+    <WixVariables>WixUILicenseRtf=$(MSBuildThisFileDirectory)License.rtf</WixVariables>
+  </PropertyGroup>
 
 </Project>

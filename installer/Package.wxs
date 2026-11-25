@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
   <Package Name="MediaPilot"
            Manufacturer="ckrattoz"
@@ -11,11 +12,22 @@
            InstallerVersion="500">
 
     <MajorUpgrade AllowSameVersionUpgrades="yes"
-                  DowngradeErrorMessage="A newer version of MediaPilot is already installed." />
+                  DowngradeErrorMessage="[MediaPilotDowngradeMessage]" />
 
     <MediaTemplate EmbedCab="yes" />
 
     <Icon Id="ApplicationIcon" SourceFile="$(PublishDirectory)Resources\Icons\active.ico" />
+
+    <!--
+      MediaPilot lives in the notification area and holds its files open, so
+      the installer has to close it before it can replace or remove them. The
+      application answers the close request by exiting.
+    -->
+    <util:CloseApplication Id="CloseMediaPilot"
+                           Target="MediaPilot.App.exe"
+                           CloseMessage="yes"
+                           RebootPrompt="no"
+                           Description="Cierra MediaPilot para que el instalador pueda terminar." />
 
     <Feature Id="MainProgram" Title="MediaPilot" Level="1" AllowAbsent="no">
       <!--
@@ -25,6 +37,7 @@
       <Files Include="$(PublishDirectory)**\*.*" Directory="INSTALLFOLDER" />
 
       <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="RemoveStartupRegistration" />
     </Feature>
 
     <ComponentGroup Id="StartMenuComponents" Directory="ApplicationProgramsFolder">
@@ -44,7 +57,28 @@
       </Component>
     </ComponentGroup>
 
+    <ComponentGroup Id="UninstallCleanupComponents" Directory="INSTALLFOLDER">
+      <Component Id="RemoveStartupRegistration" Guid="2B6F4A18-7C3D-4E9A-8B05-6F1D9E7C4A22">
+        <!--
+          The entry that starts MediaPilot with Windows is written by the
+          application itself, in the Run key of the current user, and only
+          when the user asks for it. The installer removes it when the
+          program is uninstalled, so that a leftover entry does not try to
+          start an executable that no longer exists.
+
+          The row has no install action: it only removes the value when the
+          program is uninstalled.
+        -->
+        <RemoveRegistryValue Root="HKCU"
+                             Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                             Name="MediaPilot" />
+      </Component>
+    </ComponentGroup>
+
     <Property Id="ARPPRODUCTICON" Value="ApplicationIcon" />
+    <Property Id="ARPCOMMENTS"
+              Value="Atajos multimedia globales para Windows 11." />
+    <Property Id="ARPHELPLINK" Value="https://github.com/ckrattoz/MediaPilot" />
 
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
 

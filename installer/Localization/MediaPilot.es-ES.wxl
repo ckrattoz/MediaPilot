@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Textos del instalador de MediaPilot.
+
+  La extension WixUI trae sus propias traducciones al castellano, pero son
+  la traduccion literal de los textos genericos de WiX: hablan de
+  "caracteristicas", de "asistentes para la instalacion" y de "volumenes
+  resaltados", y el dialogo de licencia muestra un texto de relleno.
+
+  Aqui se sustituyen por el texto de MediaPilot. Los identificadores son los
+  de la extension y todos son sobrescribibles ("Overridable"). El tono es el
+  mismo que el de la aplicacion: tratamiento de "tu".
+-->
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="es-ES" Codepage="1252">
+
+  <!-- Bienvenida -->
+  <String Id="WelcomeDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Instalaci&#243;n de [ProductName]" />
+  <String Id="WelcomeDlgDescription" Overridable="yes" Value="Se va a instalar [ProductName] en este equipo. Se queda en el &#225;rea de notificaci&#243;n y registra los atajos multimedia globales. Haz clic en Siguiente para continuar o en Cancelar para salir." />
+  <String Id="WelcomeUpdateDlgDescriptionUpdate" Overridable="yes" Value="Se va a actualizar [ProductName] en este equipo. Haz clic en Siguiente para continuar o en Cancelar para salir." />
+
+  <!-- Contrato de licencia -->
+  <String Id="LicenseAgreementDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Contrato de licencia de [ProductName]" />
+  <String Id="LicenseAgreementDlgDescription" Overridable="yes" Value="Lee el contrato de licencia de [ProductName] antes de continuar." />
+  <String Id="LicenseAgreementDlgLicenseAcceptedCheckBox" Overridable="yes" Value="A&amp;cepto los t&#233;rminos del contrato de licencia" />
+
+  <!-- Carpeta de destino -->
+  <String Id="InstallDirDlgDescription" Overridable="yes" Value="Elige la carpeta donde se va a instalar [ProductName]." />
+  <String Id="BrowseDlgDescription" Overridable="yes" Value="Buscar la carpeta de destino" />
+
+  <!-- Preparaci&#243;n y progreso -->
+  <String Id="PrepareDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Instalaci&#243;n de [ProductName]" />
+  <String Id="PrepareDlgDescription" Overridable="yes" Value="Espera mientras el instalador se prepara." />
+  <String Id="WaitForCostingDlgText" Overridable="yes" Value="Espera mientras el instalador comprueba el espacio necesario." />
+  <String Id="ProgressDlgTextInstalling" Overridable="yes" Value="Espera mientras se instala [ProductName]." />
+  <String Id="ProgressDlgTitleInstalling" Overridable="yes" Value="{&#92;WixUI_Font_Title}Instalando [ProductName]" />
+  <String Id="ProgressDlgTextRemoving" Overridable="yes" Value="Espera mientras se desinstala [ProductName]." />
+  <String Id="ProgressDlgTitleRemoving" Overridable="yes" Value="{&#92;WixUI_Font_Title}Desinstalando [ProductName]" />
+  <String Id="ProgressDlgTextRepairing" Overridable="yes" Value="Espera mientras se repara [ProductName]." />
+  <String Id="ProgressDlgTextUpdating" Overridable="yes" Value="Espera mientras se actualiza [ProductName]." />
+  <String Id="ProgressDlgTextChanging" Overridable="yes" Value="Espera mientras se cambia la carpeta donde est&#225; instalado [ProductName]." />
+  <String Id="ProgressDlgProgressBar" Overridable="yes" Value="Progreso completado" />
+  <String Id="ProgressDlgStatusLabel" Overridable="yes" Value="Estado:" />
+
+  <!-- Confirmaci&#243;n antes de instalar, cambiar, reparar o quitar -->
+  <String Id="VerifyReadyDlgInstallTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Listo para instalar [ProductName]" />
+  <String Id="VerifyReadyDlgInstallText" Overridable="yes" Value="Haz clic en Instalar para instalar [ProductName]. Haz clic en Atr&#225;s para cambiar la carpeta de destino. Al terminar, MediaPilot queda en el &#225;rea de notificaci&#243;n y se puede abrir desde ah&#237;." />
+  <String Id="VerifyReadyDlgChangeTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Listo para cambiar [ProductName]" />
+  <String Id="VerifyReadyDlgChangeText" Overridable="yes" Value="Haz clic en Cambiar para elegir otra carpeta de destino. Haz clic en Atr&#225;s para revisar la instalaci&#243;n o en Cancelar para salir." />
+  <String Id="VerifyReadyDlgRemoveTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Listo para desinstalar [ProductName]" />
+  <String Id="VerifyReadyDlgRemoveText" Overridable="yes" Value="Haz clic en Quitar para desinstalar [ProductName] del equipo. Se eliminar&#225;n los archivos del programa y el acceso directo del men&#250; Inicio. Tus ajustes y el registro de diagn&#243;stico se conservan." />
+  <String Id="VerifyReadyDlgRepairTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Listo para reparar [ProductName]" />
+  <String Id="VerifyReadyDlgRepairText" Overridable="yes" Value="Haz clic en Reparar para volver a instalar los archivos que falten o est&#233;n da&#241;ados. Tus ajustes no se modifican." />
+  <String Id="VerifyReadyDlgUpdateTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Listo para actualizar [ProductName]" />
+  <String Id="VerifyReadyDlgUpdateText" Overridable="yes" Value="Haz clic en Actualizar para instalar la versi&#243;n nueva de [ProductName]. Tus ajustes se conservan." />
+
+  <!-- Mantenimiento: cambiar, reparar o desinstalar -->
+  <String Id="MaintenanceWelcomeDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Instalaci&#243;n de [ProductName]" />
+  <String Id="MaintenanceWelcomeDlgDescription" Overridable="yes" Value="Puedes cambiar la instalaci&#243;n de [ProductName], repararla o desinstalarla de este equipo. Haz clic en Siguiente para continuar o en Cancelar para salir." />
+  <String Id="MaintenanceTypeDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Cambiar, reparar o desinstalar" />
+  <String Id="MaintenanceTypeDlgDescription" Overridable="yes" Value="Elige la operaci&#243;n que quieres realizar." />
+  <String Id="MaintenanceTypeDlgChangeText" Overridable="yes" Value="Permite cambiar la carpeta donde est&#225; instalado [ProductName]." />
+  <String Id="MaintenanceTypeDlgChangeDisabledText" Overridable="yes" Value="[ProductName] no tiene componentes que se puedan elegir por separado." />
+  <String Id="MaintenanceTypeDlgRepairText" Overridable="yes" Value="Repara la &#250;ltima instalaci&#243;n de [ProductName] volviendo a escribir los archivos que falten o est&#233;n da&#241;ados, el acceso directo y las entradas del registro." />
+  <String Id="MaintenanceTypeDlgRemoveText" Overridable="yes" Value="Desinstala [ProductName] del equipo." />
+  <String Id="MaintenanceTypeDlgRemoveDisabledText" Overridable="yes" Value="No se puede desinstalar [ProductName]." />
+
+  <!-- Cancelaci&#243;n y fin -->
+  <String Id="CancelDlgText" Overridable="yes" Value="&#191;Seguro que quieres cancelar la instalaci&#243;n de [ProductName]?" />
+  <String Id="ExitDialogTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Instalaci&#243;n de [ProductName] completada" />
+  <String Id="ExitDialogDescription" Overridable="yes" Value="Haz clic en Finalizar para cerrar el instalador." />
+  <String Id="UserExitTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Se ha interrumpido la instalaci&#243;n de [ProductName]" />
+  <String Id="UserExitDescription1" Overridable="yes" Value="Se ha interrumpido la instalaci&#243;n de [ProductName]. No se ha modificado el sistema. Puedes volver a ejecutarla m&#225;s tarde." />
+  <String Id="UserExitDescription2" Overridable="yes" Value="Haz clic en Finalizar para cerrar el instalador." />
+  <String Id="FatalErrorTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}La instalaci&#243;n de [ProductName] ha terminado por un error" />
+  <String Id="FatalErrorDescription1" Overridable="yes" Value="La instalaci&#243;n de [ProductName] ha terminado por un error y no se ha modificado el sistema. Vuelve a ejecutar el instalador para intentarlo de nuevo." />
+  <String Id="FatalErrorDescription2" Overridable="yes" Value="Haz clic en Finalizar para cerrar el instalador." />
+
+  <!-- Archivos en uso -->
+  <String Id="FilesInUseDescription" Overridable="yes" Value="Hay archivos que hay que actualizar y est&#225;n en uso en este momento." />
+  <String Id="FilesInUseText" Overridable="yes" Value="Estas aplicaciones est&#225;n usando archivos que el instalador tiene que actualizar. Ci&#233;rralas y haz clic en Reintentar para continuar, o en Salir para salir." />
+  <String Id="MsiRMFilesInUseDescription" Overridable="yes" Value="Hay archivos que hay que actualizar y est&#225;n en uso en este momento." />
+  <String Id="MsiRMFilesInUseText" Overridable="yes" Value="Estas aplicaciones est&#225;n usando archivos que el instalador tiene que actualizar. Puedes dejar que el instalador las cierre e intente reiniciarlas, o reiniciar el equipo m&#225;s tarde." />
+
+  <!-- Reanudaci&#243;n -->
+  <String Id="ResumeDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Bigger}Reanudando la instalaci&#243;n de [ProductName]" />
+  <String Id="ResumeDlgDescription" Overridable="yes" Value="La instalaci&#243;n de [ProductName] se va a completar en este equipo. Haz clic en Instalar para continuar o en Cancelar para salir." />
+
+  <!-- Errores de espacio en disco -->
+  <String Id="DiskCostDlgDescription" Overridable="yes" Value="Espacio en disco que necesita la instalaci&#243;n." />
+  <String Id="DiskCostDlgText" Overridable="yes" Value="Las unidades marcadas no tienen espacio suficiente. Borra alg&#250;n archivo, elige otra unidad o cancela la instalaci&#243;n." />
+  <String Id="OutOfDiskDlgDescription" Overridable="yes" Value="El espacio en disco que necesita la instalaci&#243;n supera el espacio disponible." />
+  <String Id="OutOfDiskDlgText" Overridable="yes" Value="Las unidades marcadas no tienen espacio suficiente. Borra alg&#250;n archivo o elige otra unidad de destino." />
+  <String Id="OutOfRbDiskDlgDescription" Overridable="yes" Value="El espacio en disco que necesita la instalaci&#243;n supera el espacio disponible." />
+  <String Id="OutOfRbDiskDlgText" Overridable="yes" Value="Las unidades marcadas no tienen espacio suficiente. Borra alg&#250;n archivo o elige otra unidad de destino." />
+  <String Id="OutOfRbDiskDlgText2" Overridable="yes" Value="Tambi&#233;n puedes deshabilitar la reversi&#243;n del instalador: si la instalaci&#243;n se interrumpe, el equipo no quedar&#225; como estaba. Haz clic en S&#237; si quieres asumir ese riesgo." />
+
+  <!--
+    Aviso de versi&#243;n anterior. Lo usa el propio instalador: la cadena se
+    resuelve como una propiedad con formato, de modo que [ProductName] queda
+    sustituido por el nombre del producto.
+  -->
+  <String Id="MediaPilotDowngradeMessage" Value="Ya hay instalada una versi&#243;n m&#225;s reciente de [ProductName]. Desinst&#225;lala antes de instalar esta versi&#243;n." />
+
+</WixLocalization>

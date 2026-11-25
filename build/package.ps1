@@ -77,14 +77,21 @@ if ($LASTEXITCODE -ne 0) {
     throw "The installer build failed with exit code $LASTEXITCODE."
 }
 
-$package = Join-Path $root "installer\bin\$Configuration\MediaPilot-$version-x64.msi"
-if (-not (Test-Path -LiteralPath $package)) {
-    throw "The expected installer was not found: $package"
+$package = Get-ChildItem -Path (Join-Path $root "installer\bin\$Configuration") `
+    -Filter "MediaPilot-$version-x64.msi" `
+    -Recurse `
+    -File |
+    Select-Object -First 1
+
+if ($null -eq $package) {
+    throw "The expected installer was not found under installer\bin\$Configuration."
 }
+
+Write-Host "    Installer     : $($package.FullName)"
 
 New-Item -ItemType Directory -Force -Path $packageDirectory | Out-Null
 $destination = Join-Path $packageDirectory "MediaPilot-$version-x64.msi"
-Copy-Item -LiteralPath $package -Destination $destination -Force
+Copy-Item -LiteralPath $package.FullName -Destination $destination -Force
 
 $size = [math]::Round((Get-Item -LiteralPath $destination).Length / 1MB, 1)
 
