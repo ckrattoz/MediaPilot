@@ -71,6 +71,10 @@ Spanish, and complete the uninstaller.**
   uninstalled. The setting keeps a single owner: the application writes it
   when the user asks for it, and the installer only cleans it up when the
   program is gone.
+  **(Corrected by [ADR 0016](0016-per-user-installation.md): the table of
+  Windows Installer removes those values when the component is installed, not
+  when it is uninstalled, so the entry of the start-up survives the uninstall
+  and is removed at every installation instead.)**
 - **The user data is not removed.** The settings and the diagnostic log are in
   `%LOCALAPPDATA%\MediaPilot`, they belong to the user and they survive a
   reinstall. The text of the uninstaller says so.
@@ -108,5 +112,7 @@ Spanish, and complete the uninstaller.**
   and `msiexec /a` returns 0.
 - The `RemoveRegistry` table of the MSI holds the row that removes the
   `MediaPilot` value of `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+  (The row exists, but it does not do what it seems: see
+  [ADR 0016](0016-per-user-installation.md).)
 - The custom actions `Wix4CloseApplications_X64` and
   `Wix4CloseApplicationsDeferred_X64` are in the package.

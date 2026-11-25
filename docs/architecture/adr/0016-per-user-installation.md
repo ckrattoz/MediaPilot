@@ -132,10 +132,49 @@ languages of the runtime, whose number changes with the version of .NET.
 ## Measurements
 
 - The validation of the package reports zero warnings of the ICE validation and
-  `msiexec /a` returns 0.
-- The `RemoveFile` table of the MSI is empty at build time and the action
-  `Wix4RemoveFoldersEx` is in the package, with the row of the table
-  `Wix4RemoveFolderEx` that points to the property resolved from the registry.
-- After the uninstall, `%LOCALAPPDATA%\Programs\MediaPilot` does not exist,
-  neither the shortcut of the start menu nor the value of the registry of the
-  program.
+  `msiexec /a` returns 0: the package extracts 425 files and 20 folders.
+- The installation runs **with the privileges of the user**. The log of the
+  installation says: `Running product '{7B736AF5-...}' with user privileges:
+  It's not assigned.` No prompt of the control of accounts appears.
+- The installation writes 424 files in `%LOCALAPPDATA%\Programs\MediaPilot`,
+  the 17 folders of the languages of the runtime, the shortcut of the start
+  menu and the value of the registry of the program.
+- The uninstall closes the application, removes the tree of folders (the action
+  `Wix4RemoveFoldersEx_X64` walks the installation folder and writes the rows
+  of the `RemoveFile` table with the folders that exist at that moment), the
+  shortcut, the folder of the start menu, the value of the registry and the
+  entry of the installed programs. Nothing of the installation is left behind.
+
+### The upgrade from the per-machine 0.3.0
+
+The upgrade is **not automatic**, and it is Windows Installer that decides it:
+`FindRelatedProducts: current install is per-user. Related install for product
+'{942FBA1F-...}' is per-machine. Skipping...` The old copy has to be removed
+first, and removing it needs the privileges of an administrator (the error
+1730 of the installer says so). The two steps are therefore: remove the 0.3.0
+with the elevation of an administrator, and install the 0.4.0 without it.
+
+### A defect of the entry of start-up, not introduced here
+
+The `RemoveRegistry` table of the package holds the row that removes the
+`MediaPilot` value of the `Run` key, and it was believed that the uninstaller
+removed the entry of the start-up with it. **It does not.**
+
+The documentation of the `RemoveRegistryValues` action says that it removes a
+value of the `RemoveRegistry` table when the component is set to be
+**installed**, not when it is uninstalled. The table exists to clean up what a
+previous installation left behind, not to remove what the program writes at
+run time. The consequence is the opposite of what the row was meant to do:
+
+- The entry of the start-up **survives the uninstall**, and Windows tries to
+  run an executable that no longer exists at every logon.
+- The entry of the start-up **is removed at every installation or repair**,
+  which silently disables "Start with Windows" after every update.
+
+The behavior is the same in the 0.3.0, so this release does not make it worse;
+the claim of [ADR 0015](0015-installer-texts-and-uninstaller.md) about it is
+corrected here. The owner of the removal of the entry of the start-up has to
+be decided: either the installer writes it, so that Windows Installer can
+remove it, and the application reconciles it with the setting when it starts,
+or the entry is removed by a custom action of the installer.
+

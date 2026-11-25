@@ -70,12 +70,15 @@
         <!--
           The entry that starts MediaPilot with Windows is written by the
           application itself, in the Run key of the current user, and only
-          when the user asks for it. The installer removes it when the
-          program is uninstalled, so that a leftover entry does not try to
-          start an executable that no longer exists.
+          when the user asks for it. The row below removes it when the
+          program is installed, which is what the table of Windows Installer
+          does with these values: it cleans up what a previous installation
+          left behind.
 
-          The row has no install action: it only removes the value when the
-          program is uninstalled.
+          It does not remove it when the program is uninstalled, because
+          Windows Installer only removes the values that the package itself
+          wrote. The ownership of that entry is still to be decided: see
+          ADR 0016.
         -->
         <RemoveRegistryValue Root="HKCU"
                              Key="Software\Microsoft\Windows\CurrentVersion\Run"
