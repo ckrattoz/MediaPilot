@@ -7,6 +7,32 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-11-25
+
+Correction of the entry that starts MediaPilot with Windows, which the
+installer did not remove and which it removed when it should not.
+
+### Fixed
+
+- **The uninstaller removes the entry of the start-up.** The installer wrote
+  it, so Windows Installer takes it away with the program. Before, the entry
+  survived the uninstall and Windows tried to run an executable that no longer
+  existed at every sign in.
+- **An update does not disable "Start with Windows" in silence.** The entry
+  was removed at every installation or repair, because that is what the table
+  of Windows Installer does with the values that the package did not write.
+
+### Changed
+
+- The installer writes the entry of the start-up with the argument
+  `--installer-startup`, and the application reconciles the entry with the
+  setting of the user when it starts: when the installer started the program
+  and the user has not enabled the automatic start, the entry is removed and
+  the program ends without staying in the notification area.
+
+See
+[ADR 0017](docs/architecture/adr/0017-startup-entry-ownership.md).
+
 ## [0.4.0] - 2026-11-25
 
 The installer installs the program for the user who runs it, without asking

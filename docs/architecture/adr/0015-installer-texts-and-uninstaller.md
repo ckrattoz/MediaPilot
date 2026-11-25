@@ -73,8 +73,9 @@ Spanish, and complete the uninstaller.**
   program is gone.
   **(Corrected by [ADR 0016](0016-per-user-installation.md): the table of
   Windows Installer removes those values when the component is installed, not
-  when it is uninstalled, so the entry of the start-up survives the uninstall
-  and is removed at every installation instead.)**
+  when it is uninstalled, so the entry of the start-up survived the uninstall
+  and was removed at every installation instead. The ownership of the entry is
+  decided in [ADR 0017](0017-startup-entry-ownership.md).)**
 - **The user data is not removed.** The settings and the diagnostic log are in
   `%LOCALAPPDATA%\MediaPilot`, they belong to the user and they survive a
   reinstall. The text of the uninstaller says so.

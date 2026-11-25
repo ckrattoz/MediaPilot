@@ -231,3 +231,4 @@ Every choice with discarded alternatives has its ADR:
 | [0014](adr/0014-default-output-device-is-resolved-every-time.md) | The default output device is resolved on every operation |
 | [0015](adr/0015-installer-texts-and-uninstaller.md) | Texts of the installer in Spanish and a complete uninstaller |
 | [0016](adr/0016-per-user-installation.md) | Installation for the current user, without elevation |
+| [0017](adr/0017-startup-entry-ownership.md) | The installer registers the program in the Run key of the user |

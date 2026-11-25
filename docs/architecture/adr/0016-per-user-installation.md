@@ -173,8 +173,8 @@ run time. The consequence is the opposite of what the row was meant to do:
 
 The behavior is the same in the 0.3.0, so this release does not make it worse;
 the claim of [ADR 0015](0015-installer-texts-and-uninstaller.md) about it is
-corrected here. The owner of the removal of the entry of the start-up has to
-be decided: either the installer writes it, so that Windows Installer can
-remove it, and the application reconciles it with the setting when it starts,
-or the entry is removed by a custom action of the installer.
+corrected here. **The ownership of the entry of the start-up is decided in
+[ADR 0017](0017-startup-entry-ownership.md): the installer writes it, so that
+the uninstaller removes it, and the application reconciles it with the
+setting of the user when it starts.**
 

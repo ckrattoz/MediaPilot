@@ -204,6 +204,17 @@ use it too, otherwise the restore fails with NU1201.
   folders that exist at that moment. The folder is read back from the registry
   (`HKCU\Software\ckrattoz\MediaPilot\InstallFolder`), because the property of
   the installation directory is not resolved anymore at that point.
+- **The installer writes the entry of the start-up, and the application keeps
+  it in sync.** Windows Installer only removes the registry values that the
+  package itself wrote, so the installer writes the value `MediaPilot` of the
+  `Run` key, with the argument `--installer-startup`, and the uninstaller
+  takes it away with the program. The application reconciles the entry with
+  the setting of the user when it starts, and it ends without running when
+  the installer started it and the user has not enabled the automatic start.
+  The argument is a constant of `WindowsStartupService` and the installer
+  writes the same text: if one of the two changes, the other one has to
+  change with it. See
+  [ADR 0017](docs/architecture/adr/0017-startup-entry-ownership.md).
 
 ## Decision records
 
