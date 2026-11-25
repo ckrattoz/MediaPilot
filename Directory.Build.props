@@ -41,7 +41,7 @@
     <Company>Antonio Nuñez</Company>
     <Authors>Antonio Nuñez</Authors>
     <Copyright>Copyright (c) 2026 ckrattoz</Copyright>
-    <VersionPrefix>0.3.0</VersionPrefix>
+    <VersionPrefix>0.4.0</VersionPrefix>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
