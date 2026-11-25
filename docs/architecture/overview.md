@@ -104,6 +104,12 @@ The volume moves one point at a time, and raising it lifts the silence, the
 same way the volume key of the keyboard does. See
 [ADR 0013](adr/0013-volume-step-and-live-notification.md).
 
+The device that the commands act on is the output device that is the default at
+that moment, and it is resolved on every operation: the user can change the
+default output device at any moment, and a device that was kept would keep
+receiving the commands. See
+[ADR 0014](adr/0014-default-output-device-is-resolved-every-time.md).
+
 ## Media sessions
 
 The track that is being played comes from the media session API of the system

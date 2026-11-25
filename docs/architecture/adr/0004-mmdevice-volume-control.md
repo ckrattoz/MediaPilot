@@ -3,6 +3,10 @@
 - **Status:** Accepted
 - **Date:** 2026-11-20
 - **Decides:** Which API is used to read and adjust the system volume.
+- **Partially superseded:** the endpoint is no longer cached, see
+  [ADR 0014](0014-default-output-device-is-resolved-every-time.md); the step of
+  the system is no longer used, see
+  [ADR 0013](0013-volume-step-and-live-notification.md).
 
 ## Context
 
@@ -47,7 +51,9 @@ meaningless number.
   from the `MMDeviceEnumeratorClass` class
   (`BCDE0395-E52F-467C-8E3D-C4579291692E`).
 - `GetDefaultAudioEndpoint` with flow `eRender` (0) and role `eMultimedia` (1):
-  the device where applications play their sound.
+  the device where applications play their sound. The console role is tried
+  first now, with the multimedia role as the fallback. See
+  [ADR 0014](0014-default-output-device-is-resolved-every-time.md).
 - `IMMDevice.Activate` instantiates `IAudioEndpointVolume`
   (`5CDF2C82-841E-4546-9722-0CF74078229A`) with `CLSCTX_ALL` (0x7).
 - The returned pointer is wrapped with `Marshal.GetObjectForIUnknown`.
@@ -83,8 +89,11 @@ discrete step per press, with the same granularity as Windows itself.
   the public methods return `false` in that case. With no output device the
   application keeps working and simply does not show the volume level. An
   audio failure must never prevent a command from running.
-- **The endpoint is cached.** It is resolved once and reused; it is released
-  with `Marshal.ReleaseComObject` in `Dispose`.
+- **The endpoint is not cached.** It was resolved once and reused, and that
+  made the volume commands reach the device that was the default when the
+  application started, even after the user changed the default output device.
+  It is resolved on every operation now. See
+  [ADR 0014](0014-default-output-device-is-resolved-every-time.md).
 - **The constants are centralized** in `AudioConstants` (`EDataFlowRender`,
   `ERoleMultimedia`, `ClsctxAll`, `SOk`), so the vtable remains the only place
   where method order matters.

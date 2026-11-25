@@ -7,6 +7,38 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-11-24
+
+Correction of the defect that left the volume commands without effect when the
+user changes the default output device.
+
+### Fixed
+
+- **The volume commands follow the output device that is the default now.** The
+  endpoint was resolved once, when the first volume command was run, and it
+  was kept for the whole life of the application. Changing the default output
+  device, for instance to the front panel of the sound card, left the commands
+  reaching the previous device: the notification appeared and the level went
+  down inside it, but the sound did not change. The device is resolved on every
+  operation now, the same way the multimedia volume key of the keyboard does.
+  See
+  [ADR 0014](docs/architecture/adr/0014-default-output-device-is-resolved-every-time.md).
+- **The notification shows the level of the device that is really playing**, and
+  not the level of the device that was playing when the application started.
+
+### Changed
+
+- The default device is resolved with the console role of Windows, which is the
+  one that the sound panel shows as the default output, and with the multimedia
+  role as the fallback.
+- The volume control of the device is behind an interface, so that the
+  behavior can be tested without an audio device.
+
+### Added
+
+- Tests that assert that the device is resolved on every operation and that
+  the command is applied to the device of the moment.
+
 ## [0.2.4] - 2026-11-23
 
 Change in the way the volume is moved and in the way its notification is shown.

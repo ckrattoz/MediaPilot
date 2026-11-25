@@ -31,8 +31,8 @@ The repository builds with `TreatWarningsAsErrors` and the .NET analyzers in
 `Recommended` mode. **A warning is an error.** Never silence a warning to make
 the build pass without understanding it.
 
-The tests are 50 in total: 29 in `MediaPilot.Core.Tests` (no Windows needed)
-and 21 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
+The tests are 58 in total: 29 in `MediaPilot.Core.Tests` (no Windows needed)
+and 29 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
 
 ## Language rules
 
@@ -160,6 +160,13 @@ use it too, otherwise the restore fails with NU1201.
   overlay that is on screen is updated in place instead of opening another one.
   See
   [ADR 0013](docs/architecture/adr/0013-volume-step-and-live-notification.md).
+- **The default output device is resolved on every operation.** It must never
+  be cached: the user can change the default output device at any moment, and
+  a cached endpoint keeps controlling the device that was the default when the
+  application started. `WindowsVolumeController` asks an
+  `IAudioEndpointResolver` for the device on every call, and the console role
+  is tried first, with the multimedia role as the fallback. See
+  [ADR 0014](docs/architecture/adr/0014-default-output-device-is-resolved-every-time.md).
 - **Do not use `string.Format` with a resource string.** Use
   `LocalizedFormat.Format`, which keeps a parsed `CompositeFormat` and
   satisfies CA1863. The format provider is `CultureInfo.CurrentCulture`: the
