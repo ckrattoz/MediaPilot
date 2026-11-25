@@ -7,7 +7,7 @@
            Manufacturer="ckrattoz"
            Version="$(ProductVersion)"
            UpgradeCode="A9874E81-9A46-4CC2-A509-42D811E30025"
-           Scope="perMachine"
+           Scope="perUser"
            Compressed="yes"
            InstallerVersion="500">
 
@@ -36,29 +36,37 @@
       -->
       <Files Include="$(PublishDirectory)**\*.*" Directory="INSTALLFOLDER" />
 
-      <ComponentRef Id="StartMenuShortcut" />
-      <ComponentRef Id="RemoveStartupRegistration" />
+      <ComponentRef Id="UserProfileRegistration" />
     </Feature>
 
-    <ComponentGroup Id="StartMenuComponents" Directory="ApplicationProgramsFolder">
-      <Component Id="StartMenuShortcut" Guid="6F0C2E14-3B95-4F0E-9C2A-6D7A1E4B8C33">
+    <ComponentGroup Id="UserProfileComponents" Directory="ApplicationProgramsFolder">
+      <!--
+        The component that registers the program in the profile of the user:
+        the shortcut of the start menu, the folder where the program was
+        installed, the entry that starts it with Windows and the removal of
+        the tree of files when it is uninstalled.
+
+        The identifier of the component has a GUID of its own, so that the
+        program is recognized as the same one when it is upgraded.
+      -->
+      <Component Id="UserProfileRegistration" Guid="6F0C2E14-3B95-4F0E-9C2A-6D7A1E4B8C33">
         <Shortcut Id="MediaPilotShortcut"
                   Name="MediaPilot"
                   Description="Global multimedia control for Windows 11"
                   Target="[INSTALLFOLDER]MediaPilot.App.exe"
                   WorkingDirectory="INSTALLFOLDER" />
         <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
+        <!--
+          The folder where the program was installed. It is the key path of
+          the component, so it lives in the registry of the user, and the
+          uninstaller reads it back to remove the tree of files.
+        -->
         <RegistryValue Root="HKCU"
                        Key="Software\ckrattoz\MediaPilot"
                        Name="InstallFolder"
                        Type="string"
                        Value="[INSTALLFOLDER]"
                        KeyPath="yes" />
-      </Component>
-    </ComponentGroup>
-
-    <ComponentGroup Id="UninstallCleanupComponents" Directory="INSTALLFOLDER">
-      <Component Id="RemoveStartupRegistration" Guid="2B6F4A18-7C3D-4E9A-8B05-6F1D9E7C4A22">
         <!--
           The entry that starts MediaPilot with Windows is written by the
           application itself, in the Run key of the current user, and only
@@ -72,6 +80,16 @@
         <RemoveRegistryValue Root="HKCU"
                              Key="Software\Microsoft\Windows\CurrentVersion\Run"
                              Name="MediaPilot" />
+        <!--
+          The program lives in the profile of the user, so the folders that
+          the installation creates have to go away with it. The action of the
+          Util extension walks the tree of the installation folder and adds
+          the rows that remove every file and every folder of it, so the
+          uninstaller leaves no empty directory behind.
+        -->
+        <util:RemoveFolderEx Id="RemoveInstallFolder"
+                              Property="MEDIAPILOT_INSTALL_DIR"
+                              Condition="REMOVE=&quot;ALL&quot;" />
       </Component>
     </ComponentGroup>
 
@@ -80,13 +98,33 @@
               Value="Atajos multimedia globales para Windows 11." />
     <Property Id="ARPHELPLINK" Value="https://github.com/ckrattoz/MediaPilot" />
 
+    <!--
+      The uninstaller needs to know the folder where the program was
+      installed in order to remove it. The folder is written to the registry
+      when the program is installed, and the search reads it back when the
+      program is uninstalled, because at that moment the property of the
+      installation directory is no longer resolved.
+    -->
+    <Property Id="MEDIAPILOT_INSTALL_DIR">
+      <RegistrySearch Id="FindInstallFolder"
+                      Root="HKCU"
+                      Key="Software\ckrattoz\MediaPilot"
+                      Name="InstallFolder"
+                      Type="directory" />
+    </Property>
+
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
 
   </Package>
 
   <Fragment>
-    <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="INSTALLFOLDER" Name="MediaPilot" />
+    <!--
+      The application is installed for the current user: it lives in the
+      profile of that user, next to its settings, and the installation does
+      not need administrator permissions.
+    -->
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLFOLDER" Name="Programs\MediaPilot" />
     </StandardDirectory>
 
     <StandardDirectory Id="ProgramMenuFolder">

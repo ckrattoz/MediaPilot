@@ -21,7 +21,45 @@
       That is exactly what AllowSameVersionUpgrades asks for: reinstalling the
       same version has to replace the previous installation.
     -->
-    <SuppressIces>ICE61</SuppressIces>
+    <!--
+      ICE91 warns that the files are installed in a directory of the profile
+      of the user, which does not vary with the ALLUSERS property. The
+      documentation of the check says that the warning is harmless when the
+      package is only installed in the per-user context and never in the
+      per-machine one, which is exactly the case: the package is declared
+      with Scope="perUser" and it is installed in the profile of the user.
+    -->
+    <!--
+      ICE38 asks for the components that are installed in the profile of the
+      user to have a key of the registry of that user as their key path, and
+      not a file, because the state of a component whose key path is a file
+      is registered for the whole computer. The published output is
+      harvested as it is and every file becomes its own component, so there
+      are more than four hundred of them, and giving each one a key of the
+      registry would leave four hundred values behind.
+
+      The program is installed for one user and it lives in the profile of
+      that user: its settings, its shortcut and its entry of start-up are
+      all per user. The check is suppressed with that in mind, and the
+      situation it protects against, two users of the same computer
+      installing the program at the same time, is written down in the
+      decision record of the installer.
+    -->
+    <!--
+      ICE64 asks for the directories that the installation creates in the
+      profile of the user to be listed in the RemoveFile table. That table
+      is written when the package is built, but the folders of the
+      installation are not known until the program is published: the set of
+      folders changes with the version of the .NET runtime, because every
+      culture of the runtime brings its own folder of resources.
+
+      The action of the Util extension that removes the tree of the
+      installation folder adds those rows when the program is uninstalled,
+      with the folders that exist at that moment, and the uninstaller
+      removes the files and the folders with them. The check is satisfied
+      at run time for that reason, and it is suppressed at build time.
+    -->
+    <SuppressIces>ICE61;ICE38;ICE64;ICE91</SuppressIces>
   </PropertyGroup>
 
   <!--
