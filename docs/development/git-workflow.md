@@ -6,10 +6,11 @@ and the change that fixes the disagreement is itself a contribution.
 
 ## Ownership of the versioning
 
-In MediaPilot the repository owner administers the versioning end to end: they
-decide the branch layout, write the commit messages, create the tags and cut
-the releases. Contributors do not push to `main` directly; they open a branch
-and a pull request, and the owner merges it.
+In MediaPilot the versioning is administered end to end by the automated
+maintainer that works on the repository: it decides the branch layout, writes
+the commit messages, creates the tags and cuts the releases. It works on a
+branch and merges it back into `main`; it never pushes to `main` directly
+from a working branch.
 
 This is specific to MediaPilot. It does not change how the owner works in any
 other repository.
@@ -112,7 +113,9 @@ A release is cut from `main` with these steps:
 
 1. `CHANGELOG.md` gets the new version section, dated, with every change since
    the previous tag.
-2. The version in `MediaPilot.App.csproj` is updated to the same number.
+2. The `VersionPrefix` property of `Directory.Build.props` is updated to the
+   same number. It is the single place where the version lives: every project
+   of the solution takes it from there.
 3. The build and the tests pass on `main`:
    `dotnet build MediaPilot.slnx -c Release` and `dotnet test MediaPilot.slnx -c Release`.
 4. An annotated tag is created: `git tag -a v1.2.0 -m "MediaPilot 1.2.0"`.

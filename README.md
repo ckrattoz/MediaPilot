@@ -155,7 +155,9 @@ MediaPilot.slnx
 │   └── MediaPilot.Platform.Tests/ Platform services
 ├── installer/                     WiX project that builds the MSI
 │   ├── Localization/              Texts of the installer, in Spanish
+│   ├── Assets/                    Images of the wizard, in BMP
 ├── build/                         Build, publish and packaging scripts
+├── tools/MediaPilot.Brand/        Master of the mark and generator of its assets
 └── docs/architecture/             Architecture and decision records
 ```
 
@@ -243,6 +245,25 @@ the log of the application are kept, because they belong to the user.
 
 The installer is a separate project and is not part of the solution: it needs
 the published output to exist before it can be compiled.
+
+## Identity
+
+The mark of MediaPilot is a rounded tile in the style of Windows 11 with a
+wave of three bars, in orange and lime over graphite. It is the icon of the
+executable, the icon of the notification area, the image of the welcome
+dialog of the installer and the mark of the about window.
+
+The master of the mark is **code**, not a design file: the project
+`tools/MediaPilot.Brand` holds the geometry and the palette and writes the
+PNG and the ICO that the product uses. The generated files are versioned, so
+the build of the application never depends on the tool.
+
+```powershell
+dotnet run --project tools/MediaPilot.Brand/MediaPilot.Brand.csproj -c Release -- assets <repository>
+```
+
+See
+[ADR 0018](docs/architecture/adr/0018-the-identity-of-the-product.md).
 
 ## License
 

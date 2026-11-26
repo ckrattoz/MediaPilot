@@ -31,8 +31,8 @@ The repository builds with `TreatWarningsAsErrors` and the .NET analyzers in
 `Recommended` mode. **A warning is an error.** Never silence a warning to make
 the build pass without understanding it.
 
-The tests are 58 in total: 29 in `MediaPilot.Core.Tests` (no Windows needed)
-and 29 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
+The tests are 67 in total: 33 in `MediaPilot.Core.Tests` (no Windows needed)
+and 34 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
 
 ## Language rules
 
@@ -71,8 +71,9 @@ The full procedure is in
 
 ## Versioning
 
-The repository owner administers the versioning of this repository: the branch
-layout, the commit messages, the tags and the releases. The rules are:
+The versioning of this repository is administered end to end by the automated
+maintainer that works on it: the branch layout, the commit messages, the
+tags and the releases. The rules are:
 
 - `main` is the only long-lived branch. Work happens in
   `feature/<topic>`, `fix/<topic>`, `refactor/<topic>`, `docs/<topic>` or
@@ -215,6 +216,27 @@ use it too, otherwise the restore fails with NU1201.
   writes the same text: if one of the two changes, the other one has to
   change with it. See
   [ADR 0017](docs/architecture/adr/0017-startup-entry-ownership.md).
+- **The master of the mark is code, and the files it writes are
+  versioned.** The geometry and the palette live in `tools/MediaPilot.Brand`,
+  and the PNG and the ICO that the product uses are committed. After changing
+  the master, regenerate the files with the `assets` command of the tool and
+  commit the result: a change of the master without its files leaves the
+  product showing the old mark.
+- **A window shows the 32 pixel PNG, not the ICO.** WPF builds the icon of a
+  window from the first frame of the ICO, and the first frame is the
+  smallest one, so the icon of the title bar ends up being a 16 pixel image
+  stretched. The system does not have that problem: it picks the frame that
+  fits the size it needs, which is why the ICO is the right format for the
+  executable and for the notification area.
+- **The images of the installer are BMP and they are opaque.** The `Bitmap`
+  control of Windows Installer does not read PNG and it does not blend the
+  image, so the alpha channel of the files is forced to 255. Their size is
+  the one of the control of the extension: 370x234 for the welcome dialog
+  and 370x44 for the band.
+- **The wizard images are replaced through the strings of the
+  localization.** The value of `WelcomeDlgBitmap` and of every
+  `*BannerBitmap` is the name of a binary of the package, not a file. See
+  [ADR 0018](docs/architecture/adr/0018-the-identity-of-the-product.md).
 
 ## Decision records
 
