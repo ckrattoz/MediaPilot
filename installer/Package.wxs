@@ -4,7 +4,7 @@
      xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
   <Package Name="MediaPilot"
-           Manufacturer="ckrattoz"
+           Manufacturer="Antonio Nuñez"
            Version="$(ProductVersion)"
            UpgradeCode="A9874E81-9A46-4CC2-A509-42D811E30025"
            Scope="perUser"
