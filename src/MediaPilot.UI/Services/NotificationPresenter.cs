@@ -45,13 +45,15 @@ public sealed class NotificationPresenter : INotificationPresenter
                 : LocalizedFormat.Format(CultureInfo.CurrentCulture, Strings.Notification_TrackVolumeFormat, direction, trackTitle, volume);
         }
 
-        Show(title, body, VolumeDisplayDuration);
+        // With the sound muted the level is zero: the bar has to agree with
+        // what the user hears.
+        Show(title, body, VolumeDisplayDuration, muted ? 0 : volume);
     }
 
     /// <inheritdoc />
-    public void ShowMessage(string title, string message) => Show(title, message, MessageDisplayDuration);
+    public void ShowMessage(string title, string message) => Show(title, message, MessageDisplayDuration, null);
 
-    private void Show(string title, string message, TimeSpan duration)
+    private void Show(string title, string message, TimeSpan duration, int? level)
     {
         var dispatcher = Application.Current?.Dispatcher;
 
@@ -62,11 +64,11 @@ public sealed class NotificationPresenter : INotificationPresenter
 
         if (dispatcher.CheckAccess())
         {
-            Present(title, message, duration);
+            Present(title, message, duration, level);
             return;
         }
 
-        dispatcher.BeginInvoke(() => Present(title, message, duration));
+        dispatcher.BeginInvoke(() => Present(title, message, duration, level));
     }
 
     /// <summary>
@@ -80,11 +82,12 @@ public sealed class NotificationPresenter : INotificationPresenter
     /// <param name="title">Notification title.</param>
     /// <param name="message">Notification body.</param>
     /// <param name="duration">Time visible before closing.</param>
-    private void Present(string title, string message, TimeSpan duration)
+    /// <param name="level">Level to show in the bar, from 0 to 100, or null to hide it.</param>
+    private void Present(string title, string message, TimeSpan duration, int? level)
     {
         if (_overlay is not null && _overlay.IsVisible)
         {
-            _overlay.Update(title, message, duration);
+            _overlay.Update(title, message, duration, level);
             return;
         }
 
@@ -99,6 +102,6 @@ public sealed class NotificationPresenter : INotificationPresenter
 
         _overlay = overlay;
 
-        overlay.Show(title, message, duration);
+        overlay.Show(title, message, duration, level);
     }
 }

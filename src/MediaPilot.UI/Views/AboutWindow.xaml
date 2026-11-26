@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:MediaPilot.UI.Resources"
         Title="{loc:Localize About_WindowTitle}"
+        Icon="pack://application:,,,/MediaPilot.UI;component/Resources/Brand/mark-32.png"
         Width="460"
         SizeToContent="Height"
         WindowStartupLocation="CenterScreen"
@@ -19,14 +20,33 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="{loc:Localize App_Name}"
-                       FontSize="28" FontWeight="SemiBold"
-                       Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
-            <TextBlock Text="{loc:Localize App_Tagline}"
-                       Margin="0,4,0,0"
-                       Style="{StaticResource MediaPilot.Caption}" />
-        </StackPanel>
+        <!--
+            The header of the window: the mark of the application at its
+            largest size next to the name of the product and its version.
+        -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0"
+                   Width="128" Height="128"
+                   VerticalAlignment="Top"
+                   Source="pack://application:,,,/MediaPilot.UI;component/Resources/Brand/mark-128.png" />
+
+            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{loc:Localize App_Name}"
+                           FontSize="28" FontWeight="SemiBold"
+                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
+                <TextBlock Text="{loc:Localize App_Tagline}"
+                           Margin="0,4,0,0"
+                           Style="{StaticResource MediaPilot.Caption}" />
+                <TextBlock x:Name="VersionText"
+                           Margin="0,12,0,0"
+                           Style="{StaticResource MediaPilot.Caption}" />
+            </StackPanel>
+        </Grid>
 
         <Border Grid.Row="1" Margin="0,18,0,0"
                 Style="{StaticResource MediaPilot.Card}">

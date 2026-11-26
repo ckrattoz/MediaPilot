@@ -82,6 +82,9 @@
   <data name="Tray_Menu_Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
+  <data name="Tray_TooltipFormat" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
   <data name="Settings_WindowTitle" xml:space="preserve">
     <value>MediaPilot - Settings</value>
   </data>
@@ -153,6 +156,9 @@
   </data>
   <data name="About_Button_Close" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version {0}</value>
   </data>
   <data name="Command_Previous" xml:space="preserve">
     <value>Previous track</value>

@@ -4,6 +4,7 @@
         xmlns:controls="clr-namespace:MediaPilot.UI.Controls"
         xmlns:loc="clr-namespace:MediaPilot.UI.Resources"
         Title="{loc:Localize Settings_WindowTitle}"
+        Icon="pack://application:,,,/MediaPilot.UI;component/Resources/Brand/mark-32.png"
         Width="560" Height="640"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MediaPilot.Brush.Surface}">
@@ -15,13 +16,27 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,18">
-            <TextBlock Text="{loc:Localize Settings_Heading}"
-                       FontSize="24" FontWeight="SemiBold"
-                       Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
-            <TextBlock Style="{StaticResource MediaPilot.Caption}"
-                       Text="{loc:Localize Settings_Subheading}" />
-        </StackPanel>
+        <!-- The header of the window: the mark of the application next to the
+             name of the section. -->
+        <Grid Grid.Row="0" Margin="0,0,0,18">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0"
+                   Width="36" Height="36"
+                   VerticalAlignment="Top"
+                   Source="pack://application:,,,/MediaPilot.UI;component/Resources/Brand/mark-32.png" />
+
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                <TextBlock Text="{loc:Localize Settings_Heading}"
+                           FontSize="24" FontWeight="SemiBold"
+                           Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}" />
+                <TextBlock Style="{StaticResource MediaPilot.Caption}"
+                           Text="{loc:Localize Settings_Subheading}" />
+            </StackPanel>
+        </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>

@@ -131,7 +131,7 @@ public sealed class CompositionRoot : IDisposable
         _tray.StartupToggled += (_, _) => RunOnDispatcher(() => ToggleStartup(settingsStore));
         _tray.ExitRequested += (_, _) => RunOnDispatcher(() => _application.Shutdown());
 
-        _tray.SetTooltip(Strings.App_Name);
+        _tray.SetTooltip(BuildTrayTooltip());
         _tray.SetState(_settings.HotkeysEnabled ? TrayIconState.Active : TrayIconState.Inactive);
         _tray.SetStartupEnabled(_settings.StartWithWindows);
 
@@ -352,6 +352,21 @@ public sealed class CompositionRoot : IDisposable
         startup.TrySetEnabled(_settings.StartWithWindows);
         return true;
     }
+
+    /// <summary>
+    /// Builds the text of the tooltip of the icon in the notification area.
+    /// </summary>
+    /// <remarks>
+    /// It holds the name of the product and its version, so the user can tell
+    /// which build is running without opening the about window.
+    /// </remarks>
+    /// <returns>The text of the tooltip.</returns>
+    private static string BuildTrayTooltip() =>
+        LocalizedFormat.Format(
+            CultureInfo.CurrentCulture,
+            Strings.Tray_TooltipFormat,
+            Strings.App_Name,
+            ProductVersion.Current);
 
     private void ShowSettings(ISettingsStore settingsStore)
     {

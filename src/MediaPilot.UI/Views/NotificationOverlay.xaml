@@ -13,16 +13,63 @@
             Background="{DynamicResource MediaPilot.Brush.Surface}"
             BorderBrush="{DynamicResource MediaPilot.Brush.SurfaceStroke}"
             BorderThickness="1">
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--
+                The mark of the application: the tile and the wave. It is the
+                first thing the user sees when a shortcut is pressed.
+            -->
+            <Image Grid.Row="0" Grid.Column="0"
+                   Width="32" Height="32"
+                   VerticalAlignment="Top"
+                   Source="pack://application:,,,/MediaPilot.UI;component/Resources/Brand/mark-32.png" />
+
             <TextBlock x:Name="TitleText"
+                       Grid.Row="0" Grid.Column="1"
+                       Margin="10,5,0,0"
+                       VerticalAlignment="Top"
                        FontSize="14" FontWeight="SemiBold"
                        Foreground="{DynamicResource MediaPilot.Brush.TextPrimary}"
                        TextWrapping="Wrap" />
+
             <TextBlock x:Name="MessageText"
-                       Margin="0,6,0,0"
+                       Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                       Margin="0,8,0,0"
                        FontSize="13"
                        Foreground="{DynamicResource MediaPilot.Brush.TextSecondary}"
                        TextWrapping="Wrap" />
-        </StackPanel>
+
+            <!--
+                Level of the volume. The fill is the lime of the mark over the
+                track of the palette, and it is scaled instead of resized so
+                that it does not force a new layout pass on every change.
+            -->
+            <Border x:Name="LevelTrack"
+                    Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                    Margin="0,12,0,0"
+                    Height="4"
+                    CornerRadius="2"
+                    Background="{DynamicResource MediaPilot.Brush.BrandLimeTrack}"
+                    Visibility="Collapsed"
+                    SnapsToDevicePixels="True">
+                <Border x:Name="LevelFill"
+                        CornerRadius="2"
+                        Background="{DynamicResource MediaPilot.Brush.BrandLime}"
+                        RenderTransformOrigin="0,0">
+                    <Border.RenderTransform>
+                        <ScaleTransform x:Name="LevelScale" ScaleX="0" />
+                    </Border.RenderTransform>
+                </Border>
+            </Border>
+        </Grid>
     </Border>
 </Window>

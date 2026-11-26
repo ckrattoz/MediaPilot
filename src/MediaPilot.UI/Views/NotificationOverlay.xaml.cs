@@ -57,9 +57,10 @@ public partial class NotificationOverlay : Window
     /// <param name="title">Notification title.</param>
     /// <param name="message">Notification body.</param>
     /// <param name="duration">Time visible before closing.</param>
-    public void Show(string title, string message, TimeSpan duration)
+    /// <param name="level">Level to show in the bar, from 0 to 100, or null to hide it.</param>
+    public void Show(string title, string message, TimeSpan duration, int? level)
     {
-        Update(title, message, duration);
+        Update(title, message, duration, level);
 
         // The position is computed on Loaded, not before: until the first
         // layout the real size of the window is unknown and the notification
@@ -80,14 +81,38 @@ public partial class NotificationOverlay : Window
     /// <param name="title">Notification title.</param>
     /// <param name="message">Notification body.</param>
     /// <param name="duration">Time visible before closing.</param>
-    public void Update(string title, string message, TimeSpan duration)
+    /// <param name="level">Level to show in the bar, from 0 to 100, or null to hide it.</param>
+    public void Update(string title, string message, TimeSpan duration, int? level)
     {
         TitleText.Text = title;
         MessageText.Text = message;
+        ApplyLevel(level);
 
         _dismissTimer.Stop();
         _dismissTimer.Interval = duration;
         _dismissTimer.Start();
+    }
+
+    /// <summary>
+    /// Shows the level of the volume, or hides the bar when there is none.
+    /// </summary>
+    /// <remarks>
+    /// The fill is scaled instead of resized: the bar is the same width as
+    /// the track, and the scale is the proportion of the level, so the
+    /// notification does not run a new layout pass on every change of the
+    /// volume.
+    /// </remarks>
+    /// <param name="level">Level to show in the bar, from 0 to 100, or null to hide it.</param>
+    private void ApplyLevel(int? level)
+    {
+        if (level is null)
+        {
+            LevelTrack.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        LevelScale.ScaleX = Math.Clamp(level.Value, 0, 100) / 100.0;
+        LevelTrack.Visibility = Visibility.Visible;
     }
 
     private void OnDismissTimerTick(object? sender, EventArgs e)

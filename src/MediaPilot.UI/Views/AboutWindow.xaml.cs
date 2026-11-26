@@ -1,7 +1,10 @@
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using MediaPilot.Core;
+using MediaPilot.Localization;
+using MediaPilot.Localization.Resources;
 using MediaPilot.Platform.Interop;
 using MediaPilot.UI.Resources;
 
@@ -19,6 +22,7 @@ public partial class AboutWindow : Window
     {
         InitializeComponent();
         PopulateShortcuts();
+        ShowVersion();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -67,4 +71,16 @@ public partial class AboutWindow : Window
     }
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
+
+    /// <summary>
+    /// Shows the version of the running program under the name of the
+    /// product.
+    /// </summary>
+    private void ShowVersion()
+    {
+        VersionText.Text = LocalizedFormat.Format(
+            CultureInfo.CurrentCulture,
+            Strings.About_Version,
+            ProductVersion.Current);
+    }
 }
