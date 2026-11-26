@@ -7,6 +7,46 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-25
+
+MediaPilot has an identity of its own: the mark of the tile and the wave is
+in every surface of the product.
+
+### Added
+
+- **The mark of the application.** A rounded tile in the style of Windows 11
+  with a wave of three bars, in the orange of the brand and the lime over a
+  graphite tile. It is the icon of the executable, the icon of the
+  notification area, the image of the welcome dialog of the installer and the
+  mark of the about window.
+- **The level of the volume in the notification.** The notification of the
+  volume shows a bar with the level, in the lime of the brand, next to the
+  mark.
+- **The version of the product in the about window and in the tooltip of the
+  icon.** Both show the name of the product and its version, so the build
+  that is running can be told without opening a window.
+- **The master of the mark is code.** The project `tools/MediaPilot.Brand`
+  holds the geometry and the palette and writes the PNG and the ICO that the
+  product uses. The generated files are versioned, so the build of the
+  application never depends on the tool.
+
+### Changed
+
+- **The accent of the interface is the orange of the mark**, and the lime is
+  the color of the level of the volume and of the secondary accents. The
+  theme of Fluent is not touched: only the palette of MediaPilot changes.
+  On a light surface the orange is darkened, because the pure orange does
+  not reach the contrast that the text of a button needs.
+- **The windows show the mark at 32 pixels.** The icon of the title bar and
+  of the taskbar is the PNG and not the ICO: WPF builds the icon of a window
+  from the first frame of the ICO, and the first frame is the smallest one.
+- **The installer shows the images of the brand** in the welcome dialog and
+  in the band that every dialog of the wizard carries, and the shortcut of
+  the start menu points to the icon of the application.
+
+See
+[ADR 0018](docs/architecture/adr/0018-the-identity-of-the-product.md).
+
 ## [0.4.1] - 2026-11-25
 
 Correction of the entry that starts MediaPilot with Windows, which the
