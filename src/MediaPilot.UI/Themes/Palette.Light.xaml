@@ -8,21 +8,34 @@
         Fluent theme: that way the application does not depend on keys the
         framework may still rename, and the visual result is identical on any
         version of .NET.
+
+        The accent is the orange of the brand. On a light surface the pure
+        orange of the mark does not reach the contrast that the text of a
+        button needs, so the accent of the interface is a darker shade of the
+        same hue and the lime is kept as the color of the level.
     -->
 
     <SolidColorBrush x:Key="MediaPilot.Brush.Surface" Color="#F9F9F9" />
     <SolidColorBrush x:Key="MediaPilot.Brush.SurfaceStroke" Color="#E5E5E5" />
     <SolidColorBrush x:Key="MediaPilot.Brush.TextPrimary" Color="#1B1B1B" />
     <SolidColorBrush x:Key="MediaPilot.Brush.TextSecondary" Color="#5D5D5D" />
-    <SolidColorBrush x:Key="MediaPilot.Brush.Accent" Color="#0067C0" />
-    <SolidColorBrush x:Key="MediaPilot.Brush.AccentHover" Color="#1975C5" />
-    <SolidColorBrush x:Key="MediaPilot.Brush.AccentPressed" Color="#31589B" />
+    <SolidColorBrush x:Key="MediaPilot.Brush.Accent" Color="#C25500" />
+    <SolidColorBrush x:Key="MediaPilot.Brush.AccentHover" Color="#D46100" />
+    <SolidColorBrush x:Key="MediaPilot.Brush.AccentPressed" Color="#A34700" />
     <SolidColorBrush x:Key="MediaPilot.Brush.AccentText" Color="#FFFFFF" />
     <SolidColorBrush x:Key="MediaPilot.Brush.ControlBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="MediaPilot.Brush.ControlBackgroundHover" Color="#F6F6F6" />
     <SolidColorBrush x:Key="MediaPilot.Brush.ControlStroke" Color="#D0D0D0" />
-    <SolidColorBrush x:Key="MediaPilot.Brush.ControlStrokeFocused" Color="#0067C0" />
+    <SolidColorBrush x:Key="MediaPilot.Brush.ControlStrokeFocused" Color="#C25500" />
     <SolidColorBrush x:Key="MediaPilot.Brush.ControlText" Color="#1B1B1B" />
     <SolidColorBrush x:Key="MediaPilot.Brush.Separator" Color="#EAEAEA" />
+
+    <!--
+        The lime of the brand: the level of the volume and the accents. The
+        shade is darkened from the lime of the mark so that it reaches the
+        contrast that the graphical elements of the interface need.
+    -->
+    <SolidColorBrush x:Key="MediaPilot.Brush.BrandLime" Color="#6B8E0C" />
+    <SolidColorBrush x:Key="MediaPilot.Brush.BrandLimeTrack" Color="#E4EECF" />
 
 </ResourceDictionary>
