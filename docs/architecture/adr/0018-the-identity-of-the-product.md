@@ -106,6 +106,19 @@ with every tone grayed.
 - The extension lets every image of the wizard be replaced: the value of
   each one is the name of the binary of the package that holds it. The two
   binaries of MediaPilot take the place of the ones of the extension.
+- **The images are white.** The dialogs draw their title and their
+  description **over** these images, in the color of the system. A band in
+  the graphite of the mark left that text unreadable, and the name of the
+  product was written twice, once by the image and once by the dialog.
+- **The mark goes where the dialog does not write.** The title of the page
+  starts at the column 15 and ends at the column 215, and the description
+  goes from the column 25 to the column 365, so the band only has the last
+  columns free: the mark goes at the right end, where the extension puts
+  its logo. The canvas of the welcome page is wider than the title and the
+  description of the dialog (they start at the column 135), so the mark
+  goes in the column on the left.
+- The **line of the brand**, from the orange to the lime, is at the bottom
+  of both images, right above the line that the extension draws.
 
 ### The icon of the windows
 
@@ -153,3 +166,8 @@ ICO is the right format for the executable and for the notification area.
   **4.57** against the text, and the orange of the dark surface reaches
   **6.92**. The first shade of the lime only reached **2.71** against the
   light surface, so it was darkened to `#6B8E0C`, which reaches **3.63**.
+- The wizard was installed and every dialog was captured. The first version
+  of the band was in the graphite of the mark, with the name of the product
+  written in it: the title and the description of the dialog, which the
+  installer draws over the image, were unreadable on top of it. The images
+  are white now, and the mark is where the dialog does not write.
