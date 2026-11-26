@@ -250,4 +250,10 @@
   <data name="Startup_FailedMessage" xml:space="preserve">
     <value>Could not configure automatic startup.</value>
   </data>
+  <data name="Instance_Running_Title" xml:space="preserve">
+    <value>MediaPilot is already running</value>
+  </data>
+  <data name="Instance_Running_Message" xml:space="preserve">
+    <value>Another copy of MediaPilot is already in the notification area, so this one closed.</value>
+  </data>
 </root>

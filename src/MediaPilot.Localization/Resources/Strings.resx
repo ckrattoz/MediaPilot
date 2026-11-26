@@ -259,4 +259,10 @@
   <data name="Startup_FailedMessage" xml:space="preserve">
     <value>No se pudo configurar el inicio automático.</value>
   </data>
+  <data name="Instance_Running_Title" xml:space="preserve">
+    <value>MediaPilot ya está en marcha</value>
+  </data>
+  <data name="Instance_Running_Message" xml:space="preserve">
+    <value>Ya hay otra copia de MediaPilot en el área de notificación, así que esta se ha cerrado.</value>
+  </data>
 </root>

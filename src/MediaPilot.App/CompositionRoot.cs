@@ -13,6 +13,7 @@ using MediaPilot.Localization;
 using MediaPilot.Localization.Resources;
 using MediaPilot.Platform.Hotkeys;
 using MediaPilot.Platform.Interop;
+using MediaPilot.Platform.Instance;
 using MediaPilot.Platform.Media;
 using MediaPilot.Platform.Startup;
 using MediaPilot.Platform.Theme;
@@ -54,6 +55,7 @@ public sealed class CompositionRoot : IDisposable
     private MediaCommandExecutor? _executor;
     private WindowsThemeService? _systemTheme;
     private NotificationPresenter? _notifications;
+    private SingleInstanceGuard? _singleInstance;
     private AppSettings _settings = new();
     private SettingsWindow? _settingsWindow;
     private AboutWindow? _aboutWindow;
@@ -87,6 +89,19 @@ public sealed class CompositionRoot : IDisposable
 
         Log = _loggerFactory.CreateLogger("MediaPilot");
 
+        // Only one instance may run at a time: the second one tells the
+        // running one that it is alive and leaves. The check comes before
+        // anything else, because a second copy of the program would compete
+        // for the same global shortcuts.
+        _singleInstance = SingleInstanceGuard.TryAcquire();
+
+        if (_singleInstance is null)
+        {
+            SingleInstanceGuard.NotifyRunningInstance();
+            _application.Shutdown();
+            return;
+        }
+
         var settingsStore = new JsonSettingsStore(AppPaths.SettingsFile, _loggerFactory.CreateLogger<JsonSettingsStore>());
         _settings = settingsStore.Load();
 
@@ -102,7 +117,10 @@ public sealed class CompositionRoot : IDisposable
         _themeManager.Apply(_settings.Theme, _systemTheme.IsDark);
         _systemTheme.ThemeChanged += OnSystemThemeChanged;
 
+        _notifications = new NotificationPresenter();
+
         _messageWindow = CreateMessageWindow();
+        _router.Register(HandleSecondInstance);
 
         _hotkeys = new WindowsHotkeyService(_messageWindow.Handle, _router);
         _tray = new TrayIconService(
@@ -116,7 +134,6 @@ public sealed class CompositionRoot : IDisposable
 
         _mediaSessions = new MediaSessionMonitor(_loggerFactory.CreateLogger<MediaSessionMonitor>());
         var media = new WindowsMediaController(_mediaSessions, _loggerFactory.CreateLogger<WindowsMediaController>());
-        _notifications = new NotificationPresenter();
 
         _executor = new MediaCommandExecutor(media, _volume, _notifications)
         {
@@ -158,6 +175,7 @@ public sealed class CompositionRoot : IDisposable
         _volume?.Dispose();
         _mediaSessions?.Dispose();
         _messageWindow?.Dispose();
+        _singleInstance?.Dispose();
         _loggerFactory?.Dispose();
 
         GC.SuppressFinalize(this);
@@ -165,8 +183,11 @@ public sealed class CompositionRoot : IDisposable
 
     private HwndSource CreateMessageWindow()
     {
-        var parameters = new HwndSourceParameters("MediaPilot.Host")
+        var parameters = new HwndSourceParameters(SingleInstanceGuard.HostWindowTitle)
         {
+            // The title of the window is the one that the second instance
+            // looks for, so it is written explicitly.
+            WindowName = SingleInstanceGuard.HostWindowTitle,
             Width = 0,
             Height = 0,
             PositionX = 0,
@@ -213,6 +234,29 @@ public sealed class CompositionRoot : IDisposable
     private void OnSystemThemeChanged(object? sender, EventArgs e)
     {
         _themeManager.Apply(_settings.Theme, _systemTheme?.IsDark ?? false);
+    }
+
+    /// <summary>
+    /// Tells the user that the program was already running.
+    /// </summary>
+    /// <remarks>
+    /// A second instance of MediaPilot leaves as soon as it finds the running
+    /// one, and the notice is the only trace that it leaves behind.
+    /// </remarks>
+    /// <param name="message">Message received from the host window.</param>
+    /// <returns><see langword="true"/> if the message was handled.</returns>
+    private bool HandleSecondInstance(NativeMessage message)
+    {
+        if (message.Message != SingleInstanceGuard.WmAppSecondInstance)
+        {
+            return false;
+        }
+
+        RunOnDispatcher(() => _notifications?.ShowMessage(
+            Strings.Instance_Running_Title,
+            Strings.Instance_Running_Message));
+
+        return true;
     }
 
     private void ApplyHotkeys()

@@ -47,6 +47,9 @@ internal static partial class NativeMethods
     [LibraryImport("user32.dll", EntryPoint = "MapVirtualKeyW")]
     internal static partial uint MapVirtualKey(uint uCode, uint uMapType);
 
+    [LibraryImport("user32.dll", EntryPoint = "FindWindowW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    internal static partial nint FindWindowW(string? lpszClassName, string? lpWindowName);
+
     // ─────────────────────────── shell32 ───────────────────────────
 
     // Shell_NotifyIconW receives a structure with fixed-size string fields,
