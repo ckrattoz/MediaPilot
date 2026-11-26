@@ -19,6 +19,19 @@
     <Icon Id="ApplicationIcon" SourceFile="$(PublishDirectory)Resources\Icons\active.ico" />
 
     <!--
+      The images of the wizard. The WixUI extension brings its own, and these
+      two replace them: the welcome dialog shows the mark of the application
+      and every dialog carries the band of the brand.
+
+      The size is the one of the control of the extension: 370x234 for the
+      image of the welcome dialog and 370x44 for the band. The control of
+      Windows Installer does not blend the image, so the alpha channel of the
+      files is forced to opaque.
+    -->
+    <Binary Id="MediaPilot_Bmp_Welcome" SourceFile="Assets\welcome.bmp" />
+    <Binary Id="MediaPilot_Bmp_Banner" SourceFile="Assets\banner.bmp" />
+
+    <!--
       MediaPilot lives in the notification area and holds its files open, so
       the installer has to close it before it can replace or remove them. The
       application answers the close request by exiting.
@@ -54,7 +67,8 @@
                   Name="MediaPilot"
                   Description="Global multimedia control for Windows 11"
                   Target="[INSTALLFOLDER]MediaPilot.App.exe"
-                  WorkingDirectory="INSTALLFOLDER" />
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="ApplicationIcon" />
         <RemoveFolder Id="RemoveApplicationProgramsFolder" On="uninstall" />
         <!--
           The folder where the program was installed. It is the key path of

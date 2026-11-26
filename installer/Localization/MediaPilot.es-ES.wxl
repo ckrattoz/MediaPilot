@@ -18,6 +18,40 @@
   <String Id="WelcomeDlgDescription" Overridable="yes" Value="Se va a instalar [ProductName] en este equipo. Se queda en el &#225;rea de notificaci&#243;n y registra los atajos multimedia globales. Haz clic en Siguiente para continuar o en Cancelar para salir." />
   <String Id="WelcomeUpdateDlgDescriptionUpdate" Overridable="yes" Value="Se va a actualizar [ProductName] en este equipo. Haz clic en Siguiente para continuar o en Cancelar para salir." />
 
+  <!--
+    Imagenes del asistente. La extension WixUI trae las suyas y estos
+    identificadores las sustituyen por las de MediaPilot. El valor de cada
+    uno es el nombre de un binario del paquete: asi es como el control de
+    Windows Installer encuentra la imagen.
+
+    Los que terminan en "Banner" son la banda de 370x44 que llevan los
+    dialogos, y los demas son la imagen de 370x234 del dialogo.
+  -->
+  <String Id="AdvancedWelcomeEulaDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="BrowseDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="CustomizeDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="DiskCostDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="FeaturesDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="FilesInUseBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="InstallDirDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="InstallScopeDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="LicenseAgreementDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="MaintenanceTypeDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="MsiRMFilesInUseBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="OutOfDiskDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="OutOfRbDiskDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="ProgressDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="SetupTypeDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="VerifyReadyDlgBannerBitmap" Overridable="yes" Value="MediaPilot_Bmp_Banner" />
+  <String Id="ExitDialogBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="FatalErrorBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="MaintenanceWelcomeDlgBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="PrepareDlgBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="ResumeDlgBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="UserExitBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="WelcomeDlgBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+  <String Id="WelcomeEulaDlgBitmap" Overridable="yes" Value="MediaPilot_Bmp_Welcome" />
+
   <!-- Contrato de licencia -->
   <String Id="LicenseAgreementDlgTitle" Overridable="yes" Value="{&#92;WixUI_Font_Title}Contrato de licencia de [ProductName]" />
   <String Id="LicenseAgreementDlgDescription" Overridable="yes" Value="Lee el contrato de licencia de [ProductName] antes de continuar." />
