@@ -62,7 +62,7 @@ internal static class ShapeSheet
                     12,
                     Color.FromRgb(0x60, 0x60, 0x68));
 
-                var icon = IconRenderer.Render(BrandPalette.Candidates[0], 16, shape, drawTile);
+                var icon = IconRenderer.Render(BrandPalette.Active, 16, shape, drawTile);
                 DrawMagnified(context, icon, margin + 280, y + 16, zoom);
 
                 y += rowHeight;

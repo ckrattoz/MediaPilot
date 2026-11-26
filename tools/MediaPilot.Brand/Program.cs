@@ -13,8 +13,8 @@ internal static class Program
     /// </summary>
     /// <param name="args">
     /// The first argument is the command: <c>sheet</c> writes the review
-    /// sheets, <c>assets</c> writes the icon files. The second argument is the
-    /// output directory.
+    /// sheets, <c>assets</c> writes the icon files, <c>installer</c> writes the
+    /// images of the wizard. The second argument is the output directory.
     /// </param>
     /// <returns>The exit code of the process.</returns>
     [STAThread]
@@ -22,7 +22,7 @@ internal static class Program
     {
         if (args.Length < 2)
         {
-            Console.Error.WriteLine("Usage: MediaPilot.Brand <sheet|assets> <output-directory>");
+            Console.Error.WriteLine("Usage: MediaPilot.Brand <sheet|shapes|assets|installer> <output-directory>");
             return 1;
         }
 
@@ -45,6 +45,10 @@ internal static class Program
                 WriteAssets(outputDirectory);
                 return 0;
 
+            case "installer":
+                WriteInstallerArtwork(outputDirectory);
+                return 0;
+
             default:
                 Console.Error.WriteLine($"Unknown command: {command}");
                 return 1;
@@ -59,10 +63,10 @@ internal static class Program
     {
         var current = LoadCurrentIcon();
 
-        var sheet = BrandSheet.Build(BrandPalette.Candidates, current);
+        var sheet = BrandSheet.Build(BrandPalette.Explored, current);
         File.WriteAllBytes(Path.Combine(outputDirectory, "sheet.png"), sheet);
 
-        var legibility = BrandSheet.BuildLegibilitySheet(BrandPalette.Candidates, current);
+        var legibility = BrandSheet.BuildLegibilitySheet(BrandPalette.Explored, current);
         File.WriteAllBytes(Path.Combine(outputDirectory, "legibilidad.png"), legibility);
 
         Console.WriteLine($"Sheet: {Path.Combine(outputDirectory, "sheet.png")}");
@@ -94,27 +98,55 @@ internal static class Program
     }
 
     /// <summary>
-    /// Writes the icon files of every candidate.
+    /// Writes the icon files of the application.
     /// </summary>
-    /// <param name="outputDirectory">The directory that receives the files.</param>
-    private static void WriteAssets(string outputDirectory)
+    /// <remarks>
+    /// The icons travel to two places, and both are needed for a different
+    /// reason: the notification area loads them from the file system, and the
+    /// windows of the application take them from the resources of the assembly
+    /// of the user interface.
+    /// </remarks>
+    /// <param name="repositoryRoot">The root of the repository.</param>
+    private static void WriteAssets(string repositoryRoot)
     {
-        foreach (var palette in BrandPalette.Candidates)
-        {
-            var ico = IcoWriter.Build(palette);
-            File.WriteAllBytes(Path.Combine(outputDirectory, $"{palette.Id}.ico"), ico);
+        var appIcons = Path.Combine(repositoryRoot, "src", "MediaPilot.App", "Resources", "Icons");
+        var uiBrand = Path.Combine(repositoryRoot, "src", "MediaPilot.UI", "Resources", "Brand");
 
-            foreach (var size in new[] { 16, 32, 256 })
-            {
-                var png = IconRenderer.EncodePng(IconRenderer.Render(palette, size));
-                File.WriteAllBytes(Path.Combine(outputDirectory, $"{palette.Id}-{size}.png"), png);
-            }
-        }
+        Directory.CreateDirectory(appIcons);
+        Directory.CreateDirectory(uiBrand);
+
+        var active = IcoWriter.Build(BrandPalette.Active);
+        File.WriteAllBytes(Path.Combine(appIcons, "active.ico"), active);
 
         var inactive = IcoWriter.Build(BrandPalette.Inactive);
-        File.WriteAllBytes(Path.Combine(outputDirectory, "inactive.ico"), inactive);
+        File.WriteAllBytes(Path.Combine(appIcons, "inactive.ico"), inactive);
 
-        Console.WriteLine($"Assets: {outputDirectory}");
+        foreach (var size in new[] { 32, 64, 128, 256 })
+        {
+            var png = IconRenderer.EncodePng(IconRenderer.Render(BrandPalette.Active, size));
+            File.WriteAllBytes(Path.Combine(uiBrand, $"mark-{size}.png"), png);
+        }
+
+        // The icon of the windows of the application.
+        File.WriteAllBytes(Path.Combine(uiBrand, "MediaPilot.ico"), active);
+
+        Console.WriteLine($"Tray icons: {appIcons}");
+        Console.WriteLine($"Brand resources: {uiBrand}");
+    }
+
+    /// <summary>
+    /// Writes the images of the installation wizard.
+    /// </summary>
+    /// <param name="outputDirectory">The directory that receives the files.</param>
+    private static void WriteInstallerArtwork(string outputDirectory)
+    {
+        var welcome = InstallerArtwork.BuildWelcome();
+        File.WriteAllBytes(Path.Combine(outputDirectory, "welcome.bmp"), welcome);
+
+        var banner = InstallerArtwork.BuildBanner();
+        File.WriteAllBytes(Path.Combine(outputDirectory, "banner.bmp"), banner);
+
+        Console.WriteLine($"Installer artwork: {outputDirectory}");
     }
 
     /// <summary>
