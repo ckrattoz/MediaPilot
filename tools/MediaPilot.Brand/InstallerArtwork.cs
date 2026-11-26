@@ -20,6 +20,12 @@ namespace MediaPilot.Brand;
 /// The control that shows them does not accept PNG, only bitmap, so the
 /// images are written as uncompressed 32 bit bitmaps.
 /// </para>
+/// <para>
+/// The dialogs draw their title and their description over these images, in
+/// the color of the system. The canvas is therefore white, and the mark goes
+/// where the dialog does not write: the column on the left of the welcome
+/// page, and the end on the right of the band.
+/// </para>
 /// </remarks>
 internal static class InstallerArtwork
 {
@@ -36,6 +42,16 @@ internal static class InstallerArtwork
     public const int BannerHeight = 44;
 
     /// <summary>
+    /// The left column of the canvas of the welcome page, in pixels.
+    /// </summary>
+    /// <remarks>
+    /// The dialog draws its title and its description over the canvas, from
+    /// the column 135 to the column 355. The column on the left is the only
+    /// one that stays free, and it is where the mark goes.
+    /// </remarks>
+    private const int MarkColumn = 135;
+
+    /// <summary>
     /// Builds the canvas of the welcome page.
     /// </summary>
     /// <returns>The bytes of the bitmap file.</returns>
@@ -45,68 +61,20 @@ internal static class InstallerArtwork
 
         using (var context = visual.RenderOpen())
         {
-            context.DrawRectangle(
-                new SolidColorBrush(Color.FromRgb(0x17, 0x1A, 0x20)),
-                null,
-                new Rect(0, 0, DialogWidth, DialogHeight));
+            // The canvas is white. The dialog draws its title and its
+            // description over it, in the color of the system, and a white
+            // canvas is the only one that keeps that text readable with any
+            // theme of the operating system.
+            context.DrawRectangle(Brushes.White, null, new Rect(0, 0, DialogWidth, DialogHeight));
 
-            // The mark, centered at the top of the canvas.
-            var mark = IconRenderer.Render(BrandPalette.Active, 84);
-            context.DrawImage(mark, new Rect((DialogWidth - 84) / 2.0, 22, 84, 84));
+            // The mark, in the column on the left, where the dialog does not
+            // draw anything.
+            var size = 120;
+            var mark = IconRenderer.Render(BrandPalette.Active, size);
+            context.DrawImage(mark, new Rect((MarkColumn - size) / 2.0, (DialogHeight - size) / 2.0, size, size));
 
-            var typeface = new Typeface(
-                new FontFamily("Segoe UI"),
-                FontStyles.Normal,
-                FontWeights.SemiBold,
-                FontStretches.Normal);
-
-            var title = new FormattedText(
-                "MediaPilot",
-                System.Globalization.CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                typeface,
-                26,
-                new SolidColorBrush(Color.FromRgb(0xF2, 0xF2, 0xF2)),
-                1.0);
-
-            context.DrawText(title, new Point((DialogWidth - title.Width) / 2.0, 118));
-
-            var captionTypeface = new Typeface(
-                new FontFamily("Segoe UI"),
-                FontStyles.Normal,
-                FontWeights.Normal,
-                FontStretches.Normal);
-
-            var caption = new FormattedText(
-                "Atajos multimedia globales",
-                System.Globalization.CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                captionTypeface,
-                13,
-                new SolidColorBrush(Color.FromRgb(0xA6, 0xA6, 0xA6)),
-                1.0);
-
-            context.DrawText(caption, new Point((DialogWidth - caption.Width) / 2.0, 152));
-
-            // The wave of the mark is repeated at the bottom of the canvas as
-            // a band of bars: it identifies the product without repeating the
-            // logo, and it echoes the mark that is above.
-            var accent = new LinearGradientBrush(
-                Color.FromRgb(0xFF, 0x8A, 0x2B),
-                Color.FromRgb(0xB6, 0xE2, 0x4A),
-                new Point(0, 0),
-                new Point(1, 0));
-
-            var heights = new[] { 16.0, 30.0, 22.0, 38.0, 18.0, 32.0, 24.0, 40.0, 20.0 };
-
-            for (var i = 0; i < heights.Length; i++)
-            {
-                var x = 22 + (i * 38);
-                var height = heights[i];
-                var bar = new Rect(x, DialogHeight - 22 - height, 16, height);
-
-                context.DrawRectangle(accent, null, bar);
-            }
+            // The line of the brand at the bottom of the page.
+            context.DrawRectangle(BuildAccent(), null, new Rect(0, DialogHeight - 3, DialogWidth, 3));
         }
 
         return EncodeBitmap(visual, DialogWidth, DialogHeight);
@@ -122,42 +90,34 @@ internal static class InstallerArtwork
 
         using (var context = visual.RenderOpen())
         {
-            context.DrawRectangle(
-                new SolidColorBrush(Color.FromRgb(0x17, 0x1A, 0x20)),
-                null,
-                new Rect(0, 0, BannerWidth, BannerHeight));
+            // The band is white, like the background of the dialog, so that it
+            // is not a stripe of another color on top of the page.
+            context.DrawRectangle(Brushes.White, null, new Rect(0, 0, BannerWidth, BannerHeight));
 
-            var accent = new LinearGradientBrush(
-                Color.FromRgb(0xFF, 0x8A, 0x2B),
-                Color.FromRgb(0xB6, 0xE2, 0x4A),
-                new Point(0, 0),
-                new Point(1, 0));
+            // The line of the brand at the bottom of the band, right above
+            // the line that the extension draws.
+            context.DrawRectangle(BuildAccent(), null, new Rect(0, BannerHeight - 3, BannerWidth, 3));
 
-            context.DrawRectangle(accent, null, new Rect(0, BannerHeight - 3, BannerWidth, 3));
-
-            var mark = IconRenderer.Render(BrandPalette.Active, 28);
-            context.DrawImage(mark, new Rect(14, (BannerHeight - 28) / 2.0, 28, 28));
-
-            var typeface = new Typeface(
-                new FontFamily("Segoe UI"),
-                FontStyles.Normal,
-                FontWeights.SemiBold,
-                FontStretches.Normal);
-
-            var title = new FormattedText(
-                "MediaPilot",
-                System.Globalization.CultureInfo.InvariantCulture,
-                FlowDirection.LeftToRight,
-                typeface,
-                15,
-                new SolidColorBrush(Color.FromRgb(0xF2, 0xF2, 0xF2)),
-                1.0);
-
-            context.DrawText(title, new Point(52, (BannerHeight - title.Height) / 2.0));
+            // The mark at the right end, where the extension puts its logo.
+            // The title of the dialog ends at the column 215 and the
+            // description does not reach the last column.
+            var size = 32;
+            var mark = IconRenderer.Render(BrandPalette.Active, size);
+            context.DrawImage(mark, new Rect(BannerWidth - size - 6, (BannerHeight - size) / 2.0, size, size));
         }
 
         return EncodeBitmap(visual, BannerWidth, BannerHeight);
     }
+
+    /// <summary>
+    /// Builds the gradient of the brand, from the orange to the lime.
+    /// </summary>
+    /// <returns>The brush of the gradient.</returns>
+    private static LinearGradientBrush BuildAccent() => new(
+        BrandPalette.BrandOrange,
+        BrandPalette.BrandLime,
+        new Point(0, 0),
+        new Point(1, 0));
 
     /// <summary>
     /// Encodes a visual as an uncompressed 32 bit bitmap file.
