@@ -60,7 +60,7 @@ does not, and the package is changed to not ask for them.
 ### The registration of the installation
 
 - The key path of the component that registers the program is a value of
-  `HKCU\Software\ckrattoz\MediaPilot`, so the state of the installation
+  `HKCU\Software\Antonio Núñez\MediaPilot`, so the state of the installation
   belongs to the user and not to the computer.
 - The shortcut of the start menu and the entry of the installed programs
   belong to the user as well.
@@ -77,7 +77,7 @@ languages of the runtime, whose number changes with the version of .NET.
   exist at that moment, so the set of languages of the runtime does not have to
   be known when the package is built.
 - The folder is read back from the registry
-  (`HKCU\Software\ckrattoz\MediaPilot\InstallFolder`) when the program is
+  (`HKCU\Software\Antonio Núñez\MediaPilot\InstallFolder`) when the program is
   uninstalled, because at that moment the property of the installation
   directory is not resolved anymore.
 - The action only runs when the program is being removed (`REMOVE="ALL"`).

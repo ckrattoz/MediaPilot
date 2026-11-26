@@ -76,7 +76,7 @@
           uninstaller reads it back to remove the tree of files.
         -->
         <RegistryValue Root="HKCU"
-                       Key="Software\ckrattoz\MediaPilot"
+                       Key="Software\Antonio Núñez\MediaPilot"
                        Name="InstallFolder"
                        Type="string"
                        Value="[INSTALLFOLDER]"
@@ -129,7 +129,7 @@
     <Property Id="MEDIAPILOT_INSTALL_DIR">
       <RegistrySearch Id="FindInstallFolder"
                       Root="HKCU"
-                      Key="Software\ckrattoz\MediaPilot"
+                      Key="Software\Antonio Núñez\MediaPilot"
                       Name="InstallFolder"
                       Type="directory" />
     </Property>

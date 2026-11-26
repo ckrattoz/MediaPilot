@@ -203,7 +203,7 @@ use it too, otherwise the restore fails with NU1201.
   table cannot be written when the package is built:
   `util:RemoveFolderEx` writes them when the program is uninstalled, with the
   folders that exist at that moment. The folder is read back from the registry
-  (`HKCU\Software\ckrattoz\MediaPilot\InstallFolder`), because the property of
+  (`HKCU\Software\Antonio Núñez\MediaPilot\InstallFolder`), because the property of
   the installation directory is not resolved anymore at that point.
 - **The installer writes the entry of the start-up, and the application keeps
   it in sync.** Windows Installer only removes the registry values that the
