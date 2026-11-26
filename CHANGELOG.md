@@ -7,6 +7,20 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-11-26
+
+MediaPilot is credited to its author, with the name and not with the handle of
+the GitHub account.
+
+### Fixed
+
+- **The author is Antonio Nuñez.** The copyright of the assembly, the license
+  file and the license that the installer shows, the publisher of the package
+  and the key of the registry that holds the state of the installation used the
+  handle of the GitHub account. They use the name of the author now, in the
+  product and in the documentation that describes it. The handle stays in the
+  links to the repository, where it is the name of the account.
+
 ## [0.5.0] - 2026-11-25
 
 MediaPilot has an identity of its own: the mark of the tile and the wave is
