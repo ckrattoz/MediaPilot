@@ -12,20 +12,28 @@ It is a static page with no build step: the `site/` folder of this repository
 
 | Setting | Value |
 | --- | --- |
-| Source | Deploy from a branch |
-| Branch | `main` |
-| Folder | `/site` |
+| Source | GitHub Actions (`build_type: workflow`) |
+| Workflow | `.github/workflows/pages.yml` |
+| Content | The `site` folder of the `main` branch |
 | Address | `https://ckrattoz.github.io/MediaPilot/` |
+| Environment | `github-pages` |
 
-Every push to `main` republishes the page. There is nothing to compile: the
-HTML carries its own stylesheet and the images live in `site/assets/`.
+The workflow uploads the `site` folder as the artifact of the deployment and
+publishes it. Every push to `main` that touches the folder republishes the
+page, and the workflow can also be run by hand.
+
+There is nothing to compile: the HTML carries its own stylesheet and the images
+live in `site/assets/`.
+
+The REST API of GitHub only accepts the root of the repository or `/docs` as
+the source of a site published from a branch, and the site of this repository
+lives in its own folder, so the publication goes through the workflow. That
+also keeps the rule of one long lived branch: there is no `gh-pages` branch, and
+the page and the product never drift apart.
 
 The page follows the identity of the product: the palette and the mark come
 from `src/MediaPilot.UI/Resources/Brand`. A change of the brand has to be
 followed by a change of the page.
-
-The rule of one long lived branch applies here too: the site lives in `main`
-and not in a `gh-pages` branch, so the page and the product never drift apart.
 
 ## The download contract
 
