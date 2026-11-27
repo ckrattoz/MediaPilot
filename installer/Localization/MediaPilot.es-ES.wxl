@@ -135,4 +135,13 @@
   -->
   <String Id="MediaPilotDowngradeMessage" Value="Ya hay instalada una versi&#243;n m&#225;s reciente de [ProductName]. Desinst&#225;lala antes de instalar esta versi&#243;n." />
 
+  <!--
+    Dialogo final. La extension WixUI solo conoce las propiedades
+    WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT y WIXUI_EXITDIALOGOPTIONALTEXT: las
+    muestra cuando estan vacias y cuando el producto no estaba instalado
+    antes. Estas cadenas son el texto de esas propiedades.
+  -->
+  <String Id="MediaPilotLaunchText" Value="Lanzar MediaPilot" />
+  <String Id="MediaPilotBackgroundNote" Value="MediaPilot se queda en el &#225;rea de notificaci&#243;n, junto al reloj, y no abre ninguna ventana al iniciar." />
+
 </WixLocalization>

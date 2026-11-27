@@ -42,6 +42,84 @@
                            RebootPrompt="no"
                            Description="Cierra MediaPilot para que el instalador pueda terminar." />
 
+    <!--
+      The final dialog of the wizard offers to start MediaPilot right after
+      the installation.
+
+      The extension of the interface only knows these properties: it shows
+      the check box and the note when the property that holds the text of
+      each of them is set, and only when the product was not installed
+      before, so the option belongs to a first installation and not to an
+      update.
+
+      The texts live in the localization file of the package, the same as the
+      rest of the texts of the installer.
+    -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.MediaPilotLaunchText)" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="!(loc.MediaPilotBackgroundNote)" />
+
+    <!--
+      The check box starts checked: after an installation the natural thing
+      is to try the program that was just installed.
+    -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+    <!--
+      The command line that starts the program. It is built at the moment it
+      is needed, when the installation already knows where the program was
+      installed.
+
+      The property holds the path of the executable, without quotes: the
+      installer uses it as the name of the program to start, and a path with
+      quotes is not a path.
+    -->
+    <CustomAction Id="SetLaunchMediaPilot"
+                  Property="LAUNCH_MEDIAPILOT"
+                  Value="[INSTALLFOLDER]MediaPilot.App.exe"
+                  Execute="immediate" />
+
+    <!--
+      The program starts after the user closes the final dialog with the
+      "Finish" button, never while the installer is still on screen.
+
+      The action is of type 50: the path of the executable lives in a
+      property and the line of commands is the target of the action. It runs
+      in the session of the user that started the installation, which is what
+      a per-user installation needs. The installer does not wait for the
+      program, because MediaPilot lives in the notification area and it does
+      not end on its own.
+    -->
+    <CustomAction Id="LaunchMediaPilot"
+                  Property="LAUNCH_MEDIAPILOT"
+                  ExeCommand="&quot;[INSTALLFOLDER]MediaPilot.App.exe&quot;"
+                  Return="asyncNoWait"
+                  Execute="immediate" />
+
+    <UI Id="MediaPilotUI">
+      <!--
+        The events of the "Finish" button of the final dialog. The one that
+        closes the dialog belongs to the extension of the interface and has
+        the order 999, so these two run after it: the program starts when
+        the installer is already gone.
+
+        The condition is the one of the check box: the program only starts
+        when the user leaves it marked, and only when the product was
+        installed and not updated or repaired.
+      -->
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction"
+               Value="SetLaunchMediaPilot"
+               Order="1000"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = &quot;1&quot; AND NOT Installed" />
+      <Publish Dialog="ExitDialog"
+               Control="Finish"
+               Event="DoAction"
+               Value="LaunchMediaPilot"
+               Order="1001"
+               Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = &quot;1&quot; AND NOT Installed" />
+    </UI>
+
     <Feature Id="MainProgram" Title="MediaPilot" Level="1" AllowAbsent="no">
       <!--
         The published output is harvested as it is: every file becomes its own
