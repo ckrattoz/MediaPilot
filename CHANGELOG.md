@@ -7,6 +7,42 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-26
+
+MediaPilot says hello the first time it runs, and it refuses to run twice.
+
+### Added
+
+- **The notice of the first run.** MediaPilot has no window of its own, so
+  after the installation there is nothing on screen and the program looks
+  broken. The first time it runs, two seconds after the start, a notice
+  explains that it stays in the notification area, next to the clock. The
+  notice is the overlay of the product, the same one that shows the volume,
+  and it is shown only once: the flag that remembers it lives with the rest of
+  the settings.
+- **The installer offers to start MediaPilot.** The final dialog of the wizard
+  shows the option **Lanzar MediaPilot**, marked, with a note that explains
+  that the program stays in the notification area and does not open any
+  window. The program starts when the user closes the dialog with *Finalizar*,
+  never while the installer is still on screen. The option belongs to a first
+  installation: the interface only shows it when the product was not installed
+  before.
+- **Only one instance at a time.** A second copy of MediaPilot no longer
+  competes with the first one for the global hotkeys: it tells the running
+  instance that it is alive, shows a notice and ends. The instance is bound to
+  the session of the user, so two users of the same computer do not interfere
+  with each other.
+
+### Fixed
+
+- The program looked for the window of the running instance by its class, and
+  WPF does not give its hidden window a class of its own: the notice of the
+  second instance never reached the running one. The window is now looked for
+  by its title.
+
+See
+[ADR 0019](docs/architecture/adr/0019-one-instance-and-the-first-run-notice.md).
+
 ## [0.5.1] - 2026-11-26
 
 MediaPilot is credited to its author, with the name and not with the handle of

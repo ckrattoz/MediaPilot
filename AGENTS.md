@@ -31,8 +31,8 @@ The repository builds with `TreatWarningsAsErrors` and the .NET analyzers in
 `Recommended` mode. **A warning is an error.** Never silence a warning to make
 the build pass without understanding it.
 
-The tests are 67 in total: 33 in `MediaPilot.Core.Tests` (no Windows needed)
-and 34 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
+The tests are 72 in total: 33 in `MediaPilot.Core.Tests` (no Windows needed)
+and 39 in `MediaPilot.Platform.Tests` (they touch the real platform APIs).
 
 ## Language rules
 
@@ -237,6 +237,35 @@ use it too, otherwise the restore fails with NU1201.
   localization.** The value of `WelcomeDlgBitmap` and of every
   `*BannerBitmap` is the name of a binary of the package, not a file. See
   [ADR 0018](docs/architecture/adr/0018-the-identity-of-the-product.md).
+- **The final dialog of the wizard cannot be scheduled around.** It is a
+  termination action and its sequence number is negative, so the compiler
+  rejects with `WIX0177` any action that is scheduled before or after it.
+  Whatever has to happen when the user closes the dialog is a **control event**
+  on its *Finish* button (`DoAction`), with an order that is greater than the
+  999 of the extension, so that it runs after the event that closes the
+  dialog. See
+  [ADR 0019](docs/architecture/adr/0019-one-instance-and-the-first-run-notice.md).
+- **The property of a type 50 action holds the path of the executable, and
+  the target holds the line of commands.** The path must not be quoted: the
+  installer uses it as the name of the program to start, and `CreateProcess`
+  fails with `ERROR_CREATE_FAILED` (1631) when the quotes are part of it. The
+  target needs the quotes, because it is the command line.
+- **The text of a property cannot be the value of another property.** The
+  texts of the check box and of the note of the final dialog are written with
+  `!(loc.Id)`, which is resolved at build time against the localization file
+  of the package.
+- **Only one instance of MediaPilot runs at a time.** The composition root
+  takes the mutex `Local\MediaPilot.SingleInstance` before it builds anything
+  else, and the second instance sends `WM_APP + 2` to the hidden window of the
+  running one and leaves. The window is looked for **by its title**: WPF gives
+  its hidden window the class of its wrapper, which changes with every build.
+- **The notice of the first run is shown once.** The flag
+  `AppSettings.OnboardingCompleted` lives with the settings, and **every place
+  that rebuilds `AppSettings` has to carry it over**: `SettingsViewModel.Save`,
+  `JsonSettingsStore.Migrate`, `CompositionRoot.ToggleHotkeys`,
+  `CompositionRoot.ToggleStartup` and the notice of the first run itself. A
+  place that forgets it makes the notice appear again. See
+  [ADR 0019](docs/architecture/adr/0019-one-instance-and-the-first-run-notice.md).
 
 ## Decision records
 

@@ -187,6 +187,34 @@ notification (`WM_SETTINGCHANGE`).
 `ShutdownMode` is `OnExplicitShutdown`: the application only ends when the
 user chooses *Exit* in the tray menu.
 
+## Startup
+
+```
+Application starts
+     │
+     ▼
+SingleInstanceGuard.TryAcquire  ──►  already taken? ──►  notify the running one and leave
+     │
+     ▼
+Settings are loaded, the icon is in the notification area, the hotkeys are registered
+     │
+     ├── the notice of the first run has not been shown yet?
+     │        └──► two seconds later, the overlay explains where the program is
+     │
+     ▼
+The application waits, in the notification area
+```
+
+Only one instance runs per session of the user, and it is decided by a named
+mutex that the composition root takes before it builds anything else. The
+second copy sends `WM_APP + 2` to the hidden window of the running one, which
+shows a notice, and ends.
+
+The first time the program runs, the overlay explains that it lives in the
+notification area. The notice is shown once: the flag that remembers it is
+`AppSettings.OnboardingCompleted`. See
+[ADR 0019](adr/0019-one-instance-and-the-first-run-notice.md).
+
 ## Packaging
 
 The application is published as a self-contained x64 executable and packaged
@@ -233,3 +261,4 @@ Every choice with discarded alternatives has its ADR:
 | [0016](adr/0016-per-user-installation.md) | Installation for the current user, without elevation |
 | [0017](adr/0017-startup-entry-ownership.md) | The installer registers the program in the Run key of the user |
 | [0018](adr/0018-the-identity-of-the-product.md) | The identity of the product is one vector master, kept in code |
+| [0019](adr/0019-one-instance-and-the-first-run-notice.md) | One instance per session and the notice of the first run |

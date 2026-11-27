@@ -110,6 +110,22 @@ project, because **both programs register the same seven hotkeys**.
 MediaPilot detects this and reports it: a notice appears with the conflicting
 combination. The solution is to close the other program or to reassign the
 hotkey from *Settings → Keyboard shortcuts*.
+## First run
+
+MediaPilot has no window of its own: it lives in the notification area and it
+does not open anything when it starts. The **first** time it runs, a notice
+explains where it is - next to the clock, in the notification area - and how to
+open its settings. The notice is shown only once; the flag that remembers it
+is stored with the rest of the settings.
+
+The installer offers to start MediaPilot: the final dialog of the wizard shows
+the option *Lanzar MediaPilot*, marked, and the program starts when the user
+closes the dialog with *Finalizar*.
+
+Only one instance of MediaPilot runs at a time. A second copy tells the
+running one that it is alive, shows a notice and closes, so the global hotkeys
+are never registered twice.
+
 ## Settings and local data
 
 | Path | Content |
@@ -126,6 +142,7 @@ hotkey from *Settings → Keyboard shortcuts*.
   "StartWithWindows": false,
   "ShowNotifications": true,
   "Theme": "Auto",
+  "OnboardingCompleted": true,
   "Hotkeys": [
     {
       "Gesture": { "Modifiers": "Alt, Control", "Key": "Left" },
@@ -242,6 +259,9 @@ shows is the MIT license of the project, in `installer/License.rtf`. The
 uninstaller closes MediaPilot, removes the files, the folders and the
 shortcut, and removes the entry that starts it with Windows; the settings and
 the log of the application are kept, because they belong to the user.
+
+The final dialog of the wizard offers to start MediaPilot, and the program
+starts when the user closes it with *Finalizar*.
 
 The installer is a separate project and is not part of the solution: it needs
 the published output to exist before it can be compiled.
