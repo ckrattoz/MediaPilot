@@ -16,6 +16,15 @@ public sealed partial class SettingsViewModel : ObservableObject
     private readonly IStartupService _startupService;
 
     /// <summary>
+    /// State of the notice of the first run.
+    /// </summary>
+    /// <remarks>
+    /// The panel does not show it, so it keeps the value that is already
+    /// stored: saving the settings must not make the notice appear again.
+    /// </remarks>
+    private bool _onboardingCompleted;
+
+    /// <summary>
     /// Initializes the view model.
     /// </summary>
     /// <param name="settingsStore">Settings store.</param>
@@ -73,6 +82,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         ShowNotifications = settings.ShowNotifications;
         StartWithWindows = settings.StartWithWindows;
         Theme = settings.Theme;
+        _onboardingCompleted = settings.OnboardingCompleted;
 
         Hotkeys.Clear();
         foreach (var binding in settings.Hotkeys)
@@ -94,6 +104,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             ShowNotifications = ShowNotifications,
             StartWithWindows = StartWithWindows,
             Theme = Theme,
+            OnboardingCompleted = _onboardingCompleted,
             Hotkeys = [.. Hotkeys
                 .Where(h => h.Gesture is not null)
                 .Select(h => new HotkeyBinding(h.Gesture!.Value, h.Command))],

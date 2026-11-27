@@ -53,6 +53,18 @@ public sealed class NotificationPresenter : INotificationPresenter
     /// <inheritdoc />
     public void ShowMessage(string title, string message) => Show(title, message, MessageDisplayDuration, null);
 
+    /// <summary>
+    /// Shows an informational message for the given amount of time.
+    /// </summary>
+    /// <remarks>
+    /// The notices that have to be read, like the one of the first run, stay
+    /// on screen longer than the ones that only inform about a change.
+    /// </remarks>
+    /// <param name="title">Message title.</param>
+    /// <param name="message">Message body.</param>
+    /// <param name="duration">Time visible before closing.</param>
+    public void ShowMessage(string title, string message, TimeSpan duration) => Show(title, message, duration, null);
+
     private void Show(string title, string message, TimeSpan duration, int? level)
     {
         var dispatcher = Application.Current?.Dispatcher;

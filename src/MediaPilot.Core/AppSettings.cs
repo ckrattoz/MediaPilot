@@ -23,6 +23,16 @@ public sealed class AppSettings
     /// <summary>User interface theme preference.</summary>
     public ThemePreference Theme { get; init; } = ThemePreference.Auto;
 
+    /// <summary>
+    /// Indicates whether the notice of the first run has already been shown.
+    /// </summary>
+    /// <remarks>
+    /// MediaPilot has no window of its own, so the first time it runs the
+    /// user sees nothing at all. The notice that explains where the program
+    /// is only makes sense once: the flag remembers that it was shown.
+    /// </remarks>
+    public bool OnboardingCompleted { get; init; }
+
     /// <summary>Global hotkey and command bindings.</summary>
     public HotkeyBinding[] Hotkeys { get; init; } = DefaultHotkeys.All;
 }

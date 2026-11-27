@@ -40,6 +40,18 @@ public sealed class CompositionRoot : IDisposable
     private const int WmSettingChange = 0x001A;
     private const string IconFolder = "Resources/Icons";
 
+    /// <summary>
+    /// Time the application waits before it shows the notice of the first run.
+    /// </summary>
+    /// <remarks>
+    /// The notice appears once the program has settled: the icon is in the
+    /// notification area and the shortcuts are registered.
+    /// </remarks>
+    private static readonly TimeSpan OnboardingNoticeDelay = TimeSpan.FromSeconds(2);
+
+    /// <summary>Time the notice of the first run stays on screen.</summary>
+    private static readonly TimeSpan OnboardingNoticeDuration = TimeSpan.FromSeconds(8);
+
     private readonly App _application;
     private readonly IReadOnlyList<string> _startupArguments;
     private readonly NativeMessageRouter _router = new();
@@ -56,6 +68,7 @@ public sealed class CompositionRoot : IDisposable
     private WindowsThemeService? _systemTheme;
     private NotificationPresenter? _notifications;
     private SingleInstanceGuard? _singleInstance;
+    private DispatcherTimer? _onboardingTimer;
     private AppSettings _settings = new();
     private SettingsWindow? _settingsWindow;
     private AboutWindow? _aboutWindow;
@@ -160,6 +173,11 @@ public sealed class CompositionRoot : IDisposable
         // information.
         _ = _mediaSessions.StartAsync();
 
+        if (!_settings.OnboardingCompleted)
+        {
+            ScheduleOnboardingNotice(settingsStore);
+        }
+
         if (Log.IsEnabled(LogLevel.Information))
         {
             Log.LogInformation("MediaPilot started. Hotkeys enabled: {Enabled}.", _settings.HotkeysEnabled);
@@ -169,6 +187,7 @@ public sealed class CompositionRoot : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        _onboardingTimer?.Stop();
         _executor?.Dispose();
         _hotkeys?.Dispose();
         _tray?.Dispose();
@@ -259,6 +278,61 @@ public sealed class CompositionRoot : IDisposable
         return true;
     }
 
+    /// <summary>
+    /// Schedules the notice that explains where the program is.
+    /// </summary>
+    /// <remarks>
+    /// The notice is shown once, the first time the program runs. It waits a
+    /// couple of seconds so that it does not compete with the notification
+    /// of a shortcut that the user presses right after the installation.
+    /// </remarks>
+    /// <param name="settingsStore">Store that keeps the settings.</param>
+    private void ScheduleOnboardingNotice(JsonSettingsStore settingsStore)
+    {
+        _onboardingTimer = new DispatcherTimer(DispatcherPriority.Normal, _dispatcher)
+        {
+            Interval = OnboardingNoticeDelay,
+        };
+
+        _onboardingTimer.Tick += (_, _) => OnOnboardingNoticeTick(settingsStore);
+        _onboardingTimer.Start();
+    }
+
+    /// <summary>
+    /// Shows the notice of the first run and remembers that it was shown.
+    /// </summary>
+    /// <param name="settingsStore">Store that keeps the settings.</param>
+    private void OnOnboardingNoticeTick(JsonSettingsStore settingsStore)
+    {
+        _onboardingTimer?.Stop();
+
+        _notifications?.ShowMessage(
+            Strings.Onboarding_Title,
+            Strings.Onboarding_Message,
+            OnboardingNoticeDuration);
+
+        _settings = new AppSettings
+        {
+            HotkeysEnabled = _settings.HotkeysEnabled,
+            ShowNotifications = _settings.ShowNotifications,
+            StartWithWindows = _settings.StartWithWindows,
+            Theme = _settings.Theme,
+            OnboardingCompleted = true,
+            Hotkeys = _settings.Hotkeys,
+        };
+
+        try
+        {
+            settingsStore.Save(_settings);
+        }
+        catch (Exception exception)
+        {
+            // The notice was shown anyway: if the flag cannot be stored, it
+            // is shown again the next time, which is not a failure.
+            Log.LogWarning(exception, "The state of the first run could not be stored.");
+        }
+    }
+
     private void ApplyHotkeys()
     {
         if (_hotkeys is null)
@@ -317,6 +391,7 @@ public sealed class CompositionRoot : IDisposable
             ShowNotifications = _settings.ShowNotifications,
             StartWithWindows = _settings.StartWithWindows,
             Theme = _settings.Theme,
+            OnboardingCompleted = _settings.OnboardingCompleted,
             Hotkeys = _settings.Hotkeys,
         };
 
@@ -356,6 +431,7 @@ public sealed class CompositionRoot : IDisposable
             ShowNotifications = _settings.ShowNotifications,
             StartWithWindows = desired,
             Theme = _settings.Theme,
+            OnboardingCompleted = _settings.OnboardingCompleted,
             Hotkeys = _settings.Hotkeys,
         };
 

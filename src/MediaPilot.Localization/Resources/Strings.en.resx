@@ -250,6 +250,12 @@
   <data name="Startup_FailedMessage" xml:space="preserve">
     <value>Could not configure automatic startup.</value>
   </data>
+  <data name="Onboarding_Title" xml:space="preserve">
+    <value>MediaPilot is ready</value>
+  </data>
+  <data name="Onboarding_Message" xml:space="preserve">
+    <value>MediaPilot stays in the notification area, next to the clock. Click its icon to open the settings.</value>
+  </data>
   <data name="Instance_Running_Title" xml:space="preserve">
     <value>MediaPilot is already running</value>
   </data>
