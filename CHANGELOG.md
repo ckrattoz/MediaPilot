@@ -7,6 +7,14 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+### Added
+
+- **The public page.** MediaPilot has a page that presents the product and
+  offers the installer: `https://ckrattoz.github.io/MediaPilot/`. GitHub Pages
+  publishes it from the `site/` folder of the repository, without a build step.
+  The installer comes from the release of the project, and the page publishes
+  its SHA-256 so that anybody can check the file before installing it.
+
 ## [0.6.1] - 2026-11-26
 
 The about window shows who made the product and where the documentation is.

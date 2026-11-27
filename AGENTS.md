@@ -270,6 +270,13 @@ use it too, otherwise the restore fails with NU1201.
   address is a web address, and `UseShellExecute` is what lets the default
   browser of the user take it: without it `Process.Start` fails and the link
   does nothing.
+- **The public page lives in `site/` and it is published from `main`.** The
+  folder **is** the site: there is no build step. The download button points to
+  `releases/latest/download/MediaPilot-x64.msi`, so the asset of the latest
+  release has to keep that name, without the version inside, and the SHA-256
+  that the page publishes has to be updated with every release, because the
+  installer is built again and its bytes change. See
+  [the guide of the public site](docs/development/public-site.md).
 
 ## Decision records
 

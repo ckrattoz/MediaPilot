@@ -13,8 +13,12 @@ hotkey registration.
 
 > **Project status:** under active development. The hotkeys, the volume
 > control, the notifications, the track information and the installer are
-> implemented. The next milestone is the distribution outside the development
-> environment.
+> implemented, and the installer is published from the
+> [public page](https://ckrattoz.github.io/MediaPilot/).
+
+> **Download:** [the public page](https://ckrattoz.github.io/MediaPilot/) ·
+> [the latest installer](https://github.com/ckrattoz/MediaPilot/releases/latest/download/MediaPilot-x64.msi) ·
+> [the source code](https://github.com/ckrattoz/MediaPilot)
 
 ---
 
