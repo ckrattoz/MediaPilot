@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediaPilot · Atajos multimedia globales para Windows 11</title>
+<meta name="description" content="MediaPilot es una aplicación nativa de Windows 11 con siete atajos globales para reproducción y volumen, bandeja nativa y configuración visual. Descarga el instalador y comprueba su hash.">
+<meta property="og:title" content="MediaPilot · Atajos multimedia globales para Windows 11">
+<meta property="og:description" content="Reproduce, salta de pista y ajusta el volumen desde cualquier aplicación, con una tecla. Nativo, en la bandeja, sin scripts.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/mark-256.png">
+<meta name="theme-color" content="#161616">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/mark-32.png">
+<link rel="apple-touch-icon" href="assets/mark-256.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #161616;
+    --surface: #202020;
+    --surface-2: #2a2a2a;
+    --line: #3a3a3a;
+    --line-soft: #2f2f2f;
+    --text: #f2f2f2;
+    --muted: #a6a6a6;
+    --accent: #ff8a2b;
+    --accent-hover: #ffa052;
+    --accent-ink: #241100;
+    --radius: 14px;
+    --maxw: 1120px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', 'Segoe UI', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
+
+  a { color: inherit; }
+
+  /* ---------- Barra superior ---------- */
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+    background: rgba(22, 22, 22, 0.82);
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .topbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 66px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .brand img { width: 30px; height: 30px; border-radius: 7px; }
+
+  .nav { display: flex; align-items: center; gap: 26px; }
+
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s ease;
+  }
+
+  .nav a:hover { color: var(--text); }
+
+  .nav .nav-cta {
+    color: var(--accent);
+    border: 1px solid rgba(255, 138, 43, 0.35);
+    border-radius: 9px;
+    padding: 6px 14px;
+    font-weight: 500;
+  }
+
+  .nav .nav-cta:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+
+  /* ---------- Portada ---------- */
+
+  .hero {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: 64px;
+    align-items: center;
+    padding: 76px 0 68px;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+
+  .eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(255, 138, 43, 0.16);
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 4.6vw, 3.5rem);
+    line-height: 1.07;
+    letter-spacing: -0.032em;
+    font-weight: 600;
+    margin: 0 0 22px;
+  }
+
+  h1 .accent { color: var(--accent); }
+
+  .lede {
+    font-size: 19px;
+    color: var(--muted);
+    margin: 0 0 30px;
+    max-width: 34em;
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 22px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 11px;
+    padding: 13px 22px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: 0 6px 22px -8px rgba(255, 138, 43, 0.65);
+  }
+
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: #555; background: var(--surface); transform: translateY(-1px); }
+
+  .btn svg { width: 18px; height: 18px; }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .meta li { display: flex; align-items: center; gap: 7px; }
+  .meta svg { width: 15px; height: 15px; color: var(--accent); opacity: 0.85; }
+
+  /* ---------- Escena de la portada ---------- */
+
+  .scene {
+    position: relative;
+    padding: 26px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background:
+      radial-gradient(120% 90% at 18% 0%, rgba(255, 138, 43, 0.14), transparent 58%),
+      linear-gradient(180deg, #232323, #1a1a1a);
+    box-shadow: 0 26px 70px -34px rgba(0, 0, 0, 0.9);
+  }
+
+  .scene img.window {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--line-soft);
+  }
+
+  .scene .float {
+    position: absolute;
+    left: 6px;
+    bottom: -20px;
+    width: 250px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #1b1b1b;
+    box-shadow: 0 20px 46px -20px rgba(0, 0, 0, 0.95);
+    overflow: hidden;
+  }
+
+  .scene .float img { display: block; width: 100%; }
+
+  /* ---------- Secciones ---------- */
+
+  section { padding: 68px 0; border-top: 1px solid var(--line-soft); }
+
+  .section-head { max-width: 40em; margin-bottom: 44px; }
+
+  h2 {
+    font-size: clamp(1.65rem, 2.9vw, 2.1rem);
+    line-height: 1.18;
+    letter-spacing: -0.022em;
+    font-weight: 600;
+    margin: 0 0 14px;
+  }
+
+  .section-head p { color: var(--muted); margin: 0; font-size: 17px; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* ---------- Tabla de atajos ---------- */
+
+  .keys {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .keys-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  .keys-row:last-child { border-bottom: 0; }
+
+  .keys-row span.label { font-size: 15.5px; }
+
+  .keys-row .combo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13.5px;
+    color: var(--accent);
+    background: rgba(255, 138, 43, 0.1);
+    border: 1px solid rgba(255, 138, 43, 0.22);
+    border-radius: 7px;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Ventajas ---------- */
+
+  .benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: 26px; }
+
+  .benefits li { display: grid; grid-template-columns: 38px 1fr; gap: 16px; align-items: start; }
+
+  .benefits .ico {
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    border-radius: 10px;
+    background: rgba(255, 138, 43, 0.11);
+    border: 1px solid rgba(255, 138, 43, 0.2);
+  }
+
+  .benefits .ico svg { width: 19px; height: 19px; color: var(--accent); }
+
+  .benefits h3 { font-size: 16.5px; font-weight: 600; margin: 2px 0 5px; letter-spacing: -0.01em; }
+  .benefits p { margin: 0; color: var(--muted); font-size: 15.5px; }
+
+  /* ---------- Capturas ---------- */
+
+  .shots { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 28px; align-items: start; }
+
+  .shot {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, #232323, #1a1a1a);
+    padding: 20px;
+  }
+
+  .shot img { display: block; width: 100%; border-radius: 8px; }
+
+  .shot figcaption {
+    margin: 16px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .shot figcaption strong { color: var(--text); font-weight: 500; }
+
+  /* ---------- Descarga y confianza ---------- */
+
+  .trust {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    align-items: start;
+  }
+
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 26px;
+  }
+
+  .panel h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  .panel p { margin: 0 0 16px; color: var(--muted); font-size: 14.5px; }
+
+  .hash {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--line-soft);
+    border-radius: 10px;
+    background: var(--bg);
+    padding: 12px 12px 12px 15px;
+  }
+
+  .hash code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--muted);
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  .copy {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 7px 11px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .copy:hover { color: var(--text); border-color: #555; }
+  .copy svg { width: 14px; height: 14px; }
+  .copy.done { color: var(--accent); border-color: rgba(255, 138, 43, 0.4); }
+
+  .notice {
+    border: 1px solid rgba(255, 138, 43, 0.28);
+    background: rgba(255, 138, 43, 0.07);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 14.5px;
+    color: #d8cfc6;
+  }
+
+  .notice strong { color: var(--accent); font-weight: 600; }
+
+  .linklist { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 2px; }
+
+  .linklist a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 15px;
+    padding: 11px 14px;
+    border-radius: 9px;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+
+  .linklist a:hover { background: var(--surface); color: var(--text); }
+  .linklist svg { width: 16px; height: 16px; opacity: 0.6; }
+
+  /* ---------- Pie ---------- */
+
+  footer {
+    border-top: 1px solid var(--line-soft);
+    padding: 40px 0 54px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .foot .who { display: flex; align-items: center; gap: 10px; }
+  .foot img { width: 22px; height: 22px; border-radius: 5px; }
+  .foot a { color: var(--muted); text-decoration: none; }
+  .foot a:hover { color: var(--text); }
+  .foot .sep { opacity: 0.4; margin: 0 10px; }
+
+  /* ---------- Adaptación ---------- */
+
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 46px; padding: 54px 0 48px; }
+    .two-col, .trust, .shots { grid-template-columns: 1fr; gap: 38px; }
+    .scene .float { position: static; width: 100%; max-width: 280px; margin-top: 18px; }
+  }
+
+  @media (max-width: 900px) {
+    .nav a:not(.nav-cta) { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    body { font-size: 16px; }
+    .wrap { padding: 0 20px; }
+    section { padding: 52px 0; }
+    .keys-row { padding: 12px 16px; gap: 12px; }
+    .keys-row .combo { font-size: 12px; padding: 3px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="assets/mark-256.png" alt="Marca de MediaPilot">
+      <span>MediaPilot</span>
+    </a>
+    <nav class="nav">
+      <a href="#atajos">Atajos</a>
+      <a href="#capturas">Cómo se ve</a>
+      <a href="https://github.com/ckrattoz/MediaPilot" rel="noopener">GitHub</a>
+      <a class="nav-cta" href="#descarga">Descargar</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="wrap">
+    <section class="hero" style="border-top: 0;">
+      <div>
+        <p class="eyebrow"><span class="dot"></span> Versión 0.6.1 · Windows 11</p>
+        <h1>Atajos multimedia <span class="accent">globales</span> para Windows 11</h1>
+        <p class="lede">
+          Reproduce, salta de pista y ajusta el volumen desde cualquier aplicación
+          con una sola tecla. MediaPilot es una aplicación nativa que vive en la
+          bandeja del sistema: no hay scripts que mantener ni ventanas de por medio.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="https://github.com/ckrattoz/MediaPilot/releases/latest/download/MediaPilot-x64.msi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            Descargar el instalador
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/ckrattoz/MediaPilot" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            Ver el código
+          </a>
+        </div>
+        <ul class="meta">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg> Windows 11 · x64</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sin permisos de administrador</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg> 57 MB</li>
+        </ul>
+      </div>
+
+      <figure class="scene">
+        <img class="window" src="assets/about-window.png" alt="Ventana Acerca de MediaPilot con la versión y los atajos predeterminados">
+        <div class="float">
+          <img src="assets/overlay.png" alt="Notificación de MediaPilot al cambiar el volumen">
+        </div>
+      </figure>
+    </section>
+  </div>
+
+  <section id="atajos">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Siete atajos, siempre en el mismo sitio</h2>
+        <p>Windows reserva las combinaciones de forma global: si otra aplicación tiene la
+           misma, la que gana es la primera que la registró. Estos son los atajos por
+           defecto de MediaPilot y puedes cambiarlos todos desde su ventana de ajustes.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="keys">
+          <div class="keys-row"><span class="label">Pista anterior</span><span class="combo">Ctrl+Alt+←</span></div>
+          <div class="keys-row"><span class="label">Reproducir / Pausa</span><span class="combo">Ctrl+Alt+↓</span></div>
+          <div class="keys-row"><span class="label">Pista siguiente</span><span class="combo">Ctrl+Alt+→</span></div>
+          <div class="keys-row"><span class="label">Volumen −</span><span class="combo">Ctrl+Alt+Shift+←</span></div>
+          <div class="keys-row"><span class="label">Silenciar</span><span class="combo">Ctrl+Alt+Shift+↓</span></div>
+          <div class="keys-row"><span class="label">Volumen +</span><span class="combo">Ctrl+Alt+Shift+→</span></div>
+          <div class="keys-row"><span class="label">Información de la pista</span><span class="combo">Ctrl+Alt+Shift+.</span></div>
+        </div>
+
+        <ul class="benefits">
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
+            <div>
+              <h3>Nativo de verdad</h3>
+              <p>Escrito en C# sobre .NET 10 y WPF, con el tema de Windows 11. No hay
+                 AutoHotkey que instalar ni un script que se rompa al actualizar el sistema.</p>
+            </div>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg></span>
+            <div>
+              <h3>Bandeja y configuración visual</h3>
+              <p>Vive en el área de notificación, junto al reloj. Desde su ventana cambias
+                 los atajos, el tema claro u oscuro y el arranque con Windows.</p>
+            </div>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <div>
+              <h3>Una sola instancia</h3>
+              <p>Si lo abres dos veces, la segunda avisa a la que ya está corriendo y
+                 termina. Los atajos globales no se pelean entre copias.</p>
+            </div>
+          </li>
+          <li>
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <div>
+              <h3>Instalación por usuario</h3>
+              <p>Se instala en tu perfil, en <span style="font-family:'JetBrains Mono',monospace;font-size:14px;">%LOCALAPPDATA%\Programs\MediaPilot</span>,
+                 y nunca pide permisos de administrador.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="capturas">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Te avisa de dónde está</h2>
+        <p>MediaPilot no tiene ventana propia: vive en la bandeja. La primera vez que
+           arranca te explica dónde se ha quedado, y cada cambio de volumen aparece en
+           una notificación discreta.</p>
+      </div>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="assets/overlay-onboarding.png" alt="Primer aviso de MediaPilot al arrancar">
+          <figcaption><strong>El primer aviso.</strong> Explica que el programa está en el área de notificación y sólo aparece una vez.</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="assets/shortcut-card.png" alt="Tarjeta de atajos de teclado de la ventana de ajustes">
+          <figcaption><strong>Cambia cada atajo.</strong> Pulsa el campo y pulsa la combinación nueva: MediaPilot la guarda al instante.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="descarga">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Descarga verificada</h2>
+        <p>El instalador se sirve desde la publicación oficial del proyecto en GitHub,
+           sobre HTTPS. Puedes comprobar tú mismo que el fichero es el nuestro.</p>
+      </div>
+
+      <div class="trust">
+        <div class="panel">
+          <h3>SHA-256 del instalador 0.6.1</h3>
+          <p>Este es el resumen del fichero exacto que enlaza el botón de arriba.</p>
+          <div class="hash">
+            <code>1B3605C07132155FA21B302AE355001E62A8FB5F1D7CDEB47B2A7821CB4E782C</code>
+            <button class="copy" type="button" data-copy="1B3605C07132155FA21B302AE355001E62A8FB5F1D7CDEB47B2A7821CB4E782C">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copiar
+            </button>
+          </div>
+          <p style="margin:16px 0 0;font-size:14px;">
+            En PowerShell: <span style="font-family:'JetBrains Mono',monospace;font-size:13px;">Get-FileHash .\MediaPilot-x64.msi -Algorithm SHA256</span>
+          </p>
+        </div>
+
+        <div class="panel">
+          <h3>El aviso de Windows</h3>
+          <p>El instalador todavía no está firmado con un certificado de compra, así que
+             SmartScreen lo marca en la primera ejecución.</p>
+          <div class="notice">
+            <strong>No es un error.</strong> Pulsa <strong>Más información</strong> y después
+            <strong>Ejecutar de todas formas</strong>. Si prefieres estar seguro antes de
+            instalar, el hash de esta página y el código abierto del proyecto te lo confirman.
+          </div>
+          <ul class="linklist">
+            <li><a href="https://github.com/ckrattoz/MediaPilot/releases/latest" rel="noopener">Todas las publicaciones<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a href="https://github.com/ckrattoz/MediaPilot#readme" rel="noopener">Documentación del proyecto<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a href="https://github.com/ckrattoz/MediaPilot/blob/main/LICENSE" rel="noopener">Licencia MIT<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+            <li><a href="https://github.com/ckrattoz/MediaPilot/blob/main/CHANGELOG.md" rel="noopener">Registro de cambios<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="who">
+      <img src="assets/mark-32.png" alt="">
+      <span>MediaPilot 0.6.1 · © 2026 Antonio Nuñez</span>
+    </div>
+    <div>
+      <a href="https://github.com/ckrattoz/MediaPilot" rel="noopener">Código</a>
+      <span class="sep">·</span>
+      <a href="https://github.com/ckrattoz/MediaPilot/blob/main/LICENSE" rel="noopener">MIT</a>
+      <span class="sep">·</span>
+      <a href="https://github.com/ckrattoz/MediaPilot/issues" rel="noopener">Incidencias</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var value = button.getAttribute('data-copy');
+      var done = function () {
+        button.classList.add('done');
+        button.lastChild.textContent = ' Copiado';
+        setTimeout(function () {
+          button.classList.remove('done');
+          button.lastChild.textContent = ' Copiar';
+        }, 1800);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done);
+      } else {
+        var field = document.createElement('textarea');
+        field.value = value;
+        document.body.appendChild(field);
+        field.select();
+        document.execCommand('copy');
+        document.body.removeChild(field);
+        done();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
