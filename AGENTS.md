@@ -266,6 +266,10 @@ use it too, otherwise the restore fails with NU1201.
   `CompositionRoot.ToggleStartup` and the notice of the first run itself. A
   place that forgets it makes the notice appear again. See
   [ADR 0019](docs/architecture/adr/0019-one-instance-and-the-first-run-notice.md).
+- **The link of the about window opens the browser with the shell.** The
+  address is a web address, and `UseShellExecute` is what lets the default
+  browser of the user take it: without it `Process.Start` fails and the link
+  does nothing.
 
 ## Decision records
 

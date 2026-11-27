@@ -7,6 +7,18 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-26
+
+The about window shows who made the product and where the documentation is.
+
+### Added
+
+- **The copyright of the product.** The footer of the about window shows
+  the line **© 2026 Antonio Nuñez**.
+- **The link to the documentation.** The same footer carries a link that
+  opens the documentation of the project in the default browser of the
+  user.
+
 ## [0.6.0] - 2026-11-26
 
 MediaPilot says hello the first time it runs, and it refuses to run twice.
