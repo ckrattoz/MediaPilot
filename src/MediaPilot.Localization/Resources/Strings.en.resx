@@ -160,6 +160,12 @@
   <data name="About_Version" xml:space="preserve">
     <value>Version {0}</value>
   </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>© 2026 Antonio Nuñez</value>
+  </data>
+  <data name="About_Documentation" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
   <data name="Command_Previous" xml:space="preserve">
     <value>Previous track</value>
   </data>

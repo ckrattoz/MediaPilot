@@ -67,6 +67,32 @@
             </StackPanel>
         </Border>
 
+        <!--
+            Footer of the window: the copyright of the product and the link
+            to the documentation of the project.
+        -->
+        <Grid Grid.Row="3" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MediaPilot.Caption}"
+                       Text="{loc:Localize About_Copyright}" />
+
+            <TextBlock Grid.Column="1" VerticalAlignment="Center">
+                <Hyperlink NavigateUri="https://github.com/ckrattoz/MediaPilot"
+                           RequestNavigate="OnDocumentationClick"
+                           Foreground="{DynamicResource MediaPilot.Brush.Accent}"
+                           Cursor="Hand">
+                    <Run Text="{loc:Localize About_Documentation}"
+                         Foreground="{DynamicResource MediaPilot.Brush.Accent}" />
+                </Hyperlink>
+            </TextBlock>
+        </Grid>
+
         <StackPanel Grid.Row="4" Margin="0,18,0,0" HorizontalAlignment="Right">
             <Button Content="{loc:Localize About_Button_Close}"
                     Style="{StaticResource MediaPilot.AccentButton}"

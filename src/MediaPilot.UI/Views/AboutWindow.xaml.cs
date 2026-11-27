@@ -1,7 +1,10 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
+using System.Windows.Navigation;
 using MediaPilot.Core;
 using MediaPilot.Localization;
 using MediaPilot.Localization.Resources;
@@ -71,6 +74,29 @@ public partial class AboutWindow : Window
     }
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
+
+    /// <summary>
+    /// Opens the documentation of the project in the default browser.
+    /// </summary>
+    /// <remarks>
+    /// The shell is used on purpose: the address is a web address and the
+    /// default browser of the user is the one that knows how to open it.
+    /// </remarks>
+    private void OnDocumentationClick(object sender, RequestNavigateEventArgs e)
+    {
+        e.Handled = true;
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+        }
+        catch (Win32Exception)
+        {
+            // The browser could not be started, most likely because the user
+            // has no browser associated with the web addresses. There is no
+            // window to report it: the about window is about to be closed.
+        }
+    }
 
     /// <summary>
     /// Shows the version of the running program under the name of the
