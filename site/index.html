@@ -9,26 +9,85 @@
 <meta property="og:description" content="Reproduce, salta de pista y ajusta el volumen desde cualquier aplicación, con una tecla. Nativo, en la bandeja, sin scripts.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/mark-256.png">
-<meta name="theme-color" content="#161616">
+<meta name="theme-color" content="#f2f1ee">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/mark-32.png">
 <link rel="apple-touch-icon" href="assets/mark-256.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /*
+    The palette of the page.
+
+    The light theme is the default one and the dark theme is the variant, the
+    same way the application offers both. Every color of the page comes from
+    these variables, so the two themes never drift apart.
+  */
+
   :root {
+    color-scheme: light;
+    --bg: #f2f1ee;
+    --surface: #ffffff;
+    --surface-2: #f6f5f2;
+    --line: #e3e1dc;
+    --line-soft: #ecebe7;
+    --line-strong: #c9c5bd;
+    --text: #1b1b1b;
+    --muted: #5d5d5d;
+    --accent: #c25500;
+    --accent-hover: #d46100;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(194, 85, 0, 0.08);
+    --accent-line: rgba(194, 85, 0, 0.24);
+    --accent-glow: rgba(194, 85, 0, 0.14);
+    --accent-shadow: rgba(194, 85, 0, 0.42);
+    --lime: #6b8e0c;
+    --lime-soft: rgba(107, 142, 12, 0.10);
+    --lime-line: rgba(107, 142, 12, 0.26);
+    --lime-glow: rgba(107, 142, 12, 0.18);
+    --topbar: rgba(242, 241, 238, 0.86);
+    --scene-top: #ffffff;
+    --scene-bottom: #f7f6f3;
+    --float-bg: #ffffff;
+    --shadow: 0 26px 70px -34px rgba(46, 42, 36, 0.38);
+    --shadow-strong: 0 20px 46px -20px rgba(46, 42, 36, 0.32);
+    --notice-line: rgba(194, 85, 0, 0.26);
+    --notice-bg: rgba(194, 85, 0, 0.05);
+    --notice-ink: #4a443c;
+    --radius: 14px;
+    --maxw: 1120px;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
     --bg: #161616;
     --surface: #202020;
     --surface-2: #2a2a2a;
     --line: #3a3a3a;
     --line-soft: #2f2f2f;
+    --line-strong: #555555;
     --text: #f2f2f2;
     --muted: #a6a6a6;
     --accent: #ff8a2b;
     --accent-hover: #ffa052;
     --accent-ink: #241100;
-    --radius: 14px;
-    --maxw: 1120px;
+    --accent-soft: rgba(255, 138, 43, 0.10);
+    --accent-line: rgba(255, 138, 43, 0.22);
+    --accent-glow: rgba(255, 138, 43, 0.16);
+    --accent-shadow: rgba(255, 138, 43, 0.65);
+    --lime: #b6e24a;
+    --lime-soft: rgba(182, 226, 74, 0.12);
+    --lime-line: rgba(182, 226, 74, 0.30);
+    --lime-glow: rgba(182, 226, 74, 0.20);
+    --topbar: rgba(22, 22, 22, 0.82);
+    --scene-top: #232323;
+    --scene-bottom: #1a1a1a;
+    --float-bg: #1b1b1b;
+    --shadow: 0 26px 70px -34px rgba(0, 0, 0, 0.90);
+    --shadow-strong: 0 20px 46px -20px rgba(0, 0, 0, 0.95);
+    --notice-line: rgba(255, 138, 43, 0.28);
+    --notice-bg: rgba(255, 138, 43, 0.07);
+    --notice-ink: #d8cfc6;
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -56,7 +115,7 @@
     top: 0;
     z-index: 20;
     backdrop-filter: blur(14px);
-    background: rgba(22, 22, 22, 0.82);
+    background: var(--topbar);
     border-bottom: 1px solid var(--line-soft);
   }
 
@@ -91,13 +150,36 @@
 
   .nav .nav-cta {
     color: var(--accent);
-    border: 1px solid rgba(255, 138, 43, 0.35);
+    border: 1px solid var(--accent-line);
     border-radius: 9px;
     padding: 6px 14px;
     font-weight: 500;
   }
 
   .nav .nav-cta:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+
+  /* The switch of the theme. It carries the icon of the theme that is on
+     screen, and the note says which one it is. */
+  .theme-switch {
+    display: inline-grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .theme-switch:hover { color: var(--text); border-color: var(--line-strong); background: var(--surface); }
+  .theme-switch svg { width: 18px; height: 18px; }
+
+  .theme-switch .icon-moon { display: none; }
+  html[data-theme="dark"] .theme-switch .icon-sun { display: none; }
+  html[data-theme="dark"] .theme-switch .icon-moon { display: block; }
 
   /* ---------- Portada ---------- */
 
@@ -120,10 +202,11 @@
     margin: 0 0 20px;
   }
 
+  /* The lime of the mark: it is the color of the verified things. */
   .eyebrow .dot {
     width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px rgba(255, 138, 43, 0.16);
+    background: var(--lime);
+    box-shadow: 0 0 0 4px var(--lime-glow);
   }
 
   h1 {
@@ -161,13 +244,13 @@
   .btn-primary {
     background: var(--accent);
     color: var(--accent-ink);
-    box-shadow: 0 6px 22px -8px rgba(255, 138, 43, 0.65);
+    box-shadow: 0 6px 22px -8px var(--accent-shadow);
   }
 
   .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
   .btn-ghost { border-color: var(--line); color: var(--text); }
-  .btn-ghost:hover { border-color: #555; background: var(--surface); transform: translateY(-1px); }
+  .btn-ghost:hover { border-color: var(--line-strong); background: var(--surface); transform: translateY(-1px); }
 
   .btn svg { width: 18px; height: 18px; }
 
@@ -184,6 +267,7 @@
 
   .meta li { display: flex; align-items: center; gap: 7px; }
   .meta svg { width: 15px; height: 15px; color: var(--accent); opacity: 0.85; }
+  .meta .tick { color: var(--lime); opacity: 1; }
 
   /* ---------- Escena de la portada ---------- */
 
@@ -193,9 +277,9 @@
     border: 1px solid var(--line);
     border-radius: 20px;
     background:
-      radial-gradient(120% 90% at 18% 0%, rgba(255, 138, 43, 0.14), transparent 58%),
-      linear-gradient(180deg, #232323, #1a1a1a);
-    box-shadow: 0 26px 70px -34px rgba(0, 0, 0, 0.9);
+      radial-gradient(120% 90% at 18% 0%, var(--accent-glow), transparent 58%),
+      linear-gradient(180deg, var(--scene-top), var(--scene-bottom));
+    box-shadow: var(--shadow);
   }
 
   .scene img.window {
@@ -212,8 +296,8 @@
     width: 250px;
     border-radius: 12px;
     border: 1px solid var(--line);
-    background: #1b1b1b;
-    box-shadow: 0 20px 46px -20px rgba(0, 0, 0, 0.95);
+    background: var(--float-bg);
+    box-shadow: var(--shadow-strong);
     overflow: hidden;
   }
 
@@ -268,8 +352,8 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 13.5px;
     color: var(--accent);
-    background: rgba(255, 138, 43, 0.1);
-    border: 1px solid rgba(255, 138, 43, 0.22);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
     border-radius: 7px;
     padding: 4px 10px;
     white-space: nowrap;
@@ -285,8 +369,8 @@
     width: 38px; height: 38px;
     display: grid; place-items: center;
     border-radius: 10px;
-    background: rgba(255, 138, 43, 0.11);
-    border: 1px solid rgba(255, 138, 43, 0.2);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
   }
 
   .benefits .ico svg { width: 19px; height: 19px; color: var(--accent); }
@@ -301,7 +385,7 @@
   .shot {
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: linear-gradient(180deg, #232323, #1a1a1a);
+    background: linear-gradient(180deg, var(--scene-top), var(--scene-bottom));
     padding: 20px;
   }
 
@@ -332,15 +416,17 @@
     border-top: 1px solid var(--line-soft);
   }
 
+  /* The two promises of the product: they are the claims that can be
+     checked, so they carry the lime of the mark. */
   .promise .ico {
     width: 44px; height: 44px;
     display: grid; place-items: center;
     border-radius: 12px;
-    background: rgba(255, 138, 43, 0.11);
-    border: 1px solid rgba(255, 138, 43, 0.2);
+    background: var(--lime-soft);
+    border: 1px solid var(--lime-line);
   }
 
-  .promise .ico svg { width: 22px; height: 22px; color: var(--accent); }
+  .promise .ico svg { width: 22px; height: 22px; color: var(--lime); }
 
   .promise h3 {
     font-size: 20px;
@@ -420,7 +506,7 @@
   .hash code {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12.5px;
-    color: var(--muted);
+    color: var(--lime);
     word-break: break-all;
     line-height: 1.5;
   }
@@ -441,17 +527,17 @@
     transition: color 0.18s ease, border-color 0.18s ease;
   }
 
-  .copy:hover { color: var(--text); border-color: #555; }
+  .copy:hover { color: var(--text); border-color: var(--line-strong); }
   .copy svg { width: 14px; height: 14px; }
-  .copy.done { color: var(--accent); border-color: rgba(255, 138, 43, 0.4); }
+  .copy.done { color: var(--lime); border-color: var(--lime-line); }
 
   .notice {
-    border: 1px solid rgba(255, 138, 43, 0.28);
-    background: rgba(255, 138, 43, 0.07);
+    border: 1px solid var(--notice-line);
+    background: var(--notice-bg);
     border-radius: 10px;
     padding: 16px 18px;
     font-size: 14.5px;
-    color: #d8cfc6;
+    color: var(--notice-ink);
   }
 
   .notice strong { color: var(--accent); font-weight: 600; }
@@ -517,6 +603,22 @@
     .keys-row .combo { font-size: 12px; padding: 3px 8px; }
   }
 </style>
+<script>
+  /*
+    The theme is applied before the first paint, so the page never shows the
+    wrong one while it loads. The light theme is the default one and the
+    choice of the visitor is remembered.
+  */
+  (function () {
+    var theme = 'light';
+    try {
+      if (window.localStorage.getItem('mediapilot-theme') === 'dark') { theme = 'dark'; }
+    } catch (error) {
+      theme = 'light';
+    }
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 </head>
 <body>
 
@@ -530,6 +632,10 @@
       <a href="#atajos">Atajos</a>
       <a href="#capturas">Cómo se ve</a>
       <a href="https://github.com/ckrattoz/MediaPilot" rel="noopener">GitHub</a>
+      <button class="theme-switch" type="button" id="theme-switch" aria-label="Cambiar al tema oscuro" title="Tema: claro">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
       <a class="nav-cta" href="#descarga">Descargar</a>
     </nav>
   </div>
@@ -559,15 +665,15 @@
         </div>
         <ul class="meta">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg> Windows 11 · x64</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sin permisos de administrador</li>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Sin permisos de administrador</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg> 57 MB</li>
         </ul>
       </div>
 
       <figure class="scene">
-        <img class="window" src="assets/about-window.png" alt="Ventana Acerca de MediaPilot con la versión y los atajos predeterminados">
+        <img class="window" src="assets/about-window-light.png" data-src-dark="assets/about-window.png" data-src-light="assets/about-window-light.png" alt="Ventana Acerca de MediaPilot con la versión y los atajos predeterminados">
         <div class="float">
-          <img src="assets/overlay.png" alt="Notificación de MediaPilot al cambiar el volumen">
+          <img src="assets/overlay-light.png" data-src-dark="assets/overlay.png" data-src-light="assets/overlay-light.png" alt="Notificación de MediaPilot al cambiar el volumen">
         </div>
       </figure>
     </section>
@@ -642,11 +748,11 @@
 
       <div class="shots">
         <figure class="shot">
-          <img src="assets/overlay-onboarding.png" alt="Primer aviso de MediaPilot al arrancar">
+          <img src="assets/overlay-onboarding-light.png" data-src-dark="assets/overlay-onboarding.png" data-src-light="assets/overlay-onboarding-light.png" alt="Primer aviso de MediaPilot al arrancar">
           <figcaption><strong>El primer aviso.</strong> Explica que el programa está en el área de notificación y sólo aparece una vez.</figcaption>
         </figure>
         <figure class="shot">
-          <img src="assets/shortcut-card.png" alt="Tarjeta de atajos de teclado de la ventana de ajustes">
+          <img src="assets/shortcut-card-light.png" data-src-dark="assets/shortcut-card.png" data-src-light="assets/shortcut-card-light.png" alt="Tarjeta de atajos de teclado de la ventana de ajustes">
           <figcaption><strong>Cambia cada atajo.</strong> Pulsa el campo y pulsa la combinación nueva: MediaPilot la guarda al instante.</figcaption>
         </figure>
       </div>
@@ -772,6 +878,64 @@
     </div>
   </div>
 </footer>
+
+<script>
+  /*
+    The switch of the theme.
+
+    The light theme is the default one and the dark one is the variant, the
+    same way the application offers both. The choice of the visitor is
+    remembered, and the captures of the product follow the theme, because the
+    application takes its own screenshots in both.
+  */
+  (function () {
+    var root = document.documentElement;
+    var button = document.getElementById('theme-switch');
+
+    function captures(theme) {
+      var images = document.querySelectorAll('img[data-src-dark]');
+      for (var i = 0; i < images.length; i++) {
+        var image = images[i];
+        image.setAttribute(
+          'src',
+          theme === 'dark' ? image.getAttribute('data-src-dark') : image.getAttribute('data-src-light'));
+      }
+    }
+
+    function apply(theme) {
+      root.setAttribute('data-theme', theme);
+
+      if (button) {
+        button.title = theme === 'dark' ? 'Tema: oscuro' : 'Tema: claro';
+        button.setAttribute(
+          'aria-label',
+          theme === 'dark' ? 'Cambiar al tema claro' : 'Cambiar al tema oscuro');
+      }
+
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) {
+        meta.setAttribute('content', theme === 'dark' ? '#161616' : '#f2f1ee');
+      }
+
+      captures(theme);
+    }
+
+    var theme = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    apply(theme);
+
+    if (button) {
+      button.addEventListener('click', function () {
+        theme = theme === 'dark' ? 'light' : 'dark';
+        try {
+          window.localStorage.setItem('mediapilot-theme', theme);
+        } catch (error) {
+          /* Without storage the theme only lasts while the page is open. */
+        }
+        apply(theme);
+      });
+    }
+  })();
+</script>
 
 <script>
   document.querySelectorAll('.copy').forEach(function (button) {
