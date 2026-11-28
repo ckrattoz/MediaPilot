@@ -35,6 +35,30 @@ The page follows the identity of the product: the palette and the mark come
 from `src/MediaPilot.UI/Resources/Brand`. A change of the brand has to be
 followed by a change of the page.
 
+## The two themes of the page
+
+The page has a light theme and a dark theme, the same way the application
+offers both. The light one is the default and the dark one is the variant:
+
+| Piece | Where |
+| --- | --- |
+| The palette | The variables of `:root` and of `html[data-theme="dark"]` |
+| The switch | The `theme-switch` button of the navigation |
+| The choice | `localStorage`, under the key `mediapilot-theme` |
+| The captures | `assets/*.png` and `assets/*-light.png` |
+
+Every color of the page comes from a variable, so the two themes never drift
+apart. A color that is written down in a rule does not belong there.
+
+The captures of the product are real shots of the application, and the
+application takes them in both themes. The switch swaps the `src` of the images
+with the one of the theme that is on screen, so a capture of the light theme
+never appears in the dark page, or the other way around. A new capture has to
+come in the two themes.
+
+The theme is applied by a script of the `head`, before the first paint, so the
+page never shows the wrong one while it loads.
+
 ## The download contract
 
 The button of the page points to an address that does not change between

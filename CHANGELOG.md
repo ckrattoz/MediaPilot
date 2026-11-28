@@ -7,6 +7,25 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-11-28
+
+The scroll bar of the settings window follows the theme of the application, and
+the public page offers a light version of itself.
+
+### Added
+
+- **The light version of the public page.** The page carries a switch in its
+  navigation: the light theme is the default one and the dark one is the
+  variant, the same way the application offers both. The choice of the visitor
+  is remembered, and the captures of the product follow the theme, because the
+  application takes its own screenshots in both.
+
+### Fixed
+
+- **The scroll bar of the settings window.** The Fluent theme of WPF painted it
+  with the colors of the light mode, so it came out white on the dark theme. It
+  now has a template of its own that only uses the palette of the application.
+
 ## [0.6.2] - 2026-11-27
 
 The drop-down of the theme follows the theme of the application, and the public

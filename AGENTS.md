@@ -131,6 +131,10 @@ use it too, otherwise the restore fails with NU1201.
   application runs in dark mode, so `MediaPilot.ThemeComboBox` draws it with the
   palette of the application. A style that leans on the keys of the framework
   comes back white on the dark theme.
+- **The scroll bar has a template of its own, too.** The Fluent theme of WPF
+  paints it with the colors of the light mode as well, so the implicit style of
+  the scroll bar draws it with the palette of the application. A control of the
+  framework that is not covered comes back white on the dark theme.
 - **The culture is applied before the first window is created.** XAML resolves
   the strings while the visual tree is built.
 - **Never enable the invariant globalization mode.** WPF uses `en-us` as the
