@@ -35,29 +35,44 @@ The page follows the identity of the product: the palette and the mark come
 from `src/MediaPilot.UI/Resources/Brand`. A change of the brand has to be
 followed by a change of the page.
 
-## The two themes of the page
+## The themes of the page
 
 The page has a light theme and a dark theme, the same way the application
-offers both. The light one is the default and the dark one is the variant:
+offers both, and the visitor chooses between three options: follow the theme of
+the system, light and dark.
 
 | Piece | Where |
 | --- | --- |
 | The palette | The variables of `:root` and of `html[data-theme="dark"]` |
-| The switch | The `theme-switch` button of the navigation |
-| The choice | `localStorage`, under the key `mediapilot-theme` |
+| The switch | The `theme-switch` button of the navigation and its menu |
+| The choice | `localStorage`, under the key `mediapilot-theme`, with `auto`, `light` or `dark` |
 | The captures | `assets/*.png` and `assets/*-light.png` |
 
 Every color of the page comes from a variable, so the two themes never drift
 apart. A color that is written down in a rule does not belong there.
+
+Two attributes of the `html` element carry the state of the theme:
+
+| Attribute | Meaning |
+| --- | --- |
+| `data-theme` | The theme that is on screen: `light` or `dark` |
+| `data-theme-choice` | The choice of the visitor: `auto`, `light` or `dark` |
+
+The palette only knows two themes, so `auto` is resolved before the first paint:
+the script of the `head` reads the choice, asks the system with
+`matchMedia('(prefers-color-scheme: dark)')` and writes `data-theme` with the
+answer. That is why the palette never needs a third copy of the variables, and
+why the page never shows the wrong theme while it loads.
+
+`auto` is the default one, and the page keeps following the theme of the system
+while it is open: the listener of the media query applies the change when the
+system switches, but only when the visitor never picked a theme by hand.
 
 The captures of the product are real shots of the application, and the
 application takes them in both themes. The switch swaps the `src` of the images
 with the one of the theme that is on screen, so a capture of the light theme
 never appears in the dark page, or the other way around. A new capture has to
 come in the two themes.
-
-The theme is applied by a script of the `head`, before the first paint, so the
-page never shows the wrong one while it loads.
 
 ## The colors of the page
 

@@ -7,6 +7,13 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+### Changed
+
+- **The theme of the public page follows the system.** The switch of the
+  navigation offers three choices now: follow the theme of the system, light
+  and dark. The system is the default one, and the page keeps following it
+  while it is open, unless the visitor picks a theme by hand.
+
 ## [0.6.3] - 2026-11-28
 
 The scroll bar of the settings window follows the theme of the application, and

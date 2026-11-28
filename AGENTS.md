@@ -288,6 +288,11 @@ use it too, otherwise the restore fails with NU1201.
   that the page publishes has to be updated with every release, because the
   installer is built again and its bytes change. See
   [the guide of the public site](docs/development/public-site.md).
+- **The palette of the page knows two themes, never three.** The visitor picks
+  between `auto`, `light` and `dark`, and `data-theme` carries the theme that is
+  on screen while `data-theme-choice` carries the choice. `auto` is resolved
+  with `matchMedia('(prefers-color-scheme: dark)')` before the first paint, so
+  a third copy of the variables is never needed.
 
 ## Decision records
 
