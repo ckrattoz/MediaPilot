@@ -59,6 +59,24 @@ come in the two themes.
 The theme is applied by a script of the `head`, before the first paint, so the
 page never shows the wrong one while it loads.
 
+## The colors of the page
+
+The page has two colors of the brand and they do not have the same job:
+
+| Color | Job |
+| --- | --- |
+| The orange of the mark | The actions: the download, the code, the shortcuts |
+| The lime of the mark | The claims that can be checked |
+
+The lime is used with restraint: the dot of the version, the tick of the
+privileges that are not needed, the icons of the two promises and the digest of
+the installer. It never replaces the orange, and it never spreads over a whole
+section. A page with the lime everywhere stops being a page of the product.
+
+Both shades come from the palette of the application: the lime of the mark is
+`MediaPilot.Brush.BrandLime`, and the dark one is the shade of the dark theme
+while the light one is the shade of the light theme.
+
 ## The download contract
 
 The button of the page points to an address that does not change between
