@@ -126,6 +126,11 @@ use it too, otherwise the restore fails with NU1201.
 - **The theme is resolved in code, never with `ThemeMode="System"`.** On a
   machine in a mixed configuration it produces an illegible UI. See
   [ADR 0002](docs/architecture/adr/0002-explicit-theme-resolution.md).
+- **The drop-down of the theme has a template of its own.** The Fluent theme of
+  WPF paints the combo box with the colors of the light mode even when the
+  application runs in dark mode, so `MediaPilot.ThemeComboBox` draws it with the
+  palette of the application. A style that leans on the keys of the framework
+  comes back white on the dark theme.
 - **The culture is applied before the first window is created.** XAML resolves
   the strings while the visual tree is built.
 - **Never enable the invariant globalization mode.** WPF uses `en-us` as the

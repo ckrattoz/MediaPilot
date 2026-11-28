@@ -7,6 +7,11 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-11-27
+
+The drop-down of the theme follows the theme of the application, and the public
+page presents the product and offers the installer.
+
 ### Added
 
 - **The public page.** MediaPilot has a page that presents the product and
@@ -14,6 +19,13 @@ the project adheres to [Semantic Versioning](https://semver.org/lang/en/).
   publishes it from the `site/` folder of the repository, without a build step.
   The installer comes from the release of the project, and the page publishes
   its SHA-256 so that anybody can check the file before installing it.
+
+### Fixed
+
+- **The drop-down of the theme.** The Fluent theme of WPF painted the combo box
+  of the settings window with the colors of the light mode, so the button and
+  its list came out white on the dark theme. It now has a template of its own
+  that only uses the palette of the application.
 
 ## [0.6.1] - 2026-11-26
 
