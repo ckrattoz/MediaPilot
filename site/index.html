@@ -315,6 +315,79 @@
 
   .shot figcaption strong { color: var(--text); font-weight: 500; }
 
+  /* ---------- Promesas ---------- */
+
+  .promises {
+    display: grid;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .promise { display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: start; }
+
+  .promise + .promise {
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .promise .ico {
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 12px;
+    background: rgba(255, 138, 43, 0.11);
+    border: 1px solid rgba(255, 138, 43, 0.2);
+  }
+
+  .promise .ico svg { width: 22px; height: 22px; color: var(--accent); }
+
+  .promise h3 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 4px 0 8px;
+  }
+
+  .promise p { margin: 0; color: var(--muted); font-size: 16px; }
+
+  .writes {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 24px;
+  }
+
+  .writes h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  .writes > p { margin: 0 0 14px; color: var(--muted); font-size: 14.5px; }
+
+  .writes .file { padding: 13px 0; border-top: 1px dashed var(--line); }
+
+  .writes .file code {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent);
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  .writes .file span { display: block; margin-top: 3px; font-size: 14px; color: var(--muted); }
+
+  .writes .foot {
+    margin: 16px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .writes .foot code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+  }
+
   /* ---------- Descarga y confianza ---------- */
 
   .trust {
@@ -428,7 +501,7 @@
 
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; gap: 46px; padding: 54px 0 48px; }
-    .two-col, .trust, .shots { grid-template-columns: 1fr; gap: 38px; }
+    .two-col, .trust, .shots, .promises { grid-template-columns: 1fr; gap: 38px; }
     .scene .float { position: static; width: 100%; max-width: 280px; margin-top: 18px; }
   }
 
@@ -576,6 +649,64 @@
           <img src="assets/shortcut-card.png" alt="Tarjeta de atajos de teclado de la ventana de ajustes">
           <figcaption><strong>Cambia cada atajo.</strong> Pulsa el campo y pulsa la combinación nueva: MediaPilot la guarda al instante.</figcaption>
         </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="promesas">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Sin telemetría. Sin código oculto.</h2>
+        <p>MediaPilot hace una cosa y no hace nada más. Estas dos promesas no hay que
+           creérselas: se comprueban en el código.</p>
+      </div>
+
+      <div class="promises">
+        <div>
+          <div class="promise">
+            <span class="ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>
+            </span>
+            <div>
+              <h3>No hay telemetría</h3>
+              <p>MediaPilot no abre ninguna conexión de red. En todo el proyecto no hay ni
+                 una llamada a internet: ni estadísticas, ni informe de errores, ni
+                 comprobación de actualizaciones. No hay cuentas ni servidores, y funciona
+                 con el cable de red desconectado.</p>
+            </div>
+          </div>
+
+          <div class="promise">
+            <span class="ico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </span>
+            <div>
+              <h3>El código está a la vista</h3>
+              <p>Todo el código está en GitHub, bajo licencia MIT, con el historial de cada
+                 cambio y 72 pruebas que la integración continua ejecuta en cada
+                 publicación. Puedes leerlo, compilarlo y hacer con él lo que quieras.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="writes">
+          <h3>Todo lo que toca en tu disco</h3>
+          <p>Al usarlo, dos ficheros. Y nada más.</p>
+          <div class="file">
+            <code>%LOCALAPPDATA%\MediaPilot\settings.json</code>
+            <span>Tus ajustes: los atajos, el tema y el arranque con Windows.</span>
+          </div>
+          <div class="file">
+            <code>%LOCALAPPDATA%\MediaPilot\logs\</code>
+            <span>El registro de diagnóstico: un fichero por día.</span>
+          </div>
+          <div class="file">
+            <code>%LOCALAPPDATA%\Programs\MediaPilot</code>
+            <span>El programa, que deja el instalador. Si activas el arranque con Windows,
+                  añade además una entrada en el registro de Windows que quitas desde la
+                  propia aplicación.</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
