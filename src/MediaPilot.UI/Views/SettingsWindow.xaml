@@ -108,10 +108,14 @@
                                            Text="{loc:Localize Settings_Theme_Hint}" />
                             </StackPanel>
                             <ComboBox x:Name="ThemeSelector" Grid.Column="1" Width="180"
+                                      Style="{StaticResource MediaPilot.ThemeComboBox}"
                                       SelectionChanged="OnThemeSelectionChanged">
-                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Auto}" Tag="Auto" />
-                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Light}" Tag="Light" />
-                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Dark}" Tag="Dark" />
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Auto}" Tag="Auto"
+                                              Style="{StaticResource MediaPilot.ThemeComboBoxItem}" />
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Light}" Tag="Light"
+                                              Style="{StaticResource MediaPilot.ThemeComboBoxItem}" />
+                                <ComboBoxItem Content="{loc:Localize Settings_Theme_Dark}" Tag="Dark"
+                                              Style="{StaticResource MediaPilot.ThemeComboBoxItem}" />
                             </ComboBox>
                         </Grid>
                     </StackPanel>
